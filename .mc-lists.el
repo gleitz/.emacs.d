@@ -13,6 +13,7 @@
         back-to-indentation-or-beginning
         backward-sexp
         c-electric-backspace
+        c-electric-colon
         c-electric-delete-forward
         c-electric-paren
         c-electric-pound
@@ -22,6 +23,7 @@
         change-inner
         change-number-at-point
         change-outer
+        clj-hippie-expand-no-case-fold
         cua-replace-region
         cua-set-mark
         delete-blank-lines
@@ -49,6 +51,7 @@
         kill-region
         kill-region-or-backward-word
         kill-sexp
+        live-cycle-clj-coll
         magit-stage-item
         markdown-enter-key
         move-line-down
@@ -58,6 +61,7 @@
         move-to-window-line-top-bottom
         new-line-above
         open-line-above
+        open-line-and-indent
         open-line-below
         org-beginning-of-line
         org-delete-backward-char
@@ -73,6 +77,7 @@
         paredit-backslash
         paredit-backward
         paredit-backward-barf-sexp
+        paredit-backward-down
         paredit-backward-slurp-sexp
         paredit-backward-up
         paredit-close-round
@@ -132,6 +137,8 @@
         vr/isearch-backward
         vr/isearch-forward
         wrap-region-trigger
+        yaml-electric-backspace
+        yaml-electric-dash-and-dot
         yank-indented
         yas/expand
         zap-up-to-char
@@ -140,6 +147,7 @@
 (setq mc/cmds-to-run-once
       '(
         adv-insert-new-number
+        beginning-of-buffer
         cleanup-buffer
         describe-key
         dired-toggle-read-only

@@ -73,6 +73,7 @@
      git-commit-mode
      gitconfig-mode
      gitignore-mode
+     groovy-mode
      guide-key
      highlight-escape-sequences
      htmlize
@@ -87,6 +88,7 @@
      nrepl
      paredit
      php-mode
+     prodigy
      restclient
      scala-mode2
      simple-httpd
@@ -139,6 +141,9 @@
 (require 'setup-nodejs)
 (require 'setup-scala)
 
+(require 'prodigy)
+(global-set-key (kbd "C-x M-m") 'prodigy)
+
 ;; Font lock dash.el
 (eval-after-load "dash" '(dash-enable-font-lock))
 
@@ -149,7 +154,8 @@
           restclient-mode-hook
           js-mode-hook
           ruby-mode
-          markdown-mode)
+          markdown-mode
+          groovy-mode)
   (add-hook it 'turn-on-smartparens-mode))
 
 ;; Language specific setup files
