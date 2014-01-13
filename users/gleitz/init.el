@@ -15,7 +15,7 @@
 (global-set-key (kbd "C-x C-k") 'kill-region)
 (global-set-key (kbd "M-u") 'revert-buffer)
 (global-set-key (kbd "C-c d") 'desktop-change-dir)
-(global-set-key (kbd "C-x g") 'find-grep-dired)
+(global-set-key (kbd "C-x g") 'rgrep)
 (global-set-key (kbd "C-x n") 'find-name-dired)
 (global-set-key (kbd "<S-down>") 'ff/comment-and-go-down)
 (global-set-key (kbd "<S-up>") 'ff/uncomment-and-go-up)
@@ -60,6 +60,10 @@
   (kmacro-exec-ring-item (quote ("\274alert(" 0 "%d")) 100))
 
 ;; Collapse whitespace between two lines
+(defun collapse-whitespace ()
+  (interactive)
+      
+  )
 (fset 'collapse-whitespace
       [left ?\C-\M-s ?\[ ?\[ ?: ?g ?r ?a ?p ?h ?: ?\] ?\] ?\C-m left ?\C-  ?\S-\C-\M-r ?\[ ?\[ ?: ?g ?r ?a ?p ?h ?: ?\] ?\] ?\C-m right ?\C-x ?\C-k])
 (global-set-key "\C-x\C-j" 'collapse-whitespace)
@@ -134,3 +138,7 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
   (interactive)
   (find-file-other-window user-init-file))
 (global-set-key (kbd "C-c I") 'find-user-init-file)
+
+;; Zone when away
+(require 'zone)
+(zone-when-idle (* 60 10))

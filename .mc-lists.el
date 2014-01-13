@@ -129,6 +129,7 @@
         touch-buffer-file
         transpose-params
         transpose-sexps
+        vr/isearch-backward
         vr/isearch-forward
         wrap-region-trigger
         yank-indented
