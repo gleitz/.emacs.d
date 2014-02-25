@@ -153,4 +153,8 @@
 (eval-after-load "magit"
   '(define-key magit-status-mode-map (kbd "C-c C-a") 'magit-just-amend))
 
+;; Don't bother me with flyspell keybindings
+(eval-after-load "flyspell"
+  '(define-key flyspell-mode-map (kbd "C-.") nil))
+
 (provide 'setup-magit)

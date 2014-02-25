@@ -23,7 +23,9 @@
         change-inner
         change-number-at-point
         change-outer
+        cider-eval-last-sexp
         clj-hippie-expand-no-case-fold
+        cljr-unwind
         cua-replace-region
         cua-set-mark
         delete-blank-lines
@@ -38,6 +40,7 @@
         forward-sentence
         forward-sexp
         hippie-expand-no-case-fold
+        html-paragraph
         html-wrap-in-tag
         insert-postfix-whitespace
         js2-beginning-of-line
