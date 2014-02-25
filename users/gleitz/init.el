@@ -62,7 +62,7 @@
 ;; Collapse whitespace between two lines
 (defun collapse-whitespace ()
   (interactive)
-      
+
   )
 (fset 'collapse-whitespace
       [left ?\C-\M-s ?\[ ?\[ ?: ?g ?r ?a ?p ?h ?: ?\] ?\] ?\C-m left ?\C-  ?\S-\C-\M-r ?\[ ?\[ ?: ?g ?r ?a ?p ?h ?: ?\] ?\] ?\C-m right ?\C-x ?\C-k])
@@ -139,6 +139,11 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
   (find-file-other-window user-init-file))
 (global-set-key (kbd "C-c I") 'find-user-init-file)
 
+;; Cleanup buffer when saving
+(add-hook 'before-save-hook
+                   (lambda ()
+                     (cleanup-buffer-safe)))
+
 ;; Zone when away
-(require 'zone)
-(zone-when-idle (* 60 10))
+;; (require 'zone)
+;; (zone-when-idle (* 60 10))

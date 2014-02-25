@@ -86,9 +86,7 @@ region-end is used."
 
 (require 'dash)
 
-(defvar yank-indent-modes '(prog-mode
-                            sgml-mode
-                            js2-mode)
+(defvar yank-indent-modes '(js2-mode)
   "Modes in which to indent regions that are yanked (or yank-popped)")
 
 (defvar yank-advised-indent-threshold 1000

@@ -88,7 +88,6 @@
      nrepl
      paredit
      php-mode
-     prodigy
      restclient
      scala-mode2
      simple-httpd
@@ -140,9 +139,6 @@
 (require 'setup-js-beautify)
 (require 'setup-nodejs)
 (require 'setup-scala)
-
-(require 'prodigy)
-(global-set-key (kbd "C-x M-m") 'prodigy)
 
 ;; Font lock dash.el
 (eval-after-load "dash" '(dash-enable-font-lock))
