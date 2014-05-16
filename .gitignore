@@ -21,3 +21,5 @@ eshell/history
 .cask
 var/
 .tern-port
+/url/
+/var/

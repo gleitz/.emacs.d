@@ -50,11 +50,15 @@
 
 (setq-default ffip-find-options
               (ffip--create-exclude-find-options
-               '("node_modules"
-                 "target"
-                 "overlays"
-                 "build"
-                 "vendor"
-                 ".cask")))
+               '("/node_modules"
+                 "/target"
+                 "/out"
+                 "/overlays"
+                 "/build"
+                 "/dist"
+                 "/vendor"
+                 "/.cask"
+                 "/generated"
+                 "/.repl")))
 
 (provide 'setup-ffip)

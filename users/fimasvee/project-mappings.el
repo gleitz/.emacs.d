@@ -98,7 +98,7 @@
   :name "kodemaker.no"
   :cwd "~/projects/kodemaker.no/"
   :command "lein"
-  :args '("ring" "server-headless")
+  :args '("trampoline" "ring" "server-headless")
   :port 3333
   :tags '(ring))
 
@@ -142,42 +142,42 @@
    :name "oiiku-central-api"
    :cwd "~/projects/oiiku/oiiku-central-api/oiiku-central-api-server/"
    :command "lein"
-   :args '("ring" "server-headless")
+   :args '("trampoline" "ring" "server-headless")
    :tags '(oiiku pillar))
 
  (prodigy-define-service
    :name "oiiku-sso"
    :cwd "~/projects/oiiku/oiiku-sso/"
    :command "lein"
-   :args '("ring" "server-headless")
+   :args '("trampoline" "ring" "server-headless")
    :tags '(oiiku pillar))
 
  (prodigy-define-service
    :name "oiiku-event-admin"
    :cwd "~/projects/oiiku/oiiku-event-admin/"
    :command "lein"
-   :args '("ring" "server-headless")
+   :args '("trampoline" "ring" "server-headless")
    :tags '(oiiku pillar))
 
  (prodigy-define-service
    :name "oiiku-attendants-app"
    :cwd "~/projects/oiiku/oiiku-attendants-app/"
    :command "lein"
-   :args '("ring" "server-headless")
+   :args '("trampoline" "ring" "server-headless")
    :tags '(oiiku pillar))
 
  (prodigy-define-service
    :name "oiiku-messages-app"
    :cwd "~/projects/oiiku/oiiku-messages-app/"
    :command "lein"
-   :args '("ring" "server-headless")
+   :args '("trampoline" "ring" "server-headless")
    :tags '(oiiku messages))
 
  (prodigy-define-service
    :name "oiiku-messages-gateway"
    :cwd "~/projects/oiiku/oiiku-messages-gateway/"
    :command "lein"
-   :args '("ring" "server-headless")
+   :args '("trampoline" "ring" "server-headless")
    :tags '(oiiku messages))
 
  (prodigy-define-service
@@ -192,21 +192,21 @@
    :name "oiiku-badges-app"
    :cwd "~/projects/oiiku/oiiku-badges-app/"
    :command "lein"
-   :args '("ring" "server-headless")
+   :args '("trampoline" "ring" "server-headless")
    :tags '(oiiku))
 
  (prodigy-define-service
    :name "oiiku-invitations-app"
    :cwd "~/projects/oiiku/oiiku-invitations-app/"
    :command "lein"
-   :args '("ring" "server-headless")
+   :args '("trampoline" "ring" "server-headless")
    :tags '(oiiku))
 
  (prodigy-define-service
    :name "oiiku-screen-admin-app"
    :cwd "~/projects/oiiku/oiiku-screen-admin-app/"
    :command "lein"
-   :args '("ring" "server-headless")
+   :args '("trampoline" "ring" "server-headless")
    :tags '(oiiku)))
 
 ;; FINN Reise
@@ -244,6 +244,11 @@
 
 (project-specifics "projects/kodemaker.no"
   (ffip-local-patterns "*.js" "*.css" "*.edn" "*.adoc" "*.clj" "*.md"))
+
+;; Zombie CLJ
+
+(project-specifics "zombieclj"
+  (ffip-local-patterns "*.js" "*.css" "*.edn" "*.clj" "*.cljs" "*.md" "*.html"))
 
 ;; Zombie TDD
 
@@ -353,6 +358,23 @@
               (set (make-local-variable 'buster-test-prefix) "")
               (set (make-local-variable 'js2-basic-offset) 4)
               (set (make-local-variable 'js2r-use-strict) nil))))
+
+;; SPiD
+
+(add-hook 'js2-mode-hook
+          (lambda ()
+            (when (string-match-p "projects/spid" (buffer-file-name))
+              (set (make-local-variable 'js2-basic-offset) 4))))
+
+(add-hook 'js2-mode-hook
+          (lambda ()
+            (when (string-match-p "projects/spid/reckoning" (buffer-file-name))
+              (require 'single-quotes-mode)
+              (single-quotes-mode 1))))
+
+(project-specifics "spid/reckoning"
+  (ffip-local-patterns "*.scss" "*.html" "*.js")
+  (set (make-local-variable 'css-indent-offset) 2))
 
 ;; no-adventur
 

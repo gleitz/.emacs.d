@@ -25,12 +25,18 @@
         change-outer
         cider-eval-last-sexp
         clj-hippie-expand-no-case-fold
+        cljr-cycle-coll
+        cljr-raise-sexp
+        cljr-slash
+        cljr-splice-sexp-killing-backward
         cljr-unwind
+        clojure-toggle-keyword-string
         cua-replace-region
         cua-set-mark
         delete-blank-lines
         delete-indentation
         dired-back-to-start-of-files
+        down-list
         duplicate-current-line-or-region
         end-of-buffer
         eval-and-replace
@@ -50,6 +56,8 @@
         js2r-move-line-up
         js2r-split-string
         js2r-var-to-this
+        jump-char-forward
+        jump-char-process-char
         kill-and-retry-line
         kill-region
         kill-region-or-backward-word
@@ -57,6 +65,7 @@
         live-cycle-clj-coll
         magit-stage-item
         markdown-enter-key
+        markdown-insert-link
         move-line-down
         move-line-up
         move-text-down
@@ -164,6 +173,7 @@
         js2r-extract-var
         js2r-rename-var
         jump-between-source-and-test-files
+        kill-this-buffer
         kmacro-end-or-call-macro
         magit-status
         mc/add-cursor-on-click
