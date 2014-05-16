@@ -144,6 +144,9 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
                    (lambda ()
                      (cleanup-buffer-safe)))
 
+;; Let me open large files
+(setq large-file-warning-threshold 300000000)
+
 ;; Zone when away
 ;; (require 'zone)
 ;; (zone-when-idle (* 60 10))
