@@ -150,3 +150,6 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 ;; Zone when away
 ;; (require 'zone)
 ;; (zone-when-idle (* 60 10))
+
+;; PHP
+(add-to-list 'auto-mode-alist '("[^.][^t][^p][^l]\\.php$" . web-mode))
