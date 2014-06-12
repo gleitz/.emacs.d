@@ -22,7 +22,6 @@
 
 ;; Flycheck
 (add-hook 'python-mode-hook 'flycheck-mode)
-(add-hook 'js2-mode-hook 'flycheck-mode)
 (setq flycheck-error-display-timer nil)
 
 ;; Infinite pop mark

@@ -6,7 +6,7 @@
 (setq ns-function-modifier 'hyper)
 
 ;; mac friendly font
-(set-face-attribute 'default nil :font "Monaco-14")
+(set-face-attribute 'default nil :font "Monaco-12")
 
 ;; redefine read-char, at least for invocation from elisp
 (defun read-char (&optional prompt) ;; (inherit-input-method seconds)
@@ -58,7 +58,7 @@
 
 ;; mac friendly font
 (when window-system
-  (setq magnars/default-font "-apple-Monaco-medium-normal-normal-*-14-*-*-*-m-0-iso10646-1")
+  (setq magnars/default-font "-apple-Monaco-medium-normal-normal-*-12-*-*-*-m-0-iso10646-1")
   (setq magnars/presentation-font "-apple-Monaco-medium-normal-normal-*-28-*-*-*-m-0-iso10646-1")
   (set-face-attribute 'default nil :font magnars/default-font))
 
