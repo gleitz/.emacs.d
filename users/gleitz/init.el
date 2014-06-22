@@ -152,3 +152,6 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 
 ;; PHP
 (add-to-list 'auto-mode-alist '("[^.][^t][^p][^l]\\.php$" . web-mode))
+(add-hook 'php-mode-hook '(lambda ()
+  (flycheck-mode 1)
+))
