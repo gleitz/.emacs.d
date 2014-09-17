@@ -54,7 +54,10 @@
 
 ;; Autocompile on save
 (add-hook 'malabar-mode-hook
-          (lambda () (add-hook 'after-save-hook 'malabar-compile-file-silently nil t)))
+          (lambda ()
+            (add-hook 'after-save-hook 'malabar-compile-file-silently nil t)
+            (setq indent-tabs-mode t)
+            ))
 
 ;; Make Malabar's autoimport behave more like Eclipse
 (defun malabar-eclipse-import ()

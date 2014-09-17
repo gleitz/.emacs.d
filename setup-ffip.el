@@ -59,6 +59,7 @@
                  "/vendor"
                  "/.cask"
                  "/generated"
-                 "/.repl")))
+                 "/.repl"
+                 "/.git")))
 
 (provide 'setup-ffip)

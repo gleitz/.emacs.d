@@ -308,6 +308,9 @@
 (define-key global-map (kbd "C-r") 'isearch-backward)
 (define-key global-map (kbd "C-s") 'isearch-forward)
 
+;; Unbind help
+(define-key global-map (kbd "C-x C-h") nil)
+
 ;; Find files by name and display results in dired
 (global-set-key (kbd "M-s f") 'find-name-dired)
 

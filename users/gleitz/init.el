@@ -155,3 +155,9 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 (add-hook 'php-mode-hook '(lambda ()
   (flycheck-mode 1)
 ))
+
+;; Disable vc-mode
+(setq vc-handled-backends nil)
+
+;; Useful commands
+;; Skip to next tag sgml-skip-tag-forward (C-c C-f/b)

@@ -669,14 +669,14 @@ With non-nil prefix arg ICONIFY-ALL, iconify all visible frames."
 ;; REPLACES ORIGINAL (built-in):
 ;; If WINDOW is the only one in its frame, `delete-frame'.
 ;;;###autoload
-(defun delete-window (&optional window)
-  "Remove WINDOW from the display.  Default is `selected-window'.
-If WINDOW is the only one in its frame, then `delete-frame' too."
-  (interactive)
-  (save-current-buffer
-    (setq window (or window (selected-window)))
-    (select-window window)
-    (if (one-window-p t) (delete-frame) (old-delete-window (selected-window)))))
+;; (defun delete-window (&optional window)
+;;   "Remove WINDOW from the display.  Default is `selected-window'.
+;; If WINDOW is the only one in its frame, then `delete-frame' too."
+;;   (interactive)
+;;   (save-current-buffer
+;;     (setq window (or window (selected-window)))
+;;     (select-window window)
+;;     (if (one-window-p t) (delete-frame) (old-delete-window (selected-window)))))
 
 ;;;###autoload
 (defun delete-windows-for (&optional buffer)
