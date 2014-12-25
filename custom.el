@@ -27,7 +27,7 @@
  '(c-basic-offset 4)
  '(custom-safe-themes
    (quote
-    ("9527feeeec43970b1d725bdc04e97eb2b03b15be982ac50089ad223d3c6f2920" default)))
+    ("fbfbd18874a5a5a0d1ac9036f57c189195f30d57d92d9cf96b12195d18714850" "9527feeeec43970b1d725bdc04e97eb2b03b15be982ac50089ad223d3c6f2920" default)))
  '(ensime-default-server-root "/Users/bgleitzman/.emacs.d/lib/scala/ensime/")
  '(ensime-sbt-compile-on-save nil)
  '(flycheck-check-syntax-automatically (quote (save mode-enabled)))

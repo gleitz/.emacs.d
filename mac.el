@@ -80,5 +80,5 @@
 
 (when window-system
   (require 'maxframe)
-  (add-hook 'window-setup-hook 'maximize-frame t))
+  (add-hook 'window-setup-hook 'toggle-frame-maximized t))
 (provide 'mac)
