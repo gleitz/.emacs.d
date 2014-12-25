@@ -118,6 +118,7 @@
 [submodule "site-lisp/datomic-snippets"]
         path = site-lisp/datomic-snippets
         url = https://github.com/magnars/datomic-snippets.git
+<<<<<<< HEAD
 [submodule "site-lisp/arduino-mode"]
     path = site-lisp/arduino-mode
     url = https://github.com/bookest/arduino-mode.git
@@ -143,3 +144,8 @@
 [submodule "site-lisp/zencoding"]
     path = site-lisp/zencoding
 	url = https://github.com/rooney/zencoding.git
+=======
+[submodule "site-lisp/squiggly-clojure"]
+	path = site-lisp/squiggly-clojure
+	url = git@github.com:pnf/squiggly-clojure.git
+>>>>>>> upstream/master

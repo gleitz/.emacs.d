@@ -10,8 +10,11 @@
 (setq site-lisp-dir
       (expand-file-name "site-lisp" user-emacs-directory))
 
+(setq settings-dir
+      (expand-file-name "settings" user-emacs-directory))
+
 ;; Set up load path
-(add-to-list 'load-path user-emacs-directory)
+(add-to-list 'load-path settings-dir)
 (add-to-list 'load-path site-lisp-dir)
 
 ;; Keep emacs Custom-settings in separate file
@@ -66,9 +69,11 @@
      dired-details+
      elisp-slime-nav
      exec-path-from-shell
+     fill-column-indicator
      flx
      flx-ido
      flycheck
+     flycheck-pos-tip
      gist
      git-commit-mode
      gitconfig-mode
@@ -88,6 +93,7 @@
      nrepl
      paredit
      php-mode
+     prodigy
      restclient
      scala-mode2
      simple-httpd
@@ -96,7 +102,8 @@
      visual-regexp
      visual-regexp-steroids
      whitespace-cleanup-mode
-     yasnippet)))
+     yasnippet
+     )))
 
 (condition-case nil
     (init--install-packages)
@@ -164,8 +171,8 @@
 ;; Load stuff on demand
 (autoload 'skewer-start "setup-skewer" nil t)
 (autoload 'skewer-demo "setup-skewer" nil t)
-(autoload 'flycheck-mode "setup-flycheck" nil t)
 (autoload 'auto-complete-mode "auto-complete" nil t)
+(eval-after-load 'flycheck '(require 'setup-flycheck))
 
 ;; Load SimpleRTM
 (autoload 'simple-rtm-mode "simple-rtm" "Interactive mode for Remember The Milk" t)
@@ -199,6 +206,12 @@
 (require 'wgrep)
 (require 'change-inner)
 (require 'multifiles)
+
+;; Don't use expand-region fast keys
+(setq expand-region-fast-keys-enabled nil)
+
+;; Show expand-region command used
+(setq er--show-expansion-message t)
 
 ;; Fill column indicator
 (require 'fill-column-indicator)

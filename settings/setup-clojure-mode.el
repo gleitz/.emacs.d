@@ -13,6 +13,8 @@
 
 (add-hook 'clojure-mode-hook (lambda () (clj-refactor-mode 1)))
 
+(add-to-list 'cljr-project-clean-functions 'cleanup-buffer)
+
 (define-key clojure-mode-map (kbd "C->") 'cljr-thread)
 (define-key clojure-mode-map (kbd "C-<") 'cljr-unwind)
 
@@ -103,6 +105,19 @@
 (define-key clojure-mode-map (kbd "C-c C-z") 'nrepl-warn-when-not-connected)
 (define-key clojure-mode-map (kbd "C-c C-k") 'nrepl-warn-when-not-connected)
 (define-key clojure-mode-map (kbd "C-c C-n") 'nrepl-warn-when-not-connected)
+
+(setq cljr-magic-require-namespaces
+      '(("io"   . "clojure.java.io")
+        ("set"  . "clojure.set")
+        ("str"  . "clojure.string")
+        ("walk" . "clojure.walk")
+        ("zip"  . "clojure.zip")
+        ("time" . "clj-time.core")))
+
+(require 'squiggly-clojure)
+(setq squiggly-clojure-checkers '(eastwood))
+(add-hook 'cider-mode-hook (lambda () (flycheck-mode 1)))
+;; (setq squiggly-clojure-chatty nil)
 
 ;; ------------
 

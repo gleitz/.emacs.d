@@ -81,4 +81,12 @@
 (when window-system
   (require 'maxframe)
   (add-hook 'window-setup-hook 'toggle-frame-maximized t))
+
+;; Open files
+(defun mac-open-current-file ()
+  (interactive)
+  (shell-command (concat "open " (buffer-file-name))))
+
+(global-set-key (kbd "C-c C-S-o") 'mac-open-current-file)
+
 (provide 'mac)
