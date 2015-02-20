@@ -66,13 +66,16 @@
      cider-tracing
      clojure-mode
      css-eldoc
+     dired-details
      dired-details+
+     dockerfile-mode
      elisp-slime-nav
      exec-path-from-shell
      fill-column-indicator
      flx
      flx-ido
      flycheck
+     flycheck-clojure
      flycheck-pos-tip
      gist
      git-commit-mode
