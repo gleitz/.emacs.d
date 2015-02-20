@@ -85,6 +85,7 @@
      ido-at-point
      ido-vertical-mode
      js2-mode
+     js2-refactor
      less-css-mode
      magit
      markdown-mode
