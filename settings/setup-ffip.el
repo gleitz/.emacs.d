@@ -62,6 +62,7 @@
                  "/generated"
                  "/.repl"
                  "/.git"
-                 "/.tmp")))
+                 "/.tmp"
+                 "/.beans")))
 
 (provide 'setup-ffip)

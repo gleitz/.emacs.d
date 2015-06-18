@@ -154,6 +154,9 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 ;; (require 'zone)
 ;; (zone-when-idle (* 60 10))
 
+;; Make the scratch buffer for text
+(setq initial-major-mode 'text-mode)
+
 ;; PHP
 (add-to-list 'auto-mode-alist '("[^.][^t][^p][^l]\\.php$" . web-mode))
 (add-hook 'php-mode-hook '(lambda ()

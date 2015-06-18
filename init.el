@@ -75,7 +75,6 @@
      flx
      flx-ido
      flycheck
-     flycheck-clojure
      flycheck-pos-tip
      gist
      git-commit-mode
@@ -102,6 +101,7 @@
      scala-mode2
      simple-httpd
      slime-js
+     speed-type
      smartparens
      visual-regexp
      visual-regexp-steroids

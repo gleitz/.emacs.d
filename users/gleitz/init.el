@@ -16,6 +16,7 @@
 (global-set-key (kbd "M-u") 'revert-buffer)
 (global-set-key (kbd "C-c d") 'desktop-change-dir)
 (global-set-key (kbd "C-x g") 'rgrep)
+(global-set-key (kbd "C-x i") 'find-grep-dired)
 (global-set-key (kbd "C-x n") 'find-name-dired)
 (global-set-key (kbd "<S-down>") 'ff/comment-and-go-down)
 (global-set-key (kbd "<S-up>") 'ff/uncomment-and-go-up)
