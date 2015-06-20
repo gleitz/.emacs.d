@@ -98,6 +98,7 @@
      php-mode
      prodigy
      restclient
+     reveal-in-finder
      scala-mode2
      simple-httpd
      slime-js
