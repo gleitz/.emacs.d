@@ -62,10 +62,9 @@
 (defun init--install-packages ()
   (packages-install
    '(auto-complete
-     cider
-     cider-tracing
      clojure-mode
      css-eldoc
+     cider
      dired-details
      dired-details+
      dockerfile-mode
@@ -90,10 +89,10 @@
      js2-refactor
      less-css-mode
      magit
+     maxframe
      markdown-mode
      move-text
      nodejs-repl
-     nrepl
      paredit
      php-mode
      prodigy

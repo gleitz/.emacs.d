@@ -39,6 +39,7 @@
  '(magit-stage-all-confirm nil)
  '(message-log-max 1000)
  '(nxml-child-indent 4)
+ '(package-check-signature nil)
  '(read-quoted-char-radix 16)
  '(rst-compile-toolsets
    (quote

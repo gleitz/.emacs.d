@@ -3,8 +3,8 @@
 
 ;; Add melpa to package repos
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+						 ("marmalade" . "http://marmalade-repo.org/packages/")
                          ("melpa" . "http://melpa.milkbox.net/packages/")))
-
 (package-initialize)
 
 (unless (file-exists-p "~/.emacs.d/elpa/archives/melpa")
