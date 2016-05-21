@@ -2,9 +2,11 @@
 (require 'dash)
 
 ;; Add melpa to package repos
-(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-						 ("marmalade" . "http://marmalade-repo.org/packages/")
-                         ("melpa" . "http://melpa.milkbox.net/packages/")))
+(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+
+(setq package-pinned-packages '())
+
 (package-initialize)
 
 (unless (file-exists-p "~/.emacs.d/elpa/archives/melpa")

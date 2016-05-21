@@ -26,3 +26,4 @@ var/
 /eshell/
 history
 /.sx/
+/ensime/

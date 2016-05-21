@@ -89,4 +89,8 @@
 
 (global-set-key (kbd "C-c C-S-o") 'mac-open-current-file)
 
+;; fix osx weirdness with magit avatars
+
+(setq-default magit-revision-use-gravatar-kludge t)
+
 (provide 'mac)

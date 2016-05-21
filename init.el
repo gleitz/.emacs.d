@@ -63,15 +63,17 @@
   (packages-install
    '(ag
      auto-complete
-     clojure-mode
-     css-eldoc
      cider
+     clojure-mode
+     clojure-mode-extra-font-locking
+     css-eldoc
      dired-details
      dired-details+
      dockerfile-mode
      elisp-slime-nav
      elpy
      exec-path-from-shell
+     f
      fill-column-indicator
      flx
      flx-ido
@@ -84,8 +86,10 @@
      guide-key
      highlight-escape-sequences
      htmlize
+     hydra
      ido-at-point
      ido-vertical-mode
+     inflections
      js2-mode
      js2-refactor
      jsx-mode
@@ -94,8 +98,8 @@
      magit
      magit-tramp
      malabar-mode
-     maxframe
      markdown-mode
+     maxframe
      move-text
      nodejs-repl
      package-utils
@@ -108,13 +112,15 @@
      scala-mode2
      simple-httpd
      slime-js
-     speed-type
      smartparens
+     speed-type
+     string-edit
      visual-regexp
      visual-regexp-steroids
      web-mode
      whitespace-cleanup-mode
      yasnippet
+     yesql-ghosts
      )))
 
 (condition-case nil
@@ -172,7 +178,8 @@
           java-mode
           ruby-mode
           markdown-mode
-          groovy-mode)
+          groovy-mode
+          scala-mode)
   (add-hook it 'turn-on-smartparens-mode))
 
 ;; Language specific setup files
