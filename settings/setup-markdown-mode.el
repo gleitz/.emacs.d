@@ -14,4 +14,7 @@
           (lambda ()
             (setq imenu-generic-expression markdown-imenu-generic-expression)))
 
+(define-key markdown-mode-map (kbd "M-<right>") 'subword-right)
+(define-key markdown-mode-map (kbd "M-<left>") 'subword-left)
+
 (provide 'setup-markdown-mode)

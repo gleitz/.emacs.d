@@ -3,22 +3,22 @@
 
 ;; Use full project path for ffip
 
-(defun ffip-project-files ()
-  "Return an alist of all filenames in the project and their path."
-  (let ((file-alist nil))
-    (mapcar (lambda (file)
-              (let ((file-cons (cons (s-chop-prefix (file-truename (ffip-project-root)) (expand-file-name file))
-                                     (expand-file-name file))))
-                (add-to-list 'file-alist file-cons)
-                file-cons))
-            (split-string (shell-command-to-string
-                           (format "find %s -type f \\( %s \\) %s | head -n %s"
-                                   (or ffip-project-root
-                                       (ffip-project-root)
-                                       (error "No project root found"))
-                                   (ffip-join-patterns)
-                                   ffip-find-options
-                                   ffip-limit))))))
+;; (defun ffip-project-files ()
+;;   "Return an alist of all filenames in the project and their path."
+;;   (let ((file-alist nil))
+;;     (mapcar (lambda (file)
+;;               (let ((file-cons (cons (s-chop-prefix (file-truename (ffip-project-root)) (expand-file-name file))
+;;                                      (expand-file-name file))))
+;;                 (add-to-list 'file-alist file-cons)
+;;                 file-cons))
+;;             (split-string (shell-command-to-string
+;;                            (format "find %s -type f \\( %s \\) %s | head -n %s"
+;;                                    (or ffip-project-root
+;;                                        (ffip-project-root)
+;;                                        (error "No project root found"))
+;;                                    (ffip-join-patterns)
+;;                                    ffip-find-options
+;;                                    ffip-limit))))))
 
 ;; Helper methods to create local settings
 
@@ -60,6 +60,14 @@
                  "/.repl"
                  "/.git"
                  "/.tmp"
+                 "/.idea"
+                 "/.meteor"
                  "/.beans")))
+
+;; Project specific setup
+
+(when (ffip-current-full-filename-match-pattern-p "calder_cms")
+  ;; set the root directory into "~/projs/PROJECT_DIR"
+  (setq-local ffip-project-root ("~/projects/ruse/calder_cms")))
 
 (provide 'setup-ffip)

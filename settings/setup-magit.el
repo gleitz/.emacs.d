@@ -1,5 +1,4 @@
 ;; Subtler highlight
-(set-face-background 'magit-item-highlight "#121212")
 (set-face-background 'diff-file-header "#121212")
 (set-face-foreground 'diff-context "#666666")
 (set-face-foreground 'diff-added "#00cc33")
@@ -156,5 +155,27 @@
 ;; Don't bother me with flyspell keybindings
 (eval-after-load "flyspell"
   '(define-key flyspell-mode-map (kbd "C-.") nil))
+
+;; Don't use Emacs version control
+(setq vc-handled-backends ())
+
+;; Create Github PRs
+
+(defun endless/visit-pull-request-url ()
+  "Visit the current branch's PR on Github."
+  (interactive)
+  (browse-url
+   (format "https://github.com/%s/pull/new/%s"
+           (replace-regexp-in-string
+            "\\`.+github\\.com:\\(.+\\)\\.git\\'" "\\1"
+            (magit-get "remote"
+                       (magit-get-remote)
+                       "url"))
+           (cdr (or (magit-get-remote-branch)
+                    (user-error "No remote branch"))))))
+
+(eval-after-load 'magit
+  '(define-key magit-mode-map "v"
+     #'endless/visit-pull-request-url))
 
 (provide 'setup-magit)

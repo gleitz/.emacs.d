@@ -1,6 +1,7 @@
 ;; Install the following
 ;; brew install pylint
 ;; npm install -g jshint
+;; npm install -g jsxhint
 
 ;; Default indentation levels
 (setq js-indent-level 2)

@@ -1,6 +1,10 @@
 ;; Install the following
 ;; brew install pylint
 ;; npm install -g jshint
+;; pip install rope ropemacs
+;; pip install -e "git+https://github.com/pinard/Pymacs.git#egg=Pymacs"
+;; cd src/pymacs
+;; make
 
 ;; Default indentation levels
 (setq js-indent-level 2)
@@ -168,3 +172,12 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 
 ;; Useful commands
 ;; Skip to next tag sgml-skip-tag-forward (C-c C-f/b)
+
+;; For some reason dash.el was missing this
+(defun -non-nil (list)
+  "Return all non-nil elements of LIST."
+  (-remove 'null list))
+
+;; Update packages on exit
+(defadvice save-buffers-kill-terminal (before save-buffers-kill-terminal-before activate)
+  (package-utils-upgrade-all))

@@ -69,6 +69,7 @@
      (add-to-list 'grep-find-ignored-directories "node_modules")
      (add-to-list 'grep-find-ignored-directories "vendor")
      (add-to-list 'grep-find-ignored-directories ".git")
+     (add-to-list 'grep-find-ignored-directories ".meteor")
 
      ;; Add custom keybindings
      (define-key grep-mode-map "q" 'rgrep-quit-window)
@@ -117,5 +118,24 @@
 
 (eval-after-load "wgrep"
   '(define-key wgrep-mode-map (kbd "C-c C-æ") 'mc/add-cursors-to-all-matches))
+
+;; Ignore the first 4 lines of grep to clean up output
+(defun delete-grep-header ()
+  (save-excursion
+    (with-current-buffer grep-last-buffer
+      (goto-line 5)
+      (narrow-to-region (point) (point-max)))))
+
+(defvar delete-grep-header-advice
+  (ad-make-advice
+   'delete-grep-header nil t
+   '(advice lambda () (delete-grep-header))))
+
+(defun add-delete-grep-header-advice (function)
+  (ad-add-advice function delete-grep-header-advice 'after 'first)
+  (ad-activate function))
+
+(mapc 'add-delete-grep-header-advice
+      '(grep lgrep grep-find rgrep zrgrep))
 
 (provide 'setup-rgrep)

@@ -61,7 +61,8 @@
 ;; Install extensions if they're missing
 (defun init--install-packages ()
   (packages-install
-   '(auto-complete
+   '(ag
+     auto-complete
      clojure-mode
      css-eldoc
      cider
@@ -69,6 +70,7 @@
      dired-details+
      dockerfile-mode
      elisp-slime-nav
+     elpy
      exec-path-from-shell
      fill-column-indicator
      flx
@@ -76,7 +78,6 @@
      flycheck
      flycheck-pos-tip
      gist
-     git-commit-mode
      gitconfig-mode
      gitignore-mode
      groovy-mode
@@ -87,15 +88,21 @@
      ido-vertical-mode
      js2-mode
      js2-refactor
+     jsx-mode
+     keyfreq
      less-css-mode
      magit
+     magit-tramp
+     malabar-mode
      maxframe
      markdown-mode
      move-text
      nodejs-repl
+     package-utils
      paredit
      php-mode
      prodigy
+     projectile
      restclient
      reveal-in-finder
      scala-mode2
@@ -105,6 +112,7 @@
      smartparens
      visual-regexp
      visual-regexp-steroids
+     web-mode
      whitespace-cleanup-mode
      yasnippet
      )))
@@ -141,15 +149,16 @@
 (eval-after-load 'grep '(require 'setup-rgrep))
 (eval-after-load 'shell '(require 'setup-shell))
 (require 'setup-hippie)
-(require 'setup-yasnippet)
 (require 'setup-perspective)
 (require 'setup-ffip)
 (require 'setup-html-mode)
 (require 'setup-paredit)
-(require 'setup-ropemacs)
+(require 'setup-projectile)
+(require 'setup-python)
 (require 'setup-js-beautify)
 (require 'setup-nodejs)
 (require 'setup-scala)
+(require 'setup-web-mode)
 
 ;; Font lock dash.el
 (eval-after-load "dash" '(dash-enable-font-lock))
