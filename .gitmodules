@@ -118,9 +118,6 @@
 [submodule "site-lisp/datomic-snippets"]
 	path = site-lisp/datomic-snippets
 	url = https://github.com/magnars/datomic-snippets.git
-[submodule "site-lisp/arduino-mode"]
-	path = site-lisp/arduino-mode
-	url = https://github.com/bookest/arduino-mode.git
 [submodule "site-lisp/yasnippet-snippets"]
 	path = site-lisp/yasnippet-snippets
 	url = https://github.com/AndreaCrotti/yasnippet-snippets.git
@@ -137,9 +134,6 @@
 [submodule "site-lisp/ruby-end"]
 	path = site-lisp/ruby-end
 	url = https://github.com/rejeep/ruby-end.git
-[submodule "site-lisp/yasnippet"]
-	path = site-lisp/yasnippet
-	url = https://github.com/capitaomorte/yasnippet.git
 [submodule "site-lisp/zencoding"]
 	path = site-lisp/zencoding
 	url = https://github.com/rooney/zencoding.git

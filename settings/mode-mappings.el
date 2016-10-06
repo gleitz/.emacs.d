@@ -28,6 +28,9 @@
 (add-to-list 'auto-mode-alist '("\\.styl$" . sws-mode))
 (add-to-list 'auto-mode-alist '("\\.jade$" . jade-mode))
 
+;; TXT
+(add-to-list 'auto-mode-alist '("\\.txt\\'" . flyspell-mode))
+
 ;; HTML
 (add-to-list 'auto-mode-alist '("\\.html\\'" . html-mode))
 (add-to-list 'auto-mode-alist '("\\.tag$" . html-mode))

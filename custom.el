@@ -37,12 +37,16 @@
  '(global-semantic-idle-scheduler-mode nil)
  '(initial-scratch-message "")
  '(js2-pretty-multiline-decl-indentation-p t)
- '(magit-push-always-verify nil)
+ '(magit-push-always-verify nil t)
  '(magit-stage-all-confirm nil t)
  '(message-log-max 1000)
  '(nxml-child-indent 4)
  '(package-check-signature nil)
+ '(package-selected-packages
+   (quote
+    (arduino-mode yesql-ghosts whitespace-cleanup-mode web-mode visual-regexp-steroids vagrant-tramp swiper string-edit speed-type smartparens slime-js simple-httpd scala-mode2 reveal-in-finder restclient quickrun projectile prodigy php-mode paredit package-utils nodejs-repl move-text maxframe markdown-mode malabar-mode magit-tramp less-css-mode keyfreq jsx-mode js2-refactor inflections ido-vertical-mode ido-at-point hydra htmlize highlight-escape-sequences guide-key gitignore-mode gitconfig-mode git-messenger gist flycheck-pos-tip flx-ido fill-column-indicator exec-path-from-shell elpy elisp-slime-nav dockerfile-mode dired-details+ css-eldoc clojure-mode-extra-font-locking auto-complete ag)))
  '(read-quoted-char-radix 16)
+ '(recentf-max-saved-items 1000)
  '(rst-compile-toolsets
    (quote
     ((html "rst2html5" ".html" nil)
@@ -60,6 +64,6 @@
  '(tab-width 4)
  '(tern-ac-on-dot nil)
  '(tramp-default-method "ssh")
- '(tramp-ssh-controlmaster-options "")
+ '(tramp-ssh-controlmaster-options "" t)
  '(visible-bell nil)
  '(warning-minimum-level :error))

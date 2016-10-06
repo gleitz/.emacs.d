@@ -280,7 +280,7 @@
 (global-set-key (kbd "C-x C-y") 'browse-kill-ring)
 
 ;; Buffer file functions
-(global-set-key (kbd "C-x t") 'touch-buffer-file)
+;; (global-set-key (kbd "C-x t") 'touch-buffer-file)
 (global-set-key (kbd "C-x C-r") 'rename-current-buffer-file)
 
 ;; Jump from file to containing directory

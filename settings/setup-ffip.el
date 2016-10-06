@@ -65,10 +65,4 @@
                  "/.meteor"
                  "/.beans")))
 
-;; Project specific setup
-
-(when (ffip-current-full-filename-match-pattern-p "calder_cms")
-  ;; set the root directory into "~/projs/PROJECT_DIR"
-  (setq-local ffip-project-root ("~/projects/ruse/calder_cms")))
-
 (provide 'setup-ffip)
