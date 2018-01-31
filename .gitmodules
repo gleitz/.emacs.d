@@ -13,9 +13,6 @@
 [submodule "site-lisp/buster-snippets"]
 	path = site-lisp/buster-snippets
 	url = https://github.com/magnars/buster-snippets.el.git
-[submodule "site-lisp/expand-region"]
-	path = site-lisp/expand-region
-	url = https://github.com/magnars/expand-region.el.git
 [submodule "site-lisp/php-mode"]
 	path = site-lisp/php-mode
 	url = https://github.com/ejmr/php-mode.git
@@ -40,9 +37,6 @@
 [submodule "site-lisp/multiple-cursors"]
 	path = site-lisp/multiple-cursors
 	url = https://github.com/magnars/multiple-cursors.el.git
-[submodule "site-lisp/js2-refactor"]
-	path = site-lisp/js2-refactor
-	url = https://github.com/magnars/js2-refactor.el.git
 [submodule "site-lisp/feature-mode"]
 	path = site-lisp/feature-mode
 	url = https://github.com/michaelklishin/cucumber.el.git
@@ -103,9 +97,6 @@
 [submodule "lib/scala/ensime"]
 	path = lib/scala/ensime
 	url = https://github.com/aemoncannon/ensime.git
-[submodule "site-lisp/tern"]
-	path = site-lisp/tern
-	url = https://github.com/marijnh/tern.git
 [submodule "site-lisp/simplezen"]
 	path = site-lisp/simplezen
 	url = https://github.com/magnars/simplezen.el.git

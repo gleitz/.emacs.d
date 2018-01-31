@@ -1,7 +1,8 @@
 ;; Install the following
-;; brew install pylint
+;; pip install pylint
 ;; npm install -g jshint
 ;; npm install -g jsxhint
+;; npm install -g tern
 
 ;; Default indentation levels
 (setq js-indent-level 2)

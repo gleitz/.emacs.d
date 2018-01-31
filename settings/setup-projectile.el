@@ -16,4 +16,8 @@
 getting a list of all files in a project."
     projectile-ag-command))
 
+(setq projectile-mode-line
+         '(:eval (format " Projectile[%s]"
+                        (projectile-project-name))))
+
 (provide 'setup-projectile)

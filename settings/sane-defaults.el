@@ -55,8 +55,8 @@
 (setq line-number-mode t)
 (setq column-number-mode t)
 
-;; Lines should be 80 characters wide, not 72
-(setq fill-column 80)
+;; Lines should be 120 characters wide, not 72
+(setq fill-column 116)
 
 ;; Save a list of recent files visited. (open recent file with C-x f)
 (recentf-mode 1)
@@ -103,9 +103,6 @@
 
 ;; Sentences do not need double spaces to end. Period.
 (set-default 'sentence-end-double-space nil)
-
-;; 80 chars is a good width.
-(set-default 'fill-column 80)
 
 ;; Add parts of each file's directory to the buffer name if not unique
 (require 'uniquify)

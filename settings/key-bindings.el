@@ -189,9 +189,9 @@
 (global-set-key (kbd "M-p") 'backward-paragraph)
 (global-set-key (kbd "M-n") 'forward-paragraph)
 
-;; Webjump let's you quickly search google, wikipedia, emacs wiki
-(global-set-key (kbd "C-x C-g") 'webjump)
-(global-set-key (kbd "C-x M-g") 'browse-url-at-point)
+;; Jump to github and the finder
+;; (global-set-key (kbd "C-x C-g") 'browse-on-github)
+;; (global-set-key (kbd "C-x M-g") 'browse-url-at-point)
 
 ;; Completion at point
 (global-set-key (kbd "C-<tab>") 'completion-at-point)

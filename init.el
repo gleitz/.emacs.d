@@ -77,6 +77,7 @@
      elisp-slime-nav
      elpy
      exec-path-from-shell
+     expand-region
      f
      fill-column-indicator
      flx
@@ -88,6 +89,7 @@
      gitignore-mode
      groovy-mode
      guide-key
+     haskell-mode
      highlight-escape-sequences
      htmlize
      hydra
@@ -96,6 +98,7 @@
      inflections
      js2-mode
      js2-refactor
+     json-mode
      jsx-mode
      keyfreq
      less-css-mode
@@ -112,6 +115,7 @@
      prodigy
      projectile
      quickrun
+     realgud
      restclient
      reveal-in-finder
      scala-mode2
@@ -120,6 +124,9 @@
      smartparens
      speed-type
      string-edit
+     tern
+     tide
+     virtualenvwrapper
      visual-regexp
      visual-regexp-steroids
      web-mode
@@ -152,7 +159,7 @@
 ;; Arduino
 (require 'arduino-mode)
 
-;; Setup extensions
+ ;; Setup extensions
 (eval-after-load 'ido '(require 'setup-ido))
 (eval-after-load 'org '(require 'setup-org))
 (eval-after-load 'dired '(require 'setup-dired))
@@ -170,6 +177,9 @@
 (require 'setup-nodejs)
 (require 'setup-scala)
 (require 'setup-web-mode)
+(require 'setup-jsx-mode)
+(require 'setup-realgud)
+(require 'setup-typescript)
 
 ;; Font lock dash.el
 (eval-after-load "dash" '(dash-enable-font-lock))

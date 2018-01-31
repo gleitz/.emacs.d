@@ -16,5 +16,6 @@
 
 (define-key markdown-mode-map (kbd "M-<right>") 'subword-right)
 (define-key markdown-mode-map (kbd "M-<left>") 'subword-left)
+(define-key markdown-mode-map (kbd "C-_") 'undo-tree-undo)
 
 (provide 'setup-markdown-mode)
