@@ -164,3 +164,7 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 
 ;; Useful commands
 ;; Skip to next tag sgml-skip-tag-forward (C-c C-f/b)
+
+;; Enable mic-paren
+(require 'mic-paren)
+(paren-activate)

@@ -68,6 +68,7 @@
      arduino-mode
      auto-complete
      cider
+     column-enforce-mode
      clojure-mode
      clojure-mode-extra-font-locking
      css-eldoc
@@ -107,6 +108,7 @@
      malabar-mode
      markdown-mode
      maxframe
+     mic-paren
      move-text
      nodejs-repl
      package-utils
