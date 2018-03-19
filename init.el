@@ -67,16 +67,17 @@
    '(ag
      arduino-mode
      auto-complete
+     browse-kill-ring
+     change-inner
      cider
      column-enforce-mode
      clojure-mode
      clojure-mode-extra-font-locking
      css-eldoc
-     dired-details
-     dired-details+
      dockerfile-mode
      elisp-slime-nav
      elpy
+     ensime
      exec-path-from-shell
      expand-region
      f
@@ -96,34 +97,36 @@
      hydra
      ido-at-point
      ido-vertical-mode
+     ido-ubiquitous
      inflections
      js2-mode
      js2-refactor
      json-mode
      jsx-mode
+     jump-char
      keyfreq
      less-css-mode
      magit
-     magit-tramp
-     malabar-mode
      markdown-mode
      maxframe
      mic-paren
      move-text
+     multifiles
      nodejs-repl
      package-utils
      paredit
+     perspective
      php-mode
      prodigy
      projectile
      quickrun
      realgud
      restclient
-     reveal-in-finder
-     scala-mode2
+     reveal-in-osx-finder
+     scala-mode
      simple-httpd
-     slime-js
      smartparens
+     smex
      speed-type
      string-edit
      tern
@@ -132,6 +135,7 @@
      visual-regexp
      visual-regexp-steroids
      web-mode
+     wgrep
      whitespace-cleanup-mode
      yasnippet
      yesql-ghosts

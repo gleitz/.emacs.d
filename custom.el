@@ -30,7 +30,7 @@
  '(css-indent-offset 4)
  '(custom-safe-themes
    (quote
-    ("fbfbd18874a5a5a0d1ac9036f57c189195f30d57d92d9cf96b12195d18714850" "9527feeeec43970b1d725bdc04e97eb2b03b15be982ac50089ad223d3c6f2920" default)))
+	("fbfbd18874a5a5a0d1ac9036f57c189195f30d57d92d9cf96b12195d18714850" "9527feeeec43970b1d725bdc04e97eb2b03b15be982ac50089ad223d3c6f2920" default)))
  '(elpy-rpc-backend "rope")
  '(ensime-default-server-root "/Users/bgleitzman/.emacs.d/lib/scala/ensime/")
  '(ensime-sbt-compile-on-save nil)
@@ -38,17 +38,17 @@
  '(flycheck-check-syntax-automatically (quote (save mode-enabled)))
  '(flycheck-checkers
    (quote
-    (tsx-tide typescript-tide bash coffee-coffeelint css-csslint elixir emacs-lisp emacs-lisp-checkdoc erlang go-gofmt go-build go-test haml html-tidy lua perl php php-phpcs puppet-parser puppet-lint python-flake8 python-pylint rst ruby-rubocop ruby ruby-jruby rust sass scala scss sh-dash sh-bash tex-chktex tex-lacheck typescript-tslint xml-xmlstarlet zsh javascript-jshint javascript-eslint javascript-tide jsx-tide)))
+	(tsx-tide typescript-tide bash coffee-coffeelint css-csslint elixir emacs-lisp emacs-lisp-checkdoc erlang go-gofmt go-build go-test haml html-tidy lua perl php php-phpcs puppet-parser puppet-lint python-flake8 python-pylint rst ruby-rubocop ruby ruby-jruby rust sass scala scss sh-dash sh-bash tex-chktex tex-lacheck typescript-tslint xml-xmlstarlet zsh javascript-jshint javascript-eslint javascript-tide jsx-tide)))
  '(flycheck-disabled-checkers
    (quote
-    (json-jsonlist emacs-lisp emacs-lisp-checkdoc jsx-tide)))
+	(json-jsonlist emacs-lisp emacs-lisp-checkdoc jsx-tide)))
  '(flycheck-jshintrc "~/.jshintrc")
  '(flycheck-pylintrc "~/.pylintrc")
  '(global-auto-complete-mode t)
  '(global-semantic-idle-scheduler-mode nil)
  '(grep-find-ignored-directories
    (quote
-    (".meteor" "node_modules" "target" "SCCS" "RCS" "CVS" "MCVS" ".src" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "bin")))
+	(".meteor" "node_modules" "target" "SCCS" "RCS" "CVS" "MCVS" ".src" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "bin")))
  '(haskell-compile-cabal-build-command "stack build")
  '(ido-buffer-disable-smart-matches nil)
  '(initial-scratch-message "")
@@ -61,23 +61,23 @@
  '(package-check-signature nil)
  '(package-selected-packages
    (quote
-    (mic-paren column-enforce-mode tide virtualenvwrapper realgud haskell-mode json-mode ivy-historian expand-region spinner gh clojure-mode dash find-file-in-project highlight-indentation ht ivy multiple-cursors tern-auto-complete tern-mode async cider flycheck git-commit js2-mode magit-popup slime visual-regexp with-editor yasnippet tern magit arduino-mode yesql-ghosts whitespace-cleanup-mode web-mode visual-regexp-steroids vagrant-tramp swiper string-edit speed-type smartparens slime-js simple-httpd scala-mode2 reveal-in-finder restclient quickrun projectile prodigy php-mode paredit package-utils nodejs-repl move-text maxframe markdown-mode malabar-mode magit-tramp less-css-mode keyfreq jsx-mode js2-refactor inflections ido-vertical-mode ido-at-point hydra htmlize highlight-escape-sequences guide-key gitignore-mode gitconfig-mode git-messenger gist flycheck-pos-tip flx-ido fill-column-indicator exec-path-from-shell elpy elisp-slime-nav dockerfile-mode dired-details+ css-eldoc clojure-mode-extra-font-locking auto-complete ag)))
+	(dired-details mic-paren column-enforce-mode tide virtualenvwrapper realgud haskell-mode json-mode ivy-historian expand-region spinner gh clojure-mode dash find-file-in-project highlight-indentation ht ivy multiple-cursors tern-auto-complete tern-mode async cider flycheck git-commit js2-mode magit-popup slime visual-regexp with-editor yasnippet tern magit arduino-mode yesql-ghosts whitespace-cleanup-mode web-mode visual-regexp-steroids vagrant-tramp swiper string-edit speed-type smartparens slime-js simple-httpd scala-mode2 reveal-in-finder restclient quickrun projectile prodigy php-mode paredit package-utils nodejs-repl move-text maxframe markdown-mode malabar-mode magit-tramp less-css-mode keyfreq jsx-mode js2-refactor inflections ido-vertical-mode ido-at-point hydra htmlize highlight-escape-sequences guide-key gitignore-mode gitconfig-mode git-messenger gist flycheck-pos-tip flx-ido fill-column-indicator exec-path-from-shell elpy elisp-slime-nav dockerfile-mode dired-details+ css-eldoc clojure-mode-extra-font-locking auto-complete ag)))
  '(projectile-enable-caching nil)
  '(projectile-globally-ignored-directories
    (quote
-    (".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" "bin" "build")))
+	(".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" "bin" "build")))
  '(read-quoted-char-radix 16)
  '(realgud:pdb-command-name "./pdb")
  '(recentf-max-saved-items 1000)
  '(rst-compile-toolsets
    (quote
-    ((html "rst2html5" ".html" nil)
-     (latex "rst2latex" ".tex" nil)
-     (newlatex "rst2newlatex" ".tex" nil)
-     (pseudoxml "rst2pseudoxml" ".xml" nil)
-     (xml "rst2xml" ".xml" nil)
-     (pdf "rst2pdf" ".pdf" nil)
-     (s5 "rst2s5" ".html" nil))))
+	((html "rst2html5" ".html" nil)
+	 (latex "rst2latex" ".tex" nil)
+	 (newlatex "rst2newlatex" ".tex" nil)
+	 (pseudoxml "rst2pseudoxml" ".xml" nil)
+	 (xml "rst2xml" ".xml" nil)
+	 (pdf "rst2pdf" ".pdf" nil)
+	 (s5 "rst2s5" ".html" nil))))
  '(semantic-idle-scheduler-idle-time 10)
  '(sgml-basic-offset 2)
  '(shell-file-name "/bin/bash")
