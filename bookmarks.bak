@@ -1,0 +1,70 @@
+;;;; Emacs Bookmark Format Version 1 ;;;;
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("algo-headset"
+ (filename . "~/projects/vr/unity/algo-headset/")
+ (front-context-string . ".DS_Store\n  drwx")
+ (rear-context-string . "96 Aug 13 17:52 ")
+ (position . 293))
+("replicant-api"
+ (filename . "~/projects/atomic/code/replicant-api/")
+ (front-context-string . ".DS_Store\n  drwx")
+ (rear-context-string . "48 Oct 23 17:30 ")
+ (position . 287))
+("pris"
+ (filename . "~/projects/atomic/code/pris/")
+ (front-context-string . ".DS_Store\n  -rw-")
+ (rear-context-string . "44 Nov  2 19:42 ")
+ (position . 284))
+("replicant"
+ (filename . "~/projects/atomic/code/")
+ (front-context-string . ".git\n  -rw-r--r-")
+ (rear-context-string . "10 Aug  3 15:17 ")
+ (position . 277))
+("txexpsvc"
+ (filename . "~/projects/ebay/MyebayBuying/txexpsvc/")
+ (front-context-string . ".DS_Store\n  drwx")
+ (rear-context-string . "48 Jun 30 08:41 ")
+ (position . 290))
+("MobileWeb-activity"
+ (filename . "~/projects/ebay/MyebayBuying/MobileWeb-activity/")
+ (front-context-string . ".editorconfig\n  ")
+ (rear-context-string . "63 May 14 09:16 ")
+ (position . 302))
+("MyEbayWeb"
+ (filename . "~/projects/ebay/MyebayBuying/MyEbayWeb/")
+ (front-context-string . ".git\n  -rw-r--r-")
+ (rear-context-string . "08 Apr 29 11:22 ")
+ (position . 289))
+("MobileWeb"
+ (filename . "~/projects/ebay/TeamFeed/MobileWeb/")
+ (front-context-string . ".editorconfig\n  ")
+ (rear-context-string . "63 Jan 20 11:51 ")
+ (position . 289))
+("Sublimate index.html"
+ (filename . "/ssh:sublimate:/home/public/index.html")
+ (front-context-string . "<html>\n  <head>\n")
+ (rear-context-string)
+ (position . 1))
+("Virtuocity"
+ (filename . "~/projects/vr/unity/algo-headset/")
+ (front-context-string . ".DS_Store\n  drwx")
+ (rear-context-string . "96 Oct 26 19:06 ")
+ (position . 288))
+("calder"
+ (filename . "~/projects/algorithmauction/calder/")
+ (front-context-string . ".DS_Store\n  drwx")
+ (rear-context-string . "96 Oct  2 05:49 ")
+ (position . 296))
+("MEContentService"
+ (filename . "~/projects/ebay/highline/MEContentService/")
+ (front-context-string . "HighlineProvider")
+ (rear-context-string . "72 Jul 28 14:02 ")
+ (position . 651))
+("gleitzman.com projects"
+ (filename . "/ssh:nextstep:/home/gleitz/projects/")
+ (front-context-string . "ShareJS\n  drwxr-")
+ (rear-context-string . "013-10-02 08:53 ")
+ (position . 1942))
+)
