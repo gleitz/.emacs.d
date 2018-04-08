@@ -324,7 +324,6 @@ non-nil, then STRING is also echoed to the message line."
   (let ((buffer (generate-new-buffer edit-server-process-buffer-name)))
     (when (fboundp 'set-buffer-multibyte)
       (set-buffer-multibyte t)) ; djb
-    (buffer-disable-undo buffer)
     (set-process-buffer client buffer)
     (set-process-filter client 'edit-server-filter)
     ;; kill-buffer kills the associated process
@@ -484,7 +483,7 @@ is %s)"
 
     (edit-server-log proc "copying new data into buffer")
     (copy-to-buffer buffer (point-min) (point-max))
-    
+
     (with-current-buffer buffer
       (setq edit-server-url (with-current-buffer (process-buffer proc) edit-server-url))
       (edit-server-choose-major-mode)
@@ -568,7 +567,6 @@ When called interactively, use prefix arg to abort editing."
 	;; send back edited content
 	(save-restriction
 	  (widen)
-	  (buffer-disable-undo)
 	  ;; ensure any format encoding is done (like longlines)
 	  (dolist (format buffer-file-format)
 	    (format-encode-region (point-min) (point-max) format))

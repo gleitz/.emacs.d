@@ -64,13 +64,15 @@
 ;; Install extensions if they're missing
 (defun init--install-packages ()
   (packages-install
-   '(ag
+   '(ace-jump-mode
+     ag
      arduino-mode
      auto-complete
      browse-kill-ring
      change-inner
      cider
      column-enforce-mode
+     clj-refactor
      clojure-mode
      clojure-mode-extra-font-locking
      css-eldoc
@@ -85,6 +87,7 @@
      flx
      flx-ido
      flycheck
+     flycheck-clojure
      flycheck-pos-tip
      gist
      gitconfig-mode
@@ -125,10 +128,12 @@
      reveal-in-osx-finder
      scala-mode
      simple-httpd
+     simplezen
      smartparens
      smex
      speed-type
      string-edit
+     tagedit
      tern
      tide
      virtualenvwrapper
@@ -286,6 +291,10 @@
 ;; Edit with Emacs
 (require 'edit-server)
 (edit-server-start)
+(setq edit-server-new-frame nil)
+(add-hook 'edit-server-start-hook
+         (lambda ()
+           (normal-mode t)))
 
 ;; Run at full power please
 (put 'downcase-region 'disabled nil)
