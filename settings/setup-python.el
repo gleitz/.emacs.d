@@ -2,6 +2,8 @@
 
 (elpy-enable)
 
+(remove-hook 'elpy-modules 'elpy-module-flymake)
+
 (define-key elpy-mode-map (kbd "M-<right>") 'subword-right)
 (define-key elpy-mode-map (kbd "M-<left>") 'subword-left)
 

@@ -88,6 +88,7 @@
      flx-ido
      flycheck
      flycheck-clojure
+     flycheck-haskell
      flycheck-pos-tip
      gist
      gitconfig-mode
@@ -98,9 +99,9 @@
      highlight-escape-sequences
      htmlize
      hydra
+	 ido-completing-read+
      ido-at-point
      ido-vertical-mode
-     ido-ubiquitous
      inflections
      js2-mode
      js2-refactor
@@ -118,6 +119,7 @@
      nodejs-repl
      package-utils
      paredit
+     persistent-scratch
      perspective
      php-mode
      prodigy
@@ -180,6 +182,7 @@
 (require 'setup-hippie)
 (require 'setup-perspective)
 (require 'setup-ffip)
+(require 'setup-haskell)
 (require 'setup-html-mode)
 (require 'setup-paredit)
 (require 'setup-projectile)

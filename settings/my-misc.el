@@ -106,4 +106,7 @@ White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
                      (buffer-list)))))
 (global-set-key (kbd "M-s \\") 'my-isearch-buffers)
 
+;; Don't lose that scratch buffer
+(persistent-scratch-autosave-mode 1)
+
 (provide 'my-misc)
