@@ -2,6 +2,9 @@
 (setq web-mode-content-types-alist
       '(("jsx" . ".*\\.tsx?")))
 
+;; use rjsx-mode for component files (switch others away from web-mode?)
+(add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode)
+
 ;; http://www.flycheck.org/manual/latest/index.html
 (require 'flycheck)
 
@@ -34,9 +37,9 @@
 (defun my-web-mode-hook ()
   "Hooks for Web mode. Adjust indents"
   ;;; http://web-mode.org/
-  (setq web-mode-markup-indent-offset 2)
-  (setq web-mode-css-indent-offset 2)
-  (setq web-mode-code-indent-offset 2)
+  ;; (setq web-mode-markup-indent-offset 2)
+  ;; (setq web-mode-css-indent-offset 2)
+  ;; (setq web-mode-code-indent-offset 2)
   (when (string-equal "jsx" (file-name-extension buffer-file-name))
     (flycheck-select-checker 'javascript-eslint)))
 (add-hook 'web-mode-hook  'my-web-mode-hook)

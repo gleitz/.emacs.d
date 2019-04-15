@@ -39,8 +39,6 @@
 
      (define-key vc-annotate-mode-map (kbd "q") 'vc-annotate-quit)))
 
-(provide 'setup-magit)
-
 ;; C-c C-a to amend without any prompt
 
 (defun magit-just-amend ()
@@ -97,5 +95,14 @@
 (eval-after-load 'magit
   '(define-key magit-mode-map "v"
      #'endless/visit-pull-request-url))
+
+;; At some point, started getting the issue
+;; Symbol’s function definition is void: -reductions-from
+;; Included from https://github.com/magnars/dash.el/blob/master/dash.el#L286
+(defun -reductions-from (fn init list)
+  "Return a list of the intermediate values of the reduction.
+See `-reduce-from' for explanation of the arguments.
+See also: `-reductions', `-reductions-r', `-reduce-r'"
+  (nreverse (--reduce-from (cons (funcall fn (car acc) it) acc) (list init) list)))
 
 (provide 'setup-magit)

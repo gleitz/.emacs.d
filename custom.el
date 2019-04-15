@@ -24,6 +24,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ag-arguments (quote ("--smart-case" "--stats" "-p ~/.ignore")))
+ '(ag-ignore-list (quote ("node_modules")))
  '(auto-save-list-file-prefix nil)
  '(c-basic-offset 4)
  '(column-enforce-column 119)
@@ -31,7 +33,7 @@
  '(custom-safe-themes
    (quote
     ("fbfbd18874a5a5a0d1ac9036f57c189195f30d57d92d9cf96b12195d18714850" "9527feeeec43970b1d725bdc04e97eb2b03b15be982ac50089ad223d3c6f2920" default)))
- '(elpy-rpc-backend "rope")
+ '(elpy-rpc-backend "rope" t)
  '(ensime-default-server-root "/Users/bgleitzman/.emacs.d/lib/scala/ensime/")
  '(ensime-sbt-compile-on-save nil)
  '(fci-rule-column nil)
@@ -60,10 +62,15 @@
  '(magit-stage-all-confirm nil t)
  '(message-log-max 1000)
  '(nxml-child-indent 4)
+ '(package-archive-priorities
+   (quote
+    (("MELPA Stable" . 10)
+     ("GNU ELPA" . 5)
+     ("MELPA" . 0))))
  '(package-check-signature nil)
  '(package-selected-packages
    (quote
-    (perspective multifiles jump-char ido-completing-read+ flycheck-haskell ido-ubiquitous groovy-mode ensime change-inner browse-kill-ring persistent-scratch flycheck-clojure clj-refactor tagedit simplezen ace-jump-mode reveal-in-osx-finder dired-details mic-paren column-enforce-mode tide virtualenvwrapper realgud haskell-mode json-mode ivy-historian expand-region spinner gh clojure-mode dash find-file-in-project highlight-indentation ht ivy multiple-cursors tern-auto-complete tern-mode async cider flycheck git-commit js2-mode magit-popup slime visual-regexp with-editor yasnippet tern magit arduino-mode yesql-ghosts whitespace-cleanup-mode web-mode visual-regexp-steroids vagrant-tramp swiper string-edit speed-type smartparens slime-js simple-httpd scala-mode2 reveal-in-finder restclient quickrun projectile prodigy php-mode paredit package-utils nodejs-repl move-text maxframe markdown-mode malabar-mode magit-tramp less-css-mode keyfreq jsx-mode js2-refactor inflections ido-vertical-mode ido-at-point hydra htmlize highlight-escape-sequences guide-key gitignore-mode gitconfig-mode git-messenger gist flycheck-pos-tip flx-ido fill-column-indicator exec-path-from-shell elpy elisp-slime-nav dockerfile-mode dired-details+ css-eldoc clojure-mode-extra-font-locking auto-complete ag)))
+    (rjsx-mode ein wgrep smex bash-completion perspective multifiles jump-char ido-completing-read+ flycheck-haskell ido-ubiquitous groovy-mode ensime change-inner browse-kill-ring persistent-scratch flycheck-clojure clj-refactor tagedit simplezen ace-jump-mode reveal-in-osx-finder dired-details mic-paren column-enforce-mode tide virtualenvwrapper realgud haskell-mode json-mode ivy-historian expand-region spinner gh clojure-mode dash find-file-in-project highlight-indentation ht ivy multiple-cursors tern-auto-complete tern-mode async cider flycheck git-commit js2-mode slime visual-regexp with-editor yasnippet tern arduino-mode yesql-ghosts whitespace-cleanup-mode web-mode visual-regexp-steroids vagrant-tramp swiper string-edit speed-type smartparens slime-js simple-httpd scala-mode2 reveal-in-finder restclient quickrun projectile prodigy php-mode paredit package-utils nodejs-repl move-text maxframe markdown-mode malabar-mode magit-tramp less-css-mode keyfreq jsx-mode js2-refactor inflections ido-vertical-mode ido-at-point hydra htmlize highlight-escape-sequences guide-key gitignore-mode gitconfig-mode git-messenger gist flycheck-pos-tip flx-ido fill-column-indicator exec-path-from-shell elpy elisp-slime-nav dockerfile-mode dired-details+ css-eldoc clojure-mode-extra-font-locking auto-complete ag)))
  '(projectile-enable-caching nil)
  '(projectile-globally-ignored-directories
    (quote
@@ -80,6 +87,7 @@
      (xml "rst2xml" ".xml" nil)
      (pdf "rst2pdf" ".pdf" nil)
      (s5 "rst2s5" ".html" nil))))
+ '(safe-local-variable-values (quote ((jsx-indent-level . 4))))
  '(semantic-idle-scheduler-idle-time 10)
  '(sgml-basic-offset 2)
  '(shell-file-name "/bin/bash")
@@ -94,4 +102,5 @@
  '(visible-bell nil)
  '(warning-minimum-level :error)
  '(web-mode-code-indent-offset 2)
+ '(web-mode-enable-auto-indentation nil)
  '(web-mode-enable-auto-quoting nil))

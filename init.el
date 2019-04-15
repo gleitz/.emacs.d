@@ -68,6 +68,7 @@
      ag
      arduino-mode
      auto-complete
+     bash-completion
      browse-kill-ring
      change-inner
      cider
@@ -128,6 +129,7 @@
      realgud
      restclient
      reveal-in-osx-finder
+     rjsx-mode
      scala-mode
      simple-httpd
      simplezen
@@ -194,6 +196,7 @@
 (require 'setup-jsx-mode)
 (require 'setup-realgud)
 (require 'setup-typescript)
+(require 'setup-keyfreq)
 
 ;; Font lock dash.el
 (eval-after-load "dash" '(dash-enable-font-lock))
