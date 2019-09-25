@@ -24,11 +24,6 @@
 (add-to-list 'load-path settings-dir)
 (add-to-list 'load-path site-lisp-dir)
 
-;; Need to know how fast we start
-(require 'benchmark-init)
-;; To disable collection of benchmark data after init is done.
-(add-hook 'after-init-hook 'benchmark-init/deactivate)
-
 ;; Keep emacs Custom-settings in separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
@@ -160,6 +155,11 @@
   (error
    (package-refresh-contents)
    (init--install-packages)))
+
+;; Need to know how fast we start
+(require 'benchmark-init)
+;; To disable collection of benchmark data after init is done.
+(add-hook 'after-init-hook 'benchmark-init/deactivate)
 
 ;; Lets start with a smattering of sanity
 (require 'sane-defaults)
