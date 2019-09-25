@@ -75,6 +75,7 @@
      arduino-mode
      auto-complete
      bash-completion
+     benchmark-init
      browse-kill-ring
      change-inner
      column-enforce-mode
