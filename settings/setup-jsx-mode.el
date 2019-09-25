@@ -3,7 +3,7 @@
       '(("jsx" . ".*\\.tsx?")))
 
 ;; use rjsx-mode for component files (switch others away from web-mode?)
-(add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode)
+(add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode))
 
 ;; http://www.flycheck.org/manual/latest/index.html
 (require 'flycheck)
@@ -30,8 +30,8 @@
 ;; https://github.com/purcell/exec-path-from-shell
 ;; only need exec-path-from-shell on OSX
 ;; this hopefully sets up path and other vars better
-(when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize))
+;; (when (memq window-system '(mac ns))
+  ;; (exec-path-from-shell-initialize))
 
 ;; adjust indents for web-mode to 2 spaces
 (defun my-web-mode-hook ()

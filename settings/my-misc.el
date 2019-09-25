@@ -26,9 +26,6 @@
                               "http://www.urbandictionary.com/define.php?term="
                               ""])))
 
-;; Fix whitespace on save, but only if the file was clean
-(global-whitespace-cleanup-mode)
-
 ;; Use normal tabs in makefiles
 (add-hook 'makefile-mode-hook 'indent-tabs-mode)
 

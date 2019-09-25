@@ -24,6 +24,11 @@
 (add-to-list 'load-path settings-dir)
 (add-to-list 'load-path site-lisp-dir)
 
+;; Need to know how fast we start
+(require 'benchmark-init)
+;; To disable collection of benchmark data after init is done.
+(add-hook 'after-init-hook 'benchmark-init/deactivate)
+
 ;; Keep emacs Custom-settings in separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
@@ -65,19 +70,19 @@
 (defun init--install-packages ()
   (packages-install
    '(ace-jump-mode
+     ace-window
      ag
      arduino-mode
      auto-complete
      bash-completion
      browse-kill-ring
      change-inner
-     cider
      column-enforce-mode
-     clj-refactor
      clojure-mode
      clojure-mode-extra-font-locking
      css-eldoc
      dockerfile-mode
+     emojify
      elisp-slime-nav
      elpy
      ensime
@@ -88,8 +93,8 @@
      flx
      flx-ido
      flycheck
-     flycheck-clojure
      flycheck-haskell
+     flycheck-mypy
      flycheck-pos-tip
      gist
      gitconfig-mode
@@ -147,7 +152,6 @@
      wgrep
      whitespace-cleanup-mode
      yasnippet
-     yesql-ghosts
      )))
 
 (condition-case nil
@@ -172,7 +176,7 @@
 (setq guide-key/popup-window-position 'bottom)
 
 ;; Arduino
-(require 'arduino-mode)
+;; (require 'arduino-mode)
 
  ;; Setup extensions
 (eval-after-load 'ido '(require 'setup-ido))
@@ -194,7 +198,7 @@
 (require 'setup-scala)
 (require 'setup-web-mode)
 (require 'setup-jsx-mode)
-(require 'setup-realgud)
+;; (require 'setup-realgud)
 (require 'setup-typescript)
 (require 'setup-keyfreq)
 
@@ -217,7 +221,7 @@
 ;; Language specific setup files
 (eval-after-load 'js2-mode '(require 'setup-js2-mode))
 (eval-after-load 'ruby-mode '(require 'setup-ruby-mode))
-(eval-after-load 'clojure-mode '(require 'setup-clojure-mode))
+;; (eval-after-load 'clojure-mode '(require 'setup-clojure-mode))
 (eval-after-load 'markdown-mode '(require 'setup-markdown-mode))
 
 ;; Load stuff on demand
@@ -281,7 +285,7 @@
 (require 'key-bindings)
 
 ;; Misc
-(require 'project-archetypes)
+;; (require 'project-archetypes)
 (require 'my-misc)
 (when is-mac (require 'mac))
 

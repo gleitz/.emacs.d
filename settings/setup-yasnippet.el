@@ -6,7 +6,7 @@
 (yas-global-mode 1)
 
 ;; Include snippets for stuff
-(require 'buster-snippets)
+;; (require 'buster-snippets)
 (require 'angular-snippets)
 (require 'datomic-snippets)
 

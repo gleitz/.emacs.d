@@ -46,4 +46,7 @@ up before you execute another command."
 ;;               (flycheck-select-checker 'jsxhint-checker)
 ;;               (flycheck-mode))))
 
+;; Fix whitespace on save, but only if the file was clean
+(add-hook 'flycheck-mode 'whitespace-cleanup-mode)
+
 (provide 'setup-flycheck)

@@ -1,5 +1,5 @@
 ;; Install the following
-;; pip install pylint
+;; pip install pylint elpy flake8
 ;; npm install -g jshint
 ;; npm install -g jsxhint
 ;; npm install -g tern
@@ -150,8 +150,11 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 (setq large-file-warning-threshold 300000000)
 
 ;; Zone when away
-;; (require 'zone)
-;; (zone-when-idle (* 60 10))
+(require 'zone)
+(zone-when-idle (* 60 60))
+
+;; Enable emojis
+(add-hook 'text-mode-hook 'emojify-mode)
 
 ;; PHP
 (add-to-list 'auto-mode-alist '("[^.][^t][^p][^l]\\.php$" . web-mode))
@@ -165,6 +168,46 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 ;; Useful commands
 ;; Skip to next tag sgml-skip-tag-forward (C-c C-f/b)
 
+;; Large file handling
+(defun disable-all-minor-modes ()
+  (interactive)
+  (mapc
+   (lambda (mode-symbol)
+     (when (functionp mode-symbol)
+       ;; some symbols are functions which aren't normal mode functions
+       (ignore-errors
+         (funcall mode-symbol -1))))
+   minor-mode-list))
+
+(defun which-active-modes ()
+  "Give a message of which minor modes are enabled in the current buffer."
+  (interactive)
+  (let ((active-modes))
+    (mapc (lambda (mode) (condition-case nil
+                             (if (and (symbolp mode) (symbol-value mode))
+                                 (add-to-list 'active-modes mode))
+                           (error nil) ))
+          minor-mode-list)
+    (message "Active modes are %s" active-modes)))
+
+(defun my-find-file-check-make-large-file-read-only-hook ()
+  "If a file is over a given size, make the buffer read only."
+  (when (> (buffer-size) (* 1024 1024 5))
+    (setq buffer-read-only t)
+    (buffer-disable-undo)
+    (fundamental-mode)))
+
+(add-hook 'find-file-hook 'my-find-file-check-make-large-file-read-only-hook)
+
 ;; Enable mic-paren
 (require 'mic-paren)
 (paren-activate)
+
+;; Extract sequence numbers
+(fset 'extract-sequence-number
+   [?\C-s ?s ?e ?q ?u ?e ?n ?c ?e ?n ?u ?m return ?\C-a ?\C-  ?\C-e ?\M-w ?\C-x ?o ?\C-y return ?\C-x ?o down ?\C-a])
+
+;; Update packages on exit
+(defadvice save-buffers-kill-terminal (before save-buffers-kill-terminal-before activate)
+  (package-utils-upgrade-all)
+  (byte-compile-dotfiles))

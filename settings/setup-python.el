@@ -11,4 +11,6 @@
 (setq python-python-command "python3")
 (setq elpy-rpc-python-command "python3")
 
+(flycheck-add-next-checker 'python-flake8 'python-pylint)
+
 (provide 'setup-python)

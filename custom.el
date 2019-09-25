@@ -24,8 +24,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ag-arguments (quote ("--smart-case" "--stats" "-p ~/.ignore")))
- '(ag-ignore-list (quote ("node_modules")))
+ '(ag-arguments (quote ("--smart-case" "--stats")))
+ '(ag-ignore-list (quote ("node_modules" "/vendor" "/build")))
  '(auto-save-list-file-prefix nil)
  '(c-basic-offset 4)
  '(column-enforce-column 119)
@@ -40,12 +40,11 @@
  '(flycheck-check-syntax-automatically (quote (save mode-enabled)))
  '(flycheck-checkers
    (quote
-    (tsx-tide typescript-tide bash coffee-coffeelint css-csslint elixir emacs-lisp emacs-lisp-checkdoc erlang go-gofmt go-build go-test haml html-tidy lua perl php php-phpcs puppet-parser puppet-lint python-flake8 python-pylint rst ruby-rubocop ruby ruby-jruby rust sass scala scss sh-dash sh-bash tex-chktex tex-lacheck typescript-tslint xml-xmlstarlet zsh javascript-jshint javascript-eslint javascript-tide jsx-tide)))
+    (python-mypy tsx-tide typescript-tide bash coffee-coffeelint css-csslint elixir emacs-lisp emacs-lisp-checkdoc erlang go-gofmt go-build go-test haml html-tidy lua perl php php-phpcs puppet-parser puppet-lint python-flake8 python-pylint rst ruby-rubocop ruby ruby-jruby rust sass scala scss sh-dash sh-bash tex-chktex tex-lacheck typescript-tslint xml-xmlstarlet zsh javascript-jshint javascript-eslint javascript-tide jsx-tide)))
  '(flycheck-disabled-checkers
    (quote
     (json-jsonlist emacs-lisp emacs-lisp-checkdoc jsx-tide)))
  '(flycheck-jshintrc "~/.jshintrc")
- '(flycheck-pylintrc "~/.pylintrc")
  '(flycheck-python-flake8-executable "python3")
  '(flycheck-python-pylint-executable "python3")
  '(global-auto-complete-mode t)
@@ -67,10 +66,15 @@
     (("MELPA Stable" . 10)
      ("GNU ELPA" . 5)
      ("MELPA" . 0))))
+ '(package-archives
+   (quote
+    (("gnu" . "http://elpa.gnu.org/packages/")
+     ("melpa" . "http://melpa.milkbox.net/packages/")
+     ("melpa-stable" . "http://stable.melpa.org/packages/"))))
  '(package-check-signature nil)
  '(package-selected-packages
    (quote
-    (rjsx-mode ein wgrep smex bash-completion perspective multifiles jump-char ido-completing-read+ flycheck-haskell ido-ubiquitous groovy-mode ensime change-inner browse-kill-ring persistent-scratch flycheck-clojure clj-refactor tagedit simplezen ace-jump-mode reveal-in-osx-finder dired-details mic-paren column-enforce-mode tide virtualenvwrapper realgud haskell-mode json-mode ivy-historian expand-region spinner gh clojure-mode dash find-file-in-project highlight-indentation ht ivy multiple-cursors tern-auto-complete tern-mode async cider flycheck git-commit js2-mode slime visual-regexp with-editor yasnippet tern arduino-mode yesql-ghosts whitespace-cleanup-mode web-mode visual-regexp-steroids vagrant-tramp swiper string-edit speed-type smartparens slime-js simple-httpd scala-mode2 reveal-in-finder restclient quickrun projectile prodigy php-mode paredit package-utils nodejs-repl move-text maxframe markdown-mode malabar-mode magit-tramp less-css-mode keyfreq jsx-mode js2-refactor inflections ido-vertical-mode ido-at-point hydra htmlize highlight-escape-sequences guide-key gitignore-mode gitconfig-mode git-messenger gist flycheck-pos-tip flx-ido fill-column-indicator exec-path-from-shell elpy elisp-slime-nav dockerfile-mode dired-details+ css-eldoc clojure-mode-extra-font-locking auto-complete ag)))
+    (magit benchmark-init cider-interaction ace-window flycheck-mypy emojify vlf rjsx-mode ein wgrep smex bash-completion perspective multifiles jump-char ido-completing-read+ flycheck-haskell ido-ubiquitous groovy-mode ensime change-inner browse-kill-ring persistent-scratch tagedit simplezen ace-jump-mode reveal-in-osx-finder dired-details mic-paren column-enforce-mode tide virtualenvwrapper realgud haskell-mode json-mode ivy-historian expand-region spinner gh clojure-mode dash find-file-in-project highlight-indentation ht ivy multiple-cursors tern-auto-complete tern-mode async flycheck git-commit js2-mode slime visual-regexp with-editor yasnippet tern arduino-mode whitespace-cleanup-mode web-mode visual-regexp-steroids vagrant-tramp swiper string-edit speed-type smartparens slime-js simple-httpd scala-mode2 reveal-in-finder restclient quickrun projectile prodigy php-mode paredit package-utils nodejs-repl move-text maxframe markdown-mode malabar-mode magit-tramp less-css-mode keyfreq jsx-mode js2-refactor inflections ido-vertical-mode ido-at-point hydra htmlize highlight-escape-sequences guide-key gitignore-mode gitconfig-mode git-messenger gist flycheck-pos-tip flx-ido fill-column-indicator exec-path-from-shell elpy elisp-slime-nav dockerfile-mode dired-details+ css-eldoc clojure-mode-extra-font-locking auto-complete ag)))
  '(projectile-enable-caching nil)
  '(projectile-globally-ignored-directories
    (quote
@@ -96,7 +100,7 @@
  '(tab-width 4)
  '(tern-ac-on-dot nil)
  '(tide-tsserver-executable "/Users/gleitz/.nvm/versions/node/v8.11.1/bin/tsserver")
- '(tramp-default-method "ssh" nil (tramp))
+ '(tramp-default-method "ssh")
  '(tramp-ssh-controlmaster-options "" t)
  '(typescript-indent-level 2)
  '(visible-bell nil)

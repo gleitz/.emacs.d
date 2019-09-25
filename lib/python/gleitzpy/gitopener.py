@@ -18,7 +18,8 @@ def get_git_root_directory(path):
 
 def get_github_address():
     url = get_os_result('git config --get remote.origin.url')
-    url = url[url.find('github'):url.rfind('.git')]
+    service = 'github' if 'github' in url else 'gitlab'
+    url = url[url.find(service):url.rfind('.git')]
     url = url.replace(':', '/')
     return url
 
@@ -51,6 +52,8 @@ def get_github_url(filename, start_line=False, end_line=False):
 
 def main():
     """ Usage: python gitopener.py (optional: /path/to/file, default: cwd)"""
+    start_line = None
+    end_line = None
     if len(sys.argv) > 3:
         filename = sys.argv[1]
         start_line = int(sys.argv[2])

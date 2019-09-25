@@ -161,6 +161,9 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 ;; Make the scratch buffer for text
 (setq initial-major-mode 'text-mode)
 
+;; Enable emojis
+(add-hook 'text-mode 'emojify-mode)
+
 ;; PHP
 (add-to-list 'auto-mode-alist '("[^.][^t][^p][^l]\\.php$" . web-mode))
 (add-hook 'php-mode-hook '(lambda ()
