@@ -64,16 +64,6 @@
   (interactive)
   (magit-run-git-async "pull"))
 
-;; C-c C-a to amend without any prompt
-
-(defun magit-just-amend ()
-  (interactive)
-  (save-window-excursion
-    (magit-with-refresh
-      (shell-command "git --no-pager commit --amend --reuse-message=HEAD"))))
-(eval-after-load "magit"
-  '(define-key magit-status-mode-map (kbd "C-c C-a") 'magit-just-amend))
-
 ;; Don't use Emacs version control
 (setq vc-handled-backends ())
 
@@ -95,6 +85,22 @@
 (eval-after-load 'magit
   '(define-key magit-mode-map "v"
      #'endless/visit-pull-request-url))
+
+;;; modified for gitlab
+(defun endless/visit-pull-request-url-gitlab ()
+  "Visit the current branch's PR on Gitlab."
+  (interactive)
+  (browse-url
+   (format "https://gitlab.inf.replicant.ai/%s/merge_requests/new"
+           (replace-regexp-in-string
+            "\\`.+gitlab\\.inf\\.replicant\\.ai:\\(.+\\)\\.git\\'" "\\1"
+            (magit-get "remote"
+                       (magit-get-push-remote)
+                       "url")))))
+
+(eval-after-load 'magit
+  '(define-key magit-mode-map "v"
+     #'endless/visit-pull-request-url-gitlab))
 
 ;; At some point, started getting the issue
 ;; Symbol’s function definition is void: -reductions-from

@@ -151,7 +151,8 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 
 ;; Zone when away
 (require 'zone)
-(zone-when-idle (* 60 60))
+;; Note: zoning can kill battery
+;; (zone-when-idle (* 60 60))
 
 ;; Enable emojis
 (add-hook 'text-mode-hook 'emojify-mode)

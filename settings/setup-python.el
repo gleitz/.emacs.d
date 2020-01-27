@@ -13,4 +13,7 @@
 
 (flycheck-add-next-checker 'python-flake8 'python-pylint)
 
+(require 'auto-virtualenv)
+(add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv)
+
 (provide 'setup-python)

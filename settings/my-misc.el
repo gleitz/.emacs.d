@@ -69,19 +69,21 @@ White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
   (replace-regexp-in-string "\\`[ \t\n]*" "" (replace-regexp-in-string "[ \t\n]*\\'" "" string)))
 
 ;; Open github pages from files
-(defun browse-on-github ()
+(defun browse-on-github (prefix-arg)
   "Show the current file on github"
-  (interactive)
+  (interactive "P")
   (browse-url
    (trim-string
     (shell-command-to-string
-     (format "python %s %s %d %d"
+     (format "python3 %s %s %d %d %s"
              (expand-file-name "~/.emacs.d/lib/python/gleitzpy/gitopener.py")
              (buffer-file-name)
              (if mark-active (line-number-at-pos (region-beginning))
                (string-to-number (replace-regexp-in-string "Line " "" (what-line))))
              (if mark-active (line-number-at-pos (region-end))
                0)
+             (if prefix-arg "upstream"
+               "")
 )))))
 
 ;; I know that string is in my buffer somewhere

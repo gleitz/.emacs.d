@@ -69,6 +69,7 @@
      ag
      arduino-mode
      auto-complete
+     auto-virtualenv
      bash-completion
      benchmark-init
      browse-kill-ring
