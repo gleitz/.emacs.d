@@ -77,6 +77,7 @@
      column-enforce-mode
      clojure-mode
      clojure-mode-extra-font-locking
+     company-jedi
      css-eldoc
      dockerfile-mode
      emojify
@@ -92,7 +93,8 @@
      flycheck
      flycheck-haskell
      flycheck-mypy
-     flycheck-pos-tip
+     flycheck-popup-tip
+     forge
      gist
      gitconfig-mode
      gitignore-mode
@@ -229,8 +231,20 @@
 ;; Load stuff on demand
 (autoload 'skewer-start "setup-skewer" nil t)
 (autoload 'skewer-demo "setup-skewer" nil t)
-(autoload 'auto-complete-mode "auto-complete" nil t)
 (eval-after-load 'flycheck '(require 'setup-flycheck))
+
+;; Company mode for everything
+(add-hook 'after-init-hook 'global-company-mode)
+(setq company-dabbrev-downcase 0)
+(setq company-idle-delay 0.2)
+(let ((bg (face-attribute 'default :background)))
+  (custom-set-faces
+   `(company-tooltip ((t (:inherit default :background ,(color-lighten-name bg 2)))))
+   `(company-scrollbar-bg ((t (:background ,(color-lighten-name bg 50)))))
+   `(company-scrollbar-fg ((t (:background ,(color-lighten-name bg 25)))))
+   `(company-tooltip-selection ((t (:foreground ,bg :background ,(face-attribute 'font-lock-comment-face :foreground)))))
+   `(company-tooltip-annotation ((t (:inherit font-lock-keyword-face))))
+   `(company-tooltip-common ((t (:inherit font-lock-function-name-face))))))
 
 ;; Load SimpleRTM
 (autoload 'simple-rtm-mode "simple-rtm" "Interactive mode for Remember The Milk" t)
@@ -335,3 +349,4 @@
     ;; (message "%s compiled" user-init-file)
     ))
 (add-hook 'kill-emacs-hook 'byte-compile-user-init-file t t)
+(add-hook 'kill-emacs-hook 'byte-compile-dotfiles t t)

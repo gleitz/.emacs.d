@@ -111,4 +111,7 @@ See `-reduce-from' for explanation of the arguments.
 See also: `-reductions', `-reductions-r', `-reduce-r'"
   (nreverse (--reduce-from (cons (funcall fn (car acc) it) acc) (list init) list)))
 
+(with-eval-after-load 'magit
+  (require 'forge))
+
 (provide 'setup-magit)

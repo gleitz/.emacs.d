@@ -3,6 +3,7 @@
 ;; npm install -g jshint
 ;; npm install -g jsxhint
 ;; npm install -g tern
+;; pip install -U /Users/gleitz/.emacs.d/elpa/jedi-core-20191011.1750
 
 ;; Default indentation levels
 (setq js-indent-level 2)
@@ -212,3 +213,34 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 (defadvice save-buffers-kill-terminal (before save-buffers-kill-terminal-before activate)
   (package-utils-upgrade-all)
   (byte-compile-dotfiles))
+
+;; A button for completion
+  (defun check-expansion ()
+    (save-excursion
+      (if (looking-at "\\_>") t
+        (backward-char 1)
+        (if (looking-at "\\.") t
+          (backward-char 1)
+          (if (looking-at "->") t nil)))))
+
+  (defun do-yas-expand ()
+    (let ((yas/fallback-behavior 'return-nil))
+      (yas/expand)))
+
+  (defun tab-indent-or-complete ()
+    (interactive)
+    (if (minibufferp)
+        (minibuffer-complete)
+      (if (or (not yas/minor-mode)
+              (null (do-yas-expand)))
+          (if (check-expansion)
+              (company-complete-common)
+            (indent-for-tab-command)))))
+
+(global-set-key [backtab] 'tab-indent-or-complete)
+
+;; Always find your init file
+(global-set-key [f7] (lambda () (interactive) (find-file user-init-file)))
+
+;; Always find your mark
+(beacon-mode)

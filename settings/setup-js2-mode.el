@@ -197,13 +197,14 @@
 (autoload 'tern-mode "tern.el" nil t)
 (add-hook 'js2-mode-hook (lambda ()
                            (tern-mode t)
-                           (auto-complete-mode t)))
-(eval-after-load 'auto-complete
-  '(eval-after-load 'tern
-     '(progn
-        (require 'tern-auto-complete)
-        (define-key tern-mode-keymap [(control ?.)] 'tern-ac-complete)
-        (tern-ac-setup))))
+                           (company-mode)))
+;; Prefer company to ac
+;; (eval-after-load 'auto-complete
+;;   '(eval-after-load 'tern
+;;      '(progn
+;;         (require 'tern-auto-complete)
+;;         (define-key tern-mode-keymap [(control ?.)] 'tern-ac-complete)
+;;         (tern-ac-setup))))
 
 
 (defun my-aget (key map)

@@ -108,4 +108,17 @@ White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
 ;; Don't lose that scratch buffer
 (persistent-scratch-autosave-mode 1)
 
+;; Load scratch from Dropbox
+(setq scratch-buffer-path
+      (loop for filename in '("~/Dropbox/Personal/documents/scratch.txt")
+            when (file-exists-p filename) collect filename into valid-files
+            finally return (car valid-files)))
+(setq initial-buffer-choice scratch-buffer-path)
+
+;; Scroll to the end of the scratch buffer
+(defun end-of-scratch ()
+  (set-window-point (get-buffer-window (file-name-nondirectory scratch-buffer-path)) 10000000000))
+(kill-buffer "*scratch*")
+(run-at-time "1 sec" nil 'end-of-scratch)
+
 (provide 'my-misc)
