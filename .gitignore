@@ -28,3 +28,15 @@ history
 /.sx/
 /ensime/
 projectile-bookmarks.eld
+.persistent-scratch
+.python-environments/
+elpy/
+emojis/
+forge-database.sqlite
+ido.last
+projectile.cache
+recentf
+request/
+smex-items
+transient/
+.mypy_cache/
