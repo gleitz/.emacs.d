@@ -42,22 +42,6 @@ in an exploded war, re-deploy the file."
       (add-hook 'after-save-hook 'oppdrag-hot-deploy-buffer-file nil t)
     (remove-hook 'after-save-hook 'oppdrag-hot-deploy-buffer-file t)))
 
-(defun oppdrag--setup-js-quirks ()
-  (when (string-match-p "oppdrag-services" (buffer-file-name))
-    (fci-mode 1)
-    (setq js2-additional-externs '("FINN" "testCase" "cull" "dome" "bane"))
-    (setq js2r-path-to-tests "/test/javascript/tests/")
-    (setq js2r-path-to-sources "/main/webapp/oppdrag/scripts/")
-    (setq js2r-test-suffix "Test")
-    (setq buster-default-global "FINN.oppdrag")
-    (setq buster-add-default-global-to-iife t)
-    (setq buster-testcase-snippets-enabled nil)
-    (make-variable-buffer-local 'buster-test-prefix)
-    (setq buster-test-prefix "test should ")
-    (set (make-local-variable 'sgml-basic-offset) 4)
-    (make-variable-buffer-local 'js2-basic-offset)
-    (setq js2-basic-offset 4)))
-
 (eval-after-load "grep"
   '(progn (add-to-list 'grep-find-ignored-directories "ckeditor")
           (add-to-list 'grep-find-ignored-directories "external")))

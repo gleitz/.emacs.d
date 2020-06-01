@@ -6,6 +6,22 @@
 ;; You may delete these explanatory comments.
 (package-initialize)
 
+;; Patch for load-history (happened when upgrading to Emacs 27)
+;; https://emacs.stackexchange.com/questions/5552/emacs-on-android-org-mode-error-wrong-type-argument-stringp-require-t
+(defun load-history-filename-element (file-regexp)
+  "Get the first elt of `load-history' whose car matches FILE-REGEXP.
+        Return nil if there isn't one."
+  (let* ((loads load-history)
+         (load-elt (and loads (car loads))))
+    (save-match-data
+      (while (and loads
+                  (or (null (car load-elt))
+                      (not (and (stringp (car load-elt)) ; new condition
+                                (string-match file-regexp (car load-elt))))))
+        (setq loads (cdr loads)
+              load-elt (and loads (car loads)))))
+    load-elt))
+
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
@@ -108,8 +124,6 @@
      ido-at-point
      ido-vertical-mode
      inflections
-     js2-mode
-     js2-refactor
      json-mode
      jsx-mode
      jump-char
@@ -133,6 +147,8 @@
      realgud
      restclient
      reveal-in-osx-finder
+     ripgrep
+     rg
      rjsx-mode
      scala-mode
      simple-httpd
@@ -147,7 +163,6 @@
      virtualenvwrapper
      visual-regexp
      visual-regexp-steroids
-     web-mode
      wgrep
      whitespace-cleanup-mode
      yasnippet
@@ -200,9 +215,6 @@
 (require 'setup-js-beautify)
 (require 'setup-nodejs)
 (require 'setup-scala)
-(require 'setup-web-mode)
-(require 'setup-jsx-mode)
-;; (require 'setup-realgud)
 (require 'setup-typescript)
 (require 'setup-keyfreq)
 
@@ -221,9 +233,14 @@
           groovy-mode
           scala-mode)
   (add-hook it 'turn-on-smartparens-mode))
+(add-hook 'smartparens-mode-hook
+          (lambda ()
+            ;; Disable parens for all the quotes
+            (sp-pair "'" nil :actions :rem)
+            (sp-pair "\"" nil :actions :rem)))
+
 
 ;; Language specific setup files
-(eval-after-load 'js2-mode '(require 'setup-js2-mode))
 (eval-after-load 'ruby-mode '(require 'setup-ruby-mode))
 ;; (eval-after-load 'clojure-mode '(require 'setup-clojure-mode))
 (eval-after-load 'markdown-mode '(require 'setup-markdown-mode))

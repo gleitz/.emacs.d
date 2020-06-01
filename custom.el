@@ -11,7 +11,7 @@
  '(company-tooltip-annotation ((t (:inherit font-lock-keyword-face))))
  '(company-tooltip-common ((t (:inherit font-lock-constant-face))))
  '(company-tooltip-selection ((t (:inherit font-lock-function-name-face))))
- '(custom-safe-themes (quote ("9527feeeec43970b1d725bdc04e97eb2b03b15be982ac50089ad223d3c6f2920" "c03d60937e814932cd707a487676875457e0b564a615c1edfd453f23b06fe879" "f3ec2da81c2b1f66f911fe47843a09055754b40fafaddcce79bbd4d781161329" "30c6aef3025cd6f05ccb611ec8838a448a14a6784987ed98b24f78916d63b388" "84ff07913c6109d12bfda40644daeaaa8f4665afb5f04e13e422bd98b02ee88b" "cf33119622dd833e4d8f904f34c5e3ff95d1d3d45bada72dd44648b3470bdebe" "f5776f3da6117901f29405fe52edb2bcba6a687629b4cbd5923d1a642484f2f9" "d56e289b10204629ac5c35b9621a650a534ef3baf183a1c601b4936482321df1" "50ceca952b37826e860867d939f879921fac3f2032d8767d646dd4139564c68a" "ff73e1b0216feca9e041dcb3196938442cc6aa8319f97eedbc2a3e38c8ca9825" "a18dd0a954ac63a80e62c8cb1b550ffcf5d8461189c7c672555faadf2facfcf3" "cb36f8e44d41595010baa23737984c4ecb2d8cc2e363ec15fbfa0408c2f8ea9f" "ea0c5df0f067d2e3c0f048c1f8795af7b873f5014837feb0a7c8317f34417b04" "9f42bccce1e13fa5017eb8718574db099e85358b9f424db78e7318f86d1be08f" default)))
+ '(custom-safe-themes '("9527feeeec43970b1d725bdc04e97eb2b03b15be982ac50089ad223d3c6f2920" "c03d60937e814932cd707a487676875457e0b564a615c1edfd453f23b06fe879" "f3ec2da81c2b1f66f911fe47843a09055754b40fafaddcce79bbd4d781161329" "30c6aef3025cd6f05ccb611ec8838a448a14a6784987ed98b24f78916d63b388" "84ff07913c6109d12bfda40644daeaaa8f4665afb5f04e13e422bd98b02ee88b" "cf33119622dd833e4d8f904f34c5e3ff95d1d3d45bada72dd44648b3470bdebe" "f5776f3da6117901f29405fe52edb2bcba6a687629b4cbd5923d1a642484f2f9" "d56e289b10204629ac5c35b9621a650a534ef3baf183a1c601b4936482321df1" "50ceca952b37826e860867d939f879921fac3f2032d8767d646dd4139564c68a" "ff73e1b0216feca9e041dcb3196938442cc6aa8319f97eedbc2a3e38c8ca9825" "a18dd0a954ac63a80e62c8cb1b550ffcf5d8461189c7c672555faadf2facfcf3" "cb36f8e44d41595010baa23737984c4ecb2d8cc2e363ec15fbfa0408c2f8ea9f" "ea0c5df0f067d2e3c0f048c1f8795af7b873f5014837feb0a7c8317f34417b04" "9f42bccce1e13fa5017eb8718574db099e85358b9f424db78e7318f86d1be08f" default))
  '(diff-refine-change ((t (:background "midnight blue"))) t)
  '(flycheck-error ((t (:underline "Pink"))))
  '(flycheck-error-face ((t (:inherit error :underline "pink"))) t)
@@ -22,7 +22,7 @@
  '(js2-function-param-face ((t (:foreground "LightGoldenrod"))))
  '(js2-warning-face ((t nil)))
  '(mumamo-background-chunk-submode ((((class color) (min-colors 88) (background dark)) nil)) t)
- '(safe-local-variable-values (quote ((eval font-lock-add-keywords nil (quote (("defexamples\\|def-example-group\\| => " (0 (quote font-lock-keyword-face))) ("(defexamples[[:blank:]]+\\(.*\\)" (1 (quote font-lock-function-name-face)))))) (eval font-lock-add-keywords nil (quote (("defexamples\\|def-example-group\\| => " (0 (quote font-lock-keyword-face)))))) (eval when (and (buffer-file-name) (file-regular-p (buffer-file-name)) (string-match-p "^[^.]" (buffer-file-name))) (emacs-lisp-mode)) (eval font-lock-add-keywords nil (quote (("defexamples\\| => " (0 (quote font-lock-keyword-face)))))) (encoding . utf-8))))
+ '(safe-local-variable-values '((eval font-lock-add-keywords nil '(("defexamples\\|def-example-group\\| => " (0 'font-lock-keyword-face)) ("(defexamples[[:blank:]]+\\(.*\\)" (1 'font-lock-function-name-face)))) (eval font-lock-add-keywords nil '(("defexamples\\|def-example-group\\| => " (0 'font-lock-keyword-face)))) (eval when (and (buffer-file-name) (file-regular-p (buffer-file-name)) (string-match-p "^[^.]" (buffer-file-name))) (emacs-lisp-mode)) (eval font-lock-add-keywords nil '(("defexamples\\| => " (0 'font-lock-keyword-face)))) (encoding . utf-8)))
  '(show-paren-match ((nil (:background "#5a00ff"))))
  '(show-paren-mismatch ((((class color)) (:background "red")))))
 
@@ -31,37 +31,33 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ag-arguments (quote ("--smart-case" "--stats")))
- '(ag-ignore-list (quote ("node_modules" "/vendor" "/build")))
+ '(ag-arguments '("--smart-case" "--stats" "--hidden"))
+ '(ag-ignore-list '("node_modules" "/vendor" "/build"))
  '(auto-save-list-file-prefix nil)
  '(beacon-color "LightGoldenrod")
  '(c-basic-offset 4)
  '(column-enforce-column 119)
- '(css-indent-offset 4)
+ '(css-indent-offset 2)
  '(custom-safe-themes
-   (quote
-    ("50cdbe9e35198343589c648f73fab07c3e1fb4e53057a9e5d3ddd5246140b07a" "cfff5a1f3b63f487c1ecda2d7aa1a7ea206533e003c17e5b8d7142ea45444a6e" "fbfbd18874a5a5a0d1ac9036f57c189195f30d57d92d9cf96b12195d18714850" "9527feeeec43970b1d725bdc04e97eb2b03b15be982ac50089ad223d3c6f2920" default)))
+   '("50cdbe9e35198343589c648f73fab07c3e1fb4e53057a9e5d3ddd5246140b07a" "cfff5a1f3b63f487c1ecda2d7aa1a7ea206533e003c17e5b8d7142ea45444a6e" "fbfbd18874a5a5a0d1ac9036f57c189195f30d57d92d9cf96b12195d18714850" "9527feeeec43970b1d725bdc04e97eb2b03b15be982ac50089ad223d3c6f2920" default))
  '(ein:output-area-inlined-images t)
  '(elpy-rpc-backend "rope" t)
  '(elpy-syntax-check-command "pylint")
  '(ensime-default-server-root "/Users/bgleitzman/.emacs.d/lib/scala/ensime/")
  '(ensime-sbt-compile-on-save nil)
  '(fci-rule-column nil)
- '(flycheck-check-syntax-automatically (quote (save mode-enabled)))
+ '(flycheck-check-syntax-automatically '(save mode-enabled))
  '(flycheck-checkers
-   (quote
-    (python-mypy bash coffee-coffeelint css-csslint elixir emacs-lisp emacs-lisp-checkdoc erlang go-gofmt go-build go-test haml html-tidy lua perl php php-phpcs puppet-parser puppet-lint python-flake8 python-pylint rst ruby-rubocop ruby ruby-jruby rust sass scala scss sh-dash sh-bash tex-chktex tex-lacheck xml-xmlstarlet zsh javascript-jshint javascript-eslint javascript-tide jsx-tide)))
+   '(tsx-tide typescript-tide python-mypy bash coffee-coffeelint css-csslint elixir emacs-lisp emacs-lisp-checkdoc erlang go-gofmt go-build go-test haml html-tidy lua perl php php-phpcs puppet-parser puppet-lint python-flake8 python-pylint rst ruby-rubocop ruby ruby-jruby rust sass scala scss sh-dash sh-bash tex-chktex tex-lacheck xml-xmlstarlet zsh javascript-jshint javascript-eslint javascript-tide jsx-tide typescript-tsc))
  '(flycheck-disabled-checkers
-   (quote
-    (json-jsonlist emacs-lisp emacs-lisp-checkdoc jsx-tide typescript-tslint typescript-tide tsx-tide)))
+   '(json-jsonlist emacs-lisp emacs-lisp-checkdoc jsx-tide typescript-tslint typescript-tide tsx-tide javascript-tide javascript-jshint))
  '(flycheck-eslint-args nil)
  '(flycheck-jshintrc "~/.jshintrc")
  '(flycheck-python-flake8-executable "flake8")
- '(flycheck-python-mypy-config (quote ("mypy.ini" "setup.cfg" "~/.mypy.ini")))
+ '(flycheck-python-mypy-config '("mypy.ini" "setup.cfg" "~/.mypy.ini"))
  '(flycheck-python-pylint-executable "pylint")
  '(forge-alist
-   (quote
-    (("github.com" "api.github.com" "github.com" forge-github-repository)
+   '(("github.com" "api.github.com" "github.com" forge-github-repository)
      ("gitlab.inf.replicant.ai" "gitlab.inf.replicant.ai/api/v4" "gitlab.inf.replicant.ai" forge-gitlab-repository)
      ("gitlab.com" "gitlab.com/api/v4" "gitlab.com" forge-gitlab-repository)
      ("salsa.debian.org" "salsa.debian.org/api/v4" "salsa.debian.org" forge-gitlab-repository)
@@ -73,11 +69,10 @@
      ("git.kernel.org" nil "git.kernel.org" forge-cgit-repository)
      ("repo.or.cz" nil "repo.or.cz" forge-repoorcz-repository)
      ("git.suckless.org" nil "git.suckless.org" forge-stagit-repository)
-     ("git.sr.ht" nil "git.sr.ht" forge-srht-repository))))
+     ("git.sr.ht" nil "git.sr.ht" forge-srht-repository)))
  '(global-semantic-idle-scheduler-mode nil)
  '(grep-find-ignored-directories
-   (quote
-    (".meteor" "node_modules" "target" "SCCS" "RCS" "CVS" "MCVS" ".src" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "bin")))
+   '(".meteor" "node_modules" "target" "SCCS" "RCS" "CVS" "MCVS" ".src" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "bin"))
  '(haskell-compile-cabal-build-command "stack build")
  '(ido-buffer-disable-smart-matches nil)
  '(initial-scratch-message "")
@@ -88,37 +83,38 @@
  '(magit-stage-all-confirm nil t)
  '(message-log-max 1000)
  '(nxml-child-indent 4)
- '(package-archive-priorities
-   (quote
-    (("MELPA Stable" . 10)
-     ("GNU ELPA" . 5)
-     ("MELPA" . 0))))
+ '(package-archive-priorities '(("MELPA Stable" . 10) ("GNU ELPA" . 5) ("MELPA" . 0)))
  '(package-archives
-   (quote
-    (("gnu" . "http://elpa.gnu.org/packages/")
+   '(("gnu" . "http://elpa.gnu.org/packages/")
      ("melpa" . "http://melpa.milkbox.net/packages/")
-     ("melpa-stable" . "http://stable.melpa.org/packages/"))))
+     ("melpa-stable" . "http://stable.melpa.org/packages/")))
  '(package-check-signature nil)
  '(package-selected-packages
-   (quote
-    (beacon auto-complete company-jedi flycheck-pos-tip flycheck-popup-tip forge auto-virtualenv magit benchmark-init cider-interaction ace-window flycheck-mypy emojify vlf rjsx-mode ein wgrep smex bash-completion perspective multifiles jump-char ido-completing-read+ flycheck-haskell ido-ubiquitous groovy-mode ensime change-inner browse-kill-ring persistent-scratch tagedit simplezen ace-jump-mode reveal-in-osx-finder dired-details mic-paren column-enforce-mode tide virtualenvwrapper realgud haskell-mode json-mode ivy-historian expand-region spinner gh clojure-mode dash find-file-in-project highlight-indentation ht ivy multiple-cursors tern-auto-complete tern-mode async flycheck git-commit js2-mode slime visual-regexp with-editor yasnippet tern arduino-mode whitespace-cleanup-mode web-mode visual-regexp-steroids vagrant-tramp swiper string-edit speed-type smartparens slime-js simple-httpd scala-mode2 reveal-in-finder restclient quickrun projectile prodigy php-mode paredit package-utils nodejs-repl move-text maxframe markdown-mode malabar-mode magit-tramp less-css-mode keyfreq jsx-mode js2-refactor inflections ido-vertical-mode ido-at-point hydra htmlize highlight-escape-sequences guide-key gitignore-mode gitconfig-mode git-messenger gist flx-ido fill-column-indicator exec-path-from-shell elpy elisp-slime-nav dockerfile-mode dired-details+ css-eldoc clojure-mode-extra-font-locking ag)))
+   '(ripgrep rg yaml-mode prettier-js beacon auto-complete company-jedi flycheck-pos-tip flycheck-popup-tip forge auto-virtualenv magit benchmark-init cider-interaction ace-window flycheck-mypy emojify vlf rjsx-mode ein wgrep smex bash-completion perspective multifiles jump-char ido-completing-read+ flycheck-haskell ido-ubiquitous groovy-mode ensime change-inner browse-kill-ring persistent-scratch tagedit simplezen ace-jump-mode reveal-in-osx-finder dired-details mic-paren column-enforce-mode tide virtualenvwrapper realgud haskell-mode json-mode ivy-historian expand-region spinner gh clojure-mode dash find-file-in-project highlight-indentation ht ivy multiple-cursors tern-auto-complete tern-mode async flycheck git-commit slime visual-regexp with-editor yasnippet tern arduino-mode whitespace-cleanup-mode web-mode visual-regexp-steroids vagrant-tramp swiper string-edit speed-type smartparens slime-js simple-httpd scala-mode2 reveal-in-finder restclient quickrun projectile prodigy php-mode paredit package-utils nodejs-repl move-text maxframe markdown-mode malabar-mode magit-tramp less-css-mode keyfreq jsx-mode js2-refactor inflections ido-vertical-mode ido-at-point hydra htmlize highlight-escape-sequences guide-key gitignore-mode gitconfig-mode git-messenger gist flx-ido fill-column-indicator exec-path-from-shell elpy elisp-slime-nav dockerfile-mode dired-details+ css-eldoc clojure-mode-extra-font-locking ag))
  '(projectile-enable-caching nil)
  '(projectile-globally-ignored-directories
-   (quote
-    (".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" "bin" "build")))
+   '(".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" "bin" "build"))
  '(read-quoted-char-radix 16)
  '(realgud:pdb-command-name "./pdb")
  '(recentf-max-saved-items 1000)
  '(rst-compile-toolsets
-   (quote
-    ((html "rst2html5" ".html" nil)
+   '((html "rst2html5" ".html" nil)
      (latex "rst2latex" ".tex" nil)
      (newlatex "rst2newlatex" ".tex" nil)
      (pseudoxml "rst2pseudoxml" ".xml" nil)
      (xml "rst2xml" ".xml" nil)
      (pdf "rst2pdf" ".pdf" nil)
-     (s5 "rst2s5" ".html" nil))))
- '(safe-local-variable-values (quote ((jsx-indent-level . 4))))
+     (s5 "rst2s5" ".html" nil)))
+ '(safe-local-variable-values
+   '((eval setq flycheck-disabled-checkers
+           (append flycheck-disabled-checkers
+                   '(typescript-tsc)))
+     (flycheck-disabled-checkers . typescript-tsc)
+     (web-mode-code-indent-offset . 2)
+     (web-mode-markup-indent-offset . 2)
+     (web-mode-code-indent-offset . 4)
+     (web-mode-markup-indent-offset . 4)
+     (jsx-indent-level . 4)))
  '(semantic-idle-scheduler-idle-time 10)
  '(sgml-basic-offset 2)
  '(shell-file-name "/bin/bash")
@@ -126,7 +122,6 @@
  '(split-width-threshold 160)
  '(tab-width 4)
  '(tern-ac-on-dot nil)
- '(tide-tsserver-executable "/Users/gleitz/.nvm/versions/node/v8.11.1/bin/tsserver")
  '(tramp-default-method "ssh")
  '(tramp-ssh-controlmaster-options "" t)
  '(typescript-indent-level 2)
