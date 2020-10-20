@@ -40,3 +40,4 @@ request/
 smex-items
 transient/
 .mypy_cache/
+tumblr-oauth-token
