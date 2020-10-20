@@ -75,7 +75,7 @@ White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
   (browse-url
    (trim-string
     (shell-command-to-string
-     (format "python3 %s %s %d %d %s"
+     (format "python %s %s %d %d %s"
              (expand-file-name "~/.emacs.d/lib/python/gleitzpy/gitopener.py")
              (buffer-file-name)
              (if mark-active (line-number-at-pos (region-beginning))
@@ -83,8 +83,7 @@ White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
              (if mark-active (line-number-at-pos (region-end))
                0)
              (if prefix-arg "upstream"
-               "")
-)))))
+               ""))))))
 
 ;; I know that string is in my buffer somewhere
 (defun my-multi-occur-in-matching-buffers (regexp &optional allbufs)

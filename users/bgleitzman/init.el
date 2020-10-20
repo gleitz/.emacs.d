@@ -162,7 +162,10 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 (setq initial-major-mode 'text-mode)
 
 ;; Enable emojis
-(add-hook 'text-mode 'emojify-mode)
+(add-hook 'text-mode-hook 'emojify-mode)
+
+;; Enable emojis
+(add-hook 'text-mode-hook 'olivetti-mode)
 
 ;; PHP
 (add-to-list 'auto-mode-alist '("[^.][^t][^p][^l]\\.php$" . web-mode))

@@ -96,10 +96,10 @@
      company-jedi
      css-eldoc
      dockerfile-mode
-     emojify
      elisp-slime-nav
      elpy
      ensime
+     emojify
      exec-path-from-shell
      expand-region
      f
@@ -108,7 +108,6 @@
      flx-ido
      flycheck
      flycheck-haskell
-     flycheck-mypy
      flycheck-popup-tip
      forge
      gist
@@ -125,6 +124,7 @@
      ido-vertical-mode
      inflections
      json-mode
+     json-snatcher
      jsx-mode
      jump-char
      keyfreq
@@ -136,6 +136,7 @@
      move-text
      multifiles
      nodejs-repl
+     olivetti
      package-utils
      paredit
      persistent-scratch
@@ -160,6 +161,7 @@
      tagedit
      tern
      tide
+     tumblesocks
      virtualenvwrapper
      visual-regexp
      visual-regexp-steroids

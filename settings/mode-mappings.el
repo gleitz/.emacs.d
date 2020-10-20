@@ -30,6 +30,7 @@
 
 ;; TXT
 (add-to-list 'auto-mode-alist '("\\.txt\\'" . flyspell-mode))
+(add-to-list 'auto-mode-alist '("\\.txt\\'" . text-mode))
 
 ;; HTML
 (add-to-list 'auto-mode-alist '("\\.html\\'" . html-mode))
@@ -83,7 +84,7 @@
 
 ;; JavaScript
 (add-to-list 'auto-mode-alist '("\\.js$" . js-mode))
-(add-to-list 'auto-mode-alist '("\\.json$" . js-mode))
+(add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
 (add-to-list 'auto-mode-alist '("\\.jshintrc$" . js-mode))
 (add-to-list 'magic-mode-alist '("#!/usr/bin/env node" . js-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx$" . js-mode))

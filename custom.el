@@ -33,6 +33,7 @@
  ;; If there is more than one, they won't work right.
  '(ag-arguments '("--smart-case" "--stats" "--hidden"))
  '(ag-ignore-list '("node_modules" "/vendor" "/build"))
+ '(auth-source-save-behavior nil)
  '(auto-save-list-file-prefix nil)
  '(beacon-color "LightGoldenrod")
  '(c-basic-offset 4)
@@ -86,11 +87,11 @@
  '(package-archive-priorities '(("MELPA Stable" . 10) ("GNU ELPA" . 5) ("MELPA" . 0)))
  '(package-archives
    '(("gnu" . "http://elpa.gnu.org/packages/")
-     ("melpa" . "http://melpa.milkbox.net/packages/")
-     ("melpa-stable" . "http://stable.melpa.org/packages/")))
+     ("melpa" . "https://melpa.org/packages/")
+     ("melpa-stable" . "https://stable.melpa.org/packages/")))
  '(package-check-signature nil)
  '(package-selected-packages
-   '(ripgrep rg yaml-mode prettier-js beacon auto-complete company-jedi flycheck-pos-tip flycheck-popup-tip forge auto-virtualenv magit benchmark-init cider-interaction ace-window flycheck-mypy emojify vlf rjsx-mode ein wgrep smex bash-completion perspective multifiles jump-char ido-completing-read+ flycheck-haskell ido-ubiquitous groovy-mode ensime change-inner browse-kill-ring persistent-scratch tagedit simplezen ace-jump-mode reveal-in-osx-finder dired-details mic-paren column-enforce-mode tide virtualenvwrapper realgud haskell-mode json-mode ivy-historian expand-region spinner gh clojure-mode dash find-file-in-project highlight-indentation ht ivy multiple-cursors tern-auto-complete tern-mode async flycheck git-commit slime visual-regexp with-editor yasnippet tern arduino-mode whitespace-cleanup-mode web-mode visual-regexp-steroids vagrant-tramp swiper string-edit speed-type smartparens slime-js simple-httpd scala-mode2 reveal-in-finder restclient quickrun projectile prodigy php-mode paredit package-utils nodejs-repl move-text maxframe markdown-mode malabar-mode magit-tramp less-css-mode keyfreq jsx-mode js2-refactor inflections ido-vertical-mode ido-at-point hydra htmlize highlight-escape-sequences guide-key gitignore-mode gitconfig-mode git-messenger gist flx-ido fill-column-indicator exec-path-from-shell elpy elisp-slime-nav dockerfile-mode dired-details+ css-eldoc clojure-mode-extra-font-locking ag))
+   '(emojify tumblesocks olivetti json-snatcher ripgrep rg yaml-mode prettier-js beacon auto-complete company-jedi flycheck-pos-tip flycheck-popup-tip forge auto-virtualenv magit benchmark-init cider-interaction ace-window vlf rjsx-mode ein wgrep smex bash-completion perspective multifiles jump-char ido-completing-read+ flycheck-haskell ido-ubiquitous groovy-mode ensime change-inner browse-kill-ring persistent-scratch tagedit simplezen ace-jump-mode reveal-in-osx-finder dired-details mic-paren column-enforce-mode tide virtualenvwrapper realgud haskell-mode json-mode ivy-historian expand-region spinner gh clojure-mode dash find-file-in-project highlight-indentation ht ivy multiple-cursors tern-auto-complete tern-mode async flycheck git-commit slime visual-regexp with-editor yasnippet tern arduino-mode whitespace-cleanup-mode web-mode visual-regexp-steroids vagrant-tramp swiper string-edit speed-type smartparens slime-js simple-httpd scala-mode2 reveal-in-finder restclient quickrun projectile prodigy php-mode paredit package-utils nodejs-repl move-text maxframe markdown-mode malabar-mode magit-tramp less-css-mode keyfreq jsx-mode js2-refactor inflections ido-vertical-mode ido-at-point hydra htmlize highlight-escape-sequences guide-key gitignore-mode gitconfig-mode git-messenger gist flx-ido fill-column-indicator exec-path-from-shell elpy elisp-slime-nav dockerfile-mode dired-details+ css-eldoc clojure-mode-extra-font-locking ag))
  '(projectile-enable-caching nil)
  '(projectile-globally-ignored-directories
    '(".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" "bin" "build"))
@@ -117,6 +118,7 @@
      (jsx-indent-level . 4)))
  '(semantic-idle-scheduler-idle-time 10)
  '(sgml-basic-offset 2)
+ '(sh-basic-offset 2)
  '(shell-file-name "/bin/bash")
  '(split-height-threshold nil)
  '(split-width-threshold 160)

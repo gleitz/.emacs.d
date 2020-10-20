@@ -29,9 +29,14 @@
   "A TypeScript syntax checker using tsc, the TypeScript compiler.
 
 See URL `http://www.typescriptlang.org/'."
+  ;; :command ("tsc"
+  ;;           "--noEmit"
+  ;;           source-inplace)
   :command ("tsc"
             "--noEmit"
-            source-inplace)
+            "--pretty"
+            "false")
+  :enabled (lambda () (vc-find-root buffer-file-name ".git"))
   :error-patterns
   ((error line-start (file-name) "(" line "," column "): error"
           (message (one-or-more not-newline)

@@ -68,7 +68,7 @@ def main():
     elif len(sys.argv) > 2:
         filename = sys.argv[1]
         start_line = sys.argv[2]
-    elif (sys.argv) > 1:
+    elif len(sys.argv) > 1:
         filename = sys.argv[1]
     else:
         filename = os.getcwd()

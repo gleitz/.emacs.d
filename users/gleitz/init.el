@@ -1,9 +1,13 @@
 ;; Install the following
-;; pip install pylint elpy flake8
+;; pip install pylint elpy flake8 pyyaml
 ;; npm install -g jshint
 ;; npm install -g jsxhint
 ;; npm install -g tern
 ;; pip install -U /Users/gleitz/.emacs.d/elpa/jedi-core-20191011.1750
+
+;; if elpy complains
+;; trash /Users/gleitz/.emacs.d/elpy/rpc-venv
+;; M-x elpy-config
 
 ;; Default indentation levels
 (setq js-indent-level 2)
@@ -244,3 +248,19 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 
 ;; Always find your mark
 (beacon-mode)
+
+;; Increment numbers
+(defun increment-number-at-point ()
+  (interactive)
+  (skip-chars-backward "0-9")
+  (or (looking-at "[0-9]+")
+      (error "No number at point"))
+  (replace-match (number-to-string (1+ (string-to-number (match-string 0))))))
+
+;; Seems to be an issue with dired and magit
+;; if: Autoloading file /Applications/Emacs.app/Contents/Resources/lisp/dired.elc failed to define function dired-jump
+(autoload 'dired-jump "dired")
+
+;; Tumblr
+(setq tumblesocks-blog "gleitzman.tumblr.com")
+(setq oauth-nonce-function 'oauth-internal-make-nonce)
