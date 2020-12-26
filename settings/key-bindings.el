@@ -57,6 +57,7 @@
 ;; Quickly jump in document with ace-jump-mode
 (define-key global-map (kbd "C-;") 'ace-jump-mode)
 (define-key global-map (kbd "C-'") 'ace-window)
+(define-key global-map (kbd "C-:") 'avy-goto-char-timer)
 
 ;; Perform general cleanup.
 (global-set-key (kbd "C-c n") 'cleanup-buffer)
@@ -241,7 +242,9 @@
 ;; (global-set-key (kbd "<s-down>") 'windmove-down)
 
 ;; Magit
-(global-set-key (kbd "C-x m") 'magit-status-fullscreen)
+(global-set-key (kbd "C-x m") 'magit-status)
+(global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key (kbd "C-c g") 'magit-file-dispatch)
 (autoload 'magit-status-fullscreen "magit")
 
 ;; Clever newlines

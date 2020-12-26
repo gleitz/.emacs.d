@@ -7,9 +7,6 @@
 [submodule "site-lisp/jade-mode"]
 	path = site-lisp/jade-mode
 	url = https://github.com/brianc/jade-mode
-[submodule "site-lisp/ace-jump-mode"]
-	path = site-lisp/ace-jump-mode
-	url = https://github.com/winterTTr/ace-jump-mode.git
 [submodule "site-lisp/buster-snippets"]
 	path = site-lisp/buster-snippets
 	url = https://github.com/magnars/buster-snippets.el.git

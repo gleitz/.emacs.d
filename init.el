@@ -90,16 +90,17 @@
      benchmark-init
      browse-kill-ring
      change-inner
-     column-enforce-mode
      clojure-mode
      clojure-mode-extra-font-locking
+     column-enforce-mode
      company-jedi
+     company-prescient
      css-eldoc
      dockerfile-mode
      elisp-slime-nav
      elpy
-     ensime
      emojify
+     ensime
      exec-path-from-shell
      expand-region
      f
@@ -119,8 +120,8 @@
      highlight-escape-sequences
      htmlize
      hydra
-	 ido-completing-read+
      ido-at-point
+     ido-completing-read+
      ido-vertical-mode
      inflections
      json-mode
@@ -142,14 +143,15 @@
      persistent-scratch
      perspective
      php-mode
+     prescient
      prodigy
      projectile
      quickrun
      realgud
      restclient
      reveal-in-osx-finder
-     ripgrep
      rg
+     ripgrep
      rjsx-mode
      scala-mode
      simple-httpd
@@ -165,6 +167,7 @@
      virtualenvwrapper
      visual-regexp
      visual-regexp-steroids
+     vterm
      wgrep
      whitespace-cleanup-mode
      yasnippet
@@ -315,6 +318,11 @@
 ;; Smart M-x is smart
 (require 'smex)
 (smex-initialize)
+
+;; Prescient
+(require 'prescient)
+(company-prescient-mode t)
+(prescient-persist-mode 1)
 
 ;; Setup key bindings
 (require 'key-bindings)

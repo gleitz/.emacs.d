@@ -264,3 +264,7 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 ;; Tumblr
 (setq tumblesocks-blog "gleitzman.tumblr.com")
 (setq oauth-nonce-function 'oauth-internal-make-nonce)
+
+;; ripgrep default args
+;; bug: seem to make it so that you can't select the results to jump to the file
+;; (setq ripgrep--base-arguments '("--line-number" "--with-filename"))

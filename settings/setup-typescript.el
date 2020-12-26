@@ -36,7 +36,7 @@ See URL `http://www.typescriptlang.org/'."
             "--noEmit"
             "--pretty"
             "false")
-  :enabled (lambda () (vc-find-root buffer-file-name ".git"))
+  :enabled (lambda () (vc-find-root buffer-file-name "tsconfig.json"))
   :error-patterns
   ((error line-start (file-name) "(" line "," column "): error"
           (message (one-or-more not-newline)
