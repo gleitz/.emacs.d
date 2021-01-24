@@ -8,7 +8,8 @@
   (eldoc-mode +1)
   (tide-hl-identifier-mode +1)
   (column-enforce-mode +1)
-  (company-mode +1))
+  (company-mode +1)
+  (define-key tide-mode-map (kbd "C-.") 'tide-references))
 
 (require 'tide)
 

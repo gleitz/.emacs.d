@@ -1,4 +1,5 @@
-;; Turn off mouse interface early in startup to avoid momentary display
+;; Don't give 'cl warnings
+(setq byte-compile-warnings '(cl-functions))
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -96,11 +97,15 @@
      company-jedi
      company-prescient
      css-eldoc
+	 diminish
      dockerfile-mode
+     dot-mode
+     edit-server
      elisp-slime-nav
      elpy
      emojify
      ensime
+     eproject
      exec-path-from-shell
      expand-region
      f
@@ -114,6 +119,7 @@
      gist
      gitconfig-mode
      gitignore-mode
+     git-link
      groovy-mode
      guide-key
      haskell-mode
@@ -154,16 +160,19 @@
      ripgrep
      rjsx-mode
      scala-mode
+     shell-command
      simple-httpd
      simplezen
      smartparens
      smex
+     smooth-scrolling
      speed-type
      string-edit
      tagedit
      tern
      tide
      tumblesocks
+     undo-tree
      virtualenvwrapper
      visual-regexp
      visual-regexp-steroids

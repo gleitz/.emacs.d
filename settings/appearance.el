@@ -62,9 +62,6 @@
   (blink-cursor-mode -1)
   (scroll-bar-mode -1))
 
-;; Make zooming affect frame instead of buffers
-(require 'zoom-frm)
-
 ;; Unclutter the modeline
 (require 'diminish)
 (eval-after-load "yasnippet" '(diminish 'yas-minor-mode))

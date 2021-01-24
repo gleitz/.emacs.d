@@ -268,3 +268,38 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 ;; ripgrep default args
 ;; bug: seem to make it so that you can't select the results to jump to the file
 ;; (setq ripgrep--base-arguments '("--line-number" "--with-filename"))
+
+;; Be able to go back to the last change
+;;; record two different file's last change. cycle them
+(defvar feng-last-change-pos1 nil)
+(defvar feng-last-change-pos2 nil)
+
+(defun feng-swap-last-changes ()
+  (when feng-last-change-pos2
+    (let ((tmp feng-last-change-pos2))
+      (setf feng-last-change-pos2 feng-last-change-pos1
+            feng-last-change-pos1 tmp))))
+
+(defun feng-goto-last-change ()
+  (interactive)
+  (when feng-last-change-pos1
+    (let* ((buffer (find-file-noselect (car feng-last-change-pos1)))
+           (win (get-buffer-window buffer)))
+      (if win
+          (select-window win)
+        (switch-to-buffer-other-window buffer))
+      (goto-char (cdr feng-last-change-pos1))
+      (feng-swap-last-changes))))
+
+(defun feng-buffer-change-hook (beg end len)
+  (let ((bfn (buffer-file-name))
+        (file (car feng-last-change-pos1)))
+    (when bfn
+      (if (or (not file) (equal bfn file)) ;; change the same file
+          (setq feng-last-change-pos1 (cons bfn end))
+        (progn (setq feng-last-change-pos2 (cons bfn end))
+               (feng-swap-last-changes))))))
+
+(add-hook 'after-change-functions 'feng-buffer-change-hook)
+;;; just quick to reach
+(global-set-key (kbd "M-`") 'feng-goto-last-change)

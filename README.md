@@ -6,7 +6,7 @@ Bits and pieces collected over the years. Folder structure and base configuratio
 
 To grab all the dependencies:
 
-    git clone --recursive git://github.com/gleitz/.emacs.d.git
+    git clone git://github.com/gleitz/.emacs.d.git
 
 The first time you start emacs, it will install some additional packages
 that are best handled by the package manager.
@@ -121,3 +121,23 @@ overview of the most commonly used shortcuts to get you through this pain:
 * `F1 t   ` Basic tutorial
 * `F1 k   ` Help for a keybinding
 * `F1 r   ` Emacs' extensive documentation
+
+### Useful Commands
+* `C-;`, `C-:`, `C-'` Jumping between windows`
+* `M-`    `   For going to where you just edited
+* `C-x C-space` Popping the mark
+* `M-$` Spellcheck
+* `M-s o` Lines matching query
+* `C-x $` Reveal mode
+* `M-s .` isearch the symbol at point
+* `C-@` Widen the selection progressively
+* `M-s \` Multi-buffer isearch
+* `C-x C-;` Comment/uncomment region
+* `C-.` dot-mode to repeat last command
+* `C-x z` repeat last command
+* `kmacro-edit-lossage` and then `C-x e`
+* `M-?` Find references
+* `C-c ! e/l/etc` Interact with flycheck errors and messages
+
+### Useful Packages
+* git-link
