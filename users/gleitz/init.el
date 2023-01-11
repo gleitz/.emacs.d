@@ -303,3 +303,18 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 (add-hook 'after-change-functions 'feng-buffer-change-hook)
 ;;; just quick to reach
 (global-set-key (kbd "M-`") 'feng-goto-last-change)
+
+;; Allow highlighting of symbols
+(require 'symbol-overlay)
+(defun enable-symbol-overlay-mode ()
+  (unless (or (minibufferp)
+              (derived-mode-p 'magit-mode)
+              (derived-mode-p 'xref--xref-buffer-mode))
+    (symbol-overlay-mode t)))
+(define-global-minor-mode global-symbol-overlay-mode ;; name of the new global mode
+  symbol-overlay-mode                                ;; name of the minor mode
+  enable-symbol-overlay-mode)
+(global-symbol-overlay-mode)                         ;; enable it
+(global-set-key (kbd "s-`") 'symbol-overlay-put)
+(setq symbol-overlay-ignore-functions nil)           ;; don't ignore keywords in various languages
+;; (setq symbol-overlay-map (make-sparse-keymap))       ;; disable special cmds on overlays

@@ -11,9 +11,9 @@
 (global-set-key (kbd "s-.") 'copy-from-above-command)
 
 ;; Smart M-x
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+;; (global-set-key (kbd "M-x") 'smex)
+;; (global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
 ;; Use C-x C-m to do M-x per Steve Yegge's advice
 (global-set-key (kbd "C-x C-m") 'smex)
@@ -58,6 +58,9 @@
 (define-key global-map (kbd "C-;") 'ace-jump-mode)
 (define-key global-map (kbd "C-'") 'ace-window)
 (define-key global-map (kbd "C-:") 'avy-goto-char-timer)
+(add-hook 'flyspell-mode-hook
+          (lambda()
+            (define-key flyspell-mode-map (kbd "C-;") nil)))
 
 ;; Perform general cleanup.
 (global-set-key (kbd "C-c n") 'cleanup-buffer)

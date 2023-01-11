@@ -138,6 +138,17 @@ overview of the most commonly used shortcuts to get you through this pain:
 * `kmacro-edit-lossage` and then `C-x e`
 * `M-?` Find references
 * `C-c ! e/l/etc` Interact with flycheck errors and messages
+* `s-tilde` Option+tilde Highlight symbol at point
+* `M-s .` isearch-forward-symbol-at-point
+* `C-M-p` previous matching paren
+* `C-M-n` next matching paren
+* `visual-line-mode` to toggle breaking words at the end of lines
+* `dired-do-find-regex-and-replace` for [replace operations](https://www.gnu.org/software/emacs/manual/html_node/efaq/Replacing-text-across-multiple-files.html) across multiple files
 
 ### Useful Packages
 * git-link
+
+### Magit
+
+Ammend or extend commits
+https://emacs.stackexchange.com/questions/22557/add-change-to-a-previous-commit-with-magit

@@ -85,6 +85,7 @@
      ace-window
      ag
      arduino-mode
+     arduino-cli-mode
      auto-complete
      auto-virtualenv
      bash-completion
@@ -100,6 +101,7 @@
 	 diminish
      dockerfile-mode
      dot-mode
+     editorconfig
      edit-server
      elisp-slime-nav
      elpy
@@ -110,6 +112,7 @@
      expand-region
      f
      fill-column-indicator
+     fireplace
      flx
      flx-ido
      flycheck
@@ -152,6 +155,7 @@
      prescient
      prodigy
      projectile
+     python-mls
      quickrun
      realgud
      restclient
@@ -160,6 +164,8 @@
      ripgrep
      rjsx-mode
      scala-mode
+     selectrum
+     selectrum-prescient
      shell-command
      simple-httpd
      simplezen
@@ -168,6 +174,7 @@
      smooth-scrolling
      speed-type
      string-edit
+     symbol-overlay
      tagedit
      tern
      tide
@@ -231,6 +238,8 @@
 (require 'setup-scala)
 (require 'setup-typescript)
 (require 'setup-keyfreq)
+(require 'setup-copilot)
+(require 'setup-howdoi)
 
 ;; Font lock dash.el
 (eval-after-load "dash" '(dash-enable-font-lock))
@@ -251,6 +260,7 @@
           (lambda ()
             ;; Disable parens for all the quotes
             (sp-pair "'" nil :actions :rem)
+            (sp-pair "`" nil :actions :rem)
             (sp-pair "\"" nil :actions :rem)))
 
 
@@ -266,7 +276,7 @@
 
 ;; Company mode for everything
 (add-hook 'after-init-hook 'global-company-mode)
-(setq company-dabbrev-downcase 0)
+(setq company-dabbrev-downcase nil)
 (setq company-idle-delay 0.2)
 (let ((bg (face-attribute 'default :background)))
   (custom-set-faces
@@ -325,8 +335,14 @@
 (setq browse-kill-ring-quit-action 'save-and-restore)
 
 ;; Smart M-x is smart
-(require 'smex)
-(smex-initialize)
+;; (require 'smex)
+;; (smex-initialize)
+(selectrum-mode +1)
+;; to make sorting and filtering more intelligent
+(selectrum-prescient-mode +1)
+;; to save your command history on disk, so the sorting gets more
+;; intelligent over time
+(prescient-persist-mode +1)
 
 ;; Prescient
 (require 'prescient)

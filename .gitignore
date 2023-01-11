@@ -41,3 +41,7 @@ smex-items
 transient/
 .mypy_cache/
 tumblr-oauth-token
+forge-database*
+pyhist-python
+site-lisp-old/
+site-lisp/

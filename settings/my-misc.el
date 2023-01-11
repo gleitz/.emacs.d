@@ -116,7 +116,11 @@ White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
 
 ;; Scroll to the end of the scratch buffer
 (defun end-of-scratch ()
-  (set-window-point (get-buffer-window (file-name-nondirectory scratch-buffer-path)) 10000000000))
+  (set-window-point (get-buffer-window (file-name-nondirectory scratch-buffer-path)) 10000000000)
+  (typo-mode)
+  (define-key typo-global-mode-map "`" nil)
+  (define-key typo-mode-map "`" nil)
+  )
 (kill-buffer "*scratch*")
 (run-at-time "1 sec" nil 'end-of-scratch)
 
