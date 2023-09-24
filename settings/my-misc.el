@@ -118,6 +118,9 @@ White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
 (defun end-of-scratch ()
   (set-window-point (get-buffer-window (file-name-nondirectory scratch-buffer-path)) 10000000000)
   (typo-mode)
+  (define-typo-cycle typo-cycle-right-single-quotation-mark
+    "Cycle through the right quotation mark and the typewriter apostrophe. If used with a numeric prefix argument N, N typewriter apostrophes will be inserted."
+    ("'" "’"))
   (define-key typo-global-mode-map "`" nil)
   (define-key typo-mode-map "`" nil)
   )

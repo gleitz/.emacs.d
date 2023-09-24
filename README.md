@@ -136,6 +136,7 @@ overview of the most commonly used shortcuts to get you through this pain:
 * `C-.` dot-mode to repeat last command
 * `C-x z` repeat last command
 * `kmacro-edit-lossage` and then `C-x e`
+* `M-x name-last-kbd-macro` and then save with `M-x insert-kbd-macro`
 * `M-?` Find references
 * `C-c ! e/l/etc` Interact with flycheck errors and messages
 * `s-tilde` Option+tilde Highlight symbol at point
@@ -144,11 +145,13 @@ overview of the most commonly used shortcuts to get you through this pain:
 * `C-M-n` next matching paren
 * `visual-line-mode` to toggle breaking words at the end of lines
 * `dired-do-find-regex-and-replace` for [replace operations](https://www.gnu.org/software/emacs/manual/html_node/efaq/Replacing-text-across-multiple-files.html) across multiple files
+* `M-x httpd-start M-x impatient-mode` then navigate to `http://localhost:8080/imp/` to view live webpage of html
+* `M-x atomic-chrome-start-server` and then use GhostText to edit with Emacs
+* `M-x find-file-literally` to open without any modes (good for long files)
+* `C-u C-x =` unicode descriptor for character at poiny
 
 ### Useful Packages
 * git-link
 
 ### Magit
-
-Ammend or extend commits
-https://emacs.stackexchange.com/questions/22557/add-change-to-a-previous-commit-with-magit
+* `c a` to ammend a commit

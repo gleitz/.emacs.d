@@ -264,6 +264,16 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 ;; Tumblr
 (setq tumblesocks-blog "gleitzman.tumblr.com")
 (setq oauth-nonce-function 'oauth-internal-make-nonce)
+(defun oauth-build-signature-hmac-sha1 (req secret)
+  "Returns the signature for the given request object"
+  (let* ((token (oauth-request-token req))
+         (key (concat secret "&" (when token (oauth-t-token-secret token))))
+         (hmac-params
+          (list (string-to-unibyte (encode-coding-string key 'utf-8 t))
+                (string-to-unibyte (encode-coding-string
+                 (oauth-build-signature-basestring-hmac-sha1 req) 'utf-8 t)))))
+    (if oauth-hmac-sha1-param-reverse (setq hmac-params (reverse hmac-params)))
+    (base64-encode-string (apply 'hmac-sha1 hmac-params))))
 
 ;; ripgrep default args
 ;; bug: seem to make it so that you can't select the results to jump to the file
@@ -318,3 +328,27 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 (global-set-key (kbd "s-`") 'symbol-overlay-put)
 (setq symbol-overlay-ignore-functions nil)           ;; don't ignore keywords in various languages
 ;; (setq symbol-overlay-map (make-sparse-keymap))       ;; disable special cmds on overlays
+
+(defun my-reverse-region (beg end)
+ "Reverse characters between BEG and END."
+ (interactive "r")
+ (let ((region (buffer-substring beg end)))
+   (delete-region beg end)
+   (insert (nreverse region))))
+
+;; Allow editing within Emacs from the browser
+(atomic-chrome-start-server)
+
+;; Randomize lines
+(defun my-random-sort-lines (beg end)
+  "Sort lines in region randomly."
+  (interactive "r")
+  (save-excursion
+    (save-restriction
+      (narrow-to-region beg end)
+      (goto-char (point-min))
+      (let ;; To make `end-of-line' and etc. to ignore fields.
+          ((inhibit-field-text-motion t))
+        (sort-subr nil 'forward-line 'end-of-line nil nil
+                   (lambda (s1 s2) (eq (random 2) 0)))))))
+(global-set-key (kbd "C-c r") 'my-random-sort-lines)

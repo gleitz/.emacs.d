@@ -86,6 +86,7 @@
      ag
      arduino-mode
      arduino-cli-mode
+     atomic-chrome
      auto-complete
      auto-virtualenv
      bash-completion
@@ -132,6 +133,7 @@
      ido-at-point
      ido-completing-read+
      ido-vertical-mode
+     impatient-mode
      inflections
      json-mode
      json-snatcher
@@ -166,13 +168,14 @@
      scala-mode
      selectrum
      selectrum-prescient
-     shell-command
+     shell-command+
      simple-httpd
      simplezen
      smartparens
      smex
      smooth-scrolling
      speed-type
+     sqlite3
      string-edit
      symbol-overlay
      tagedit
@@ -261,7 +264,10 @@
             ;; Disable parens for all the quotes
             (sp-pair "'" nil :actions :rem)
             (sp-pair "`" nil :actions :rem)
-            (sp-pair "\"" nil :actions :rem)))
+            (sp-pair "\"" nil :actions :rem)
+            (sp-pair "{" nil :actions :rem)
+            (sp-pair "[" nil :actions :rem)
+            (sp-pair "(" nil :actions :rem)))
 
 
 ;; Language specific setup files
