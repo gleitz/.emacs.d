@@ -1,3 +1,5 @@
+(require 'typo)
+
 ;; Seed the random-number generator
 (random t)
 
@@ -112,7 +114,6 @@ White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
       (loop for filename in '("~/Dropbox/Personal/documents/scratch.txt")
             when (file-exists-p filename) collect filename into valid-files
             finally return (car valid-files)))
-(setq initial-buffer-choice scratch-buffer-path)
 
 ;; Scroll to the end of the scratch buffer
 (defun end-of-scratch ()
@@ -124,7 +125,10 @@ White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
   (define-key typo-global-mode-map "`" nil)
   (define-key typo-mode-map "`" nil)
   )
-(kill-buffer "*scratch*")
-(run-at-time "1 sec" nil 'end-of-scratch)
+
+(when (display-graphic-p)
+  (setq initial-buffer-choice scratch-buffer-path)
+  (kill-buffer "*scratch*")
+  (run-at-time "1 sec" nil 'end-of-scratch))
 
 (provide 'my-misc)

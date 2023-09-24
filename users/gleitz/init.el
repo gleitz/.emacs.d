@@ -215,8 +215,9 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 
 ;; Update packages on exit
 (defadvice save-buffers-kill-terminal (before save-buffers-kill-terminal-before activate)
-  (package-utils-upgrade-all)
-  (byte-compile-dotfiles))
+  (when (display-graphic-p)
+    (package-utils-upgrade-all)
+    (byte-compile-dotfiles)))
 
 ;; A button for completion
   (defun check-expansion ()

@@ -7,6 +7,25 @@
 ;; You may delete these explanatory comments.
 (package-initialize)
 
+;; Set path to dependencies
+(setq site-lisp-dir
+      (expand-file-name "site-lisp" user-emacs-directory))
+
+(setq settings-dir
+      (expand-file-name "settings" user-emacs-directory))
+
+;; Set up load path
+(add-to-list 'load-path settings-dir)
+(add-to-list 'load-path site-lisp-dir)
+
+;; Setup packages
+(require 'setup-package)
+
+;; These need to be installed early because they are needed the first time Emacs runs
+(packages-install
+ '(dash
+   diminish))
+
 ;; Patch for load-history (happened when upgrading to Emacs 27)
 ;; https://emacs.stackexchange.com/questions/5552/emacs-on-android-org-mode-error-wrong-type-argument-stringp-require-t
 (defun load-history-filename-element (file-regexp)
@@ -30,22 +49,12 @@
 ;; No splash screen please ... jeez
 (setq inhibit-startup-message t)
 
-;; Set path to dependencies
-(setq site-lisp-dir
-      (expand-file-name "site-lisp" user-emacs-directory))
-
-(setq settings-dir
-      (expand-file-name "settings" user-emacs-directory))
-
-;; Set up load path
-(add-to-list 'load-path settings-dir)
-(add-to-list 'load-path site-lisp-dir)
-
 ;; Keep emacs Custom-settings in separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
 
 ;; Set up appearance early
+(require 'color)
 (require 'appearance)
 
 ;; Settings for currently logged in user
@@ -75,9 +84,6 @@
 ;; Are we on a mac?
 (setq is-mac (equal system-type 'darwin))
 
-;; Setup packages
-(require 'setup-package)
-
 ;; Install extensions if they're missing
 (defun init--install-packages ()
   (packages-install
@@ -90,6 +96,7 @@
      auto-complete
      auto-virtualenv
      bash-completion
+     beacon
      benchmark-init
      browse-kill-ring
      change-inner
@@ -99,6 +106,7 @@
      company-jedi
      company-prescient
      css-eldoc
+	 dash
 	 diminish
      dockerfile-mode
      dot-mode
@@ -107,12 +115,12 @@
      elisp-slime-nav
      elpy
      emojify
-     ensime
      eproject
      exec-path-from-shell
      expand-region
      f
      fill-column-indicator
+     find-file-in-project
      fireplace
      flx
      flx-ido
@@ -121,8 +129,6 @@
      flycheck-popup-tip
      forge
      gist
-     gitconfig-mode
-     gitignore-mode
      git-link
      groovy-mode
      guide-key
@@ -137,13 +143,13 @@
      inflections
      json-mode
      json-snatcher
-     jsx-mode
      jump-char
      keyfreq
      less-css-mode
      magit
      markdown-mode
      maxframe
+     multiple-cursors
      mic-paren
      move-text
      multifiles
@@ -176,12 +182,13 @@
      smooth-scrolling
      speed-type
      sqlite3
-     string-edit
+     string-edit-at-point
      symbol-overlay
      tagedit
      tern
      tide
      tumblesocks
+     typo
      undo-tree
      virtualenvwrapper
      visual-regexp
@@ -238,7 +245,7 @@
 (require 'setup-python)
 (require 'setup-js-beautify)
 (require 'setup-nodejs)
-(require 'setup-scala)
+;; (require 'setup-scala)
 (require 'setup-typescript)
 (require 'setup-keyfreq)
 (require 'setup-copilot)
