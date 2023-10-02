@@ -1,13 +1,14 @@
 (setq ffip-prune-patterns '())
 
-(elpy-enable)
+(advice-add 'python-mode :before 'elpy-enable)
 (setq elpy-rpc-backend "jedi")
 
 (remove-hook 'elpy-modules 'elpy-module-flymake)
 
-(define-key elpy-mode-map (kbd "M-<right>") 'subword-right)
-(define-key elpy-mode-map (kbd "M-<left>") 'subword-left)
-(define-key elpy-mode-map [backtab] 'tab-indent-or-complete)
+(add-hook 'elpy-mode-hook (lambda ()
+                            (define-key elpy-mode-map (kbd "M-<right>") 'subword-right)
+                            (define-key elpy-mode-map (kbd "M-<left>") 'subword-left)
+                            (define-key elpy-mode-map [backtab] 'tab-indent-or-complete)))
 
 (setq python-python-command "python3")
 (setq elpy-rpc-python-command "python3")

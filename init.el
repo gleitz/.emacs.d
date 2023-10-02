@@ -1,3 +1,7 @@
+(require 'benchmark-init)
+;; To disable collection of benchmark data after init is done.
+(add-hook 'after-init-hook 'benchmark-init/deactivate)
+
 ;; Don't give 'cl warnings
 (setq byte-compile-warnings '(cl-functions))
 
@@ -18,13 +22,14 @@
 (add-to-list 'load-path settings-dir)
 (add-to-list 'load-path site-lisp-dir)
 
+;; These need to be installed early because they are needed the first time Emacs runs
+(when (not (package-installed-p 'dash))
+  (package-install 'dash))
+(when (not (package-installed-p 'diminish))
+  (package-install 'diminish))
+
 ;; Setup packages
 (require 'setup-package)
-
-;; These need to be installed early because they are needed the first time Emacs runs
-(packages-install
- '(dash
-   diminish))
 
 ;; Patch for load-history (happened when upgrading to Emacs 27)
 ;; https://emacs.stackexchange.com/questions/5552/emacs-on-android-org-mode-error-wrong-type-argument-stringp-require-t
@@ -196,7 +201,6 @@
      vterm
      wgrep
      whitespace-cleanup-mode
-     yasnippet
      )))
 
 (condition-case nil
