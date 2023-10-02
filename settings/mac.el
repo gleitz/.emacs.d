@@ -5,9 +5,6 @@
 (setq mac-command-modifier 'meta)
 (setq ns-function-modifier 'hyper)
 
-;; mac friendly font
-(set-face-attribute 'default nil :font "Monaco-12")
-
 ;; redefine read-char, at least for invocation from elisp
 ;; (defun read-char (&optional prompt) ;; (inherit-input-method seconds)
 ;;   "Read a character from the command input (keyboard or macro).
@@ -77,10 +74,6 @@
 
 ;; Use aspell for spell checking: brew install aspell --lang=en
 ;; (setq ispell-program-name "/usr/local/bin/aspell")
-
-(when window-system
-  (require 'maxframe)
-  (add-hook 'window-setup-hook 'toggle-frame-maximized t))
 
 ;; Open files
 (defun mac-open-current-file ()

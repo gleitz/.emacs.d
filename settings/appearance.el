@@ -84,4 +84,11 @@
 
 (rename-modeline "clojure-mode" clojure-mode "Clj")
 
+;; mac friendly font
+(set-face-attribute 'default nil :family "Monaco" :height 120)
+
+(when window-system
+  (require 'maxframe)
+  (add-hook 'window-setup-hook 'toggle-frame-maximized t))
+
 (provide 'appearance)
