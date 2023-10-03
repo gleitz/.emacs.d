@@ -43,4 +43,9 @@ transient/
 tumblr-oauth-token
 forge-database*
 pyhist-python
-site-lisp-old/
+eln-cache/
+
+# site-lisp
+site-lisp/*/.github/
+site-lisp/*/.gitignore
+site-lisp/*/.mailmap

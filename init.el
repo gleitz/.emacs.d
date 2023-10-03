@@ -1,6 +1,7 @@
-(require 'benchmark-init)
-;; To disable collection of benchmark data after init is done.
-(add-hook 'after-init-hook 'benchmark-init/deactivate)
+;; Uncomment and then run `M-x benchmark-init/show-durations-tabulated` to see what is taking time on startup
+;; (require 'benchmark-init)
+;; ;; To disable collection of benchmark data after init is done.
+;; (add-hook 'after-init-hook 'benchmark-init/deactivate)
 
 ;; Don't give 'cl warnings
 (setq byte-compile-warnings '(cl-functions))
