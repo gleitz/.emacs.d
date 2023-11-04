@@ -152,6 +152,8 @@
      jump-char
      keyfreq
      less-css-mode
+     lsp-mode
+     lsp-pyright
      magit
      markdown-mode
      maxframe
@@ -160,6 +162,7 @@
      move-text
      multifiles
      nodejs-repl
+     obsidian
      olivetti
      package-utils
      paredit
@@ -255,6 +258,7 @@
 (require 'setup-keyfreq)
 (require 'setup-copilot)
 (require 'setup-howdoi)
+(require 'setup-obsidian)
 
 ;; Font lock dash.el
 (eval-after-load "dash" '(dash-enable-font-lock))

@@ -2,7 +2,7 @@
   (interactive)
   (tide-setup)
   (flycheck-mode +1)
-  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (setq flycheck-check-syntax-automatically '(save mode-enabled)) ;; not sure if I need this?
   ;; (add-to-list 'web-mode-indentation-params '("lineup-args" . nil))
   ;; (add-to-list 'web-mode-indentation-params '("lineup-calls" . nil))
   (eldoc-mode +1)

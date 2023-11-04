@@ -1,5 +1,5 @@
 ;; Install the following
-;; pip install pylint elpy flake8 pyyaml
+;; pip install pylint elpy flake8 pyyaml flake8_nb
 ;; npm install -g jshint
 ;; npm install -g jsxhint
 ;; npm install -g tern
@@ -216,8 +216,9 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 ;; Update packages on exit
 (defadvice save-buffers-kill-terminal (before save-buffers-kill-terminal-before activate)
   (when (display-graphic-p)
-    (package-utils-upgrade-all)
-    (byte-compile-dotfiles)))
+    (if (equal current-prefix-arg '(4)) ;; This means C-u
+        (package-utils-upgrade-all)
+      (byte-compile-dotfiles))))
 
 ;; A button for completion
   (defun check-expansion ()
@@ -353,3 +354,11 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
         (sort-subr nil 'forward-line 'end-of-line nil nil
                    (lambda (s1 s2) (eq (random 2) 0)))))))
 (global-set-key (kbd "C-c r") 'my-random-sort-lines)
+
+;; extract all matches of regex
+(defun show-matches (regex string)
+  "Show all matches of REGEX in STRING."
+  (let ((pos 0))
+    (while (string-match regex string pos)
+      (setq pos (match-end 0))
+      (message "%s" (match-string 0 string)))))
