@@ -44,6 +44,7 @@ tumblr-oauth-token
 forge-database*
 pyhist-python
 eln-cache/
+elgrep-data.el
 
 # site-lisp
 site-lisp/*/.github/

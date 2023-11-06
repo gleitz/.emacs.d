@@ -81,6 +81,7 @@
 ;; Don't backup files, please
 (setq make-backup-files nil)
 (setq vc-make-backup-files nil)
+(setq create-lockfiles nil)
 
 ;; Save point position between sessions
 (require 'saveplace)
@@ -152,6 +153,7 @@
      jump-char
      keyfreq
      less-css-mode
+     live-py-mode
      lsp-mode
      lsp-pyright
      magit

@@ -78,19 +78,28 @@
 
 ;; Config for jupyter notebook
 (defun my/flycheck-buffer-action ()
-  (flycheck-buffer))
+  ;; if flycheck mode is enabled
+    (when flycheck-mode
+      (flycheck-buffer)))
+(defvar current-ein-major-mode nil)
+(defun my/flycheck-check-ein-mode-update ()
+  (if (and (eq major-mode 'python-mode)
+           (bound-and-true-p ein:notebook-mode))
+      (progn
+        (if (not (eq major-mode current-ein-major-mode))
+            (progn
+              (setq flycheck-disabled-checkers (append '(python-flake8 python-pylint python-mypy) flycheck-disabled-checkers))
+              (flycheck-select-checker 'flake8-nb)
+              (run-with-idle-timer 0.5 t #'my/flycheck-buffer-action)
+              (setq current-ein-major-mode major-mode))))
+    (progn
+      (setq current-ein-major-mode major-mode)
+    )
+  ))
 (defun setup-ein-keys ()
-  (define-key python-mode-map (kbd "C-<return>") 'ein:worksheet-execute-cell-and-goto-next-km))
-(defun my-ein-python-hook ()
-  ;; check to see if ein mode enabled
-  (when (fboundp 'ein:notebook-mode)
-    (setq flycheck-disabled-checkers (append '(python-flake8 python-pylint python-mypy) flycheck-disabled-checkers))
-    (flycheck-select-checker 'flake8-nb)
-    (run-with-idle-timer 0.5 t #'my/flycheck-buffer-action)
-    ;; defadvice: whenever we execute ein:notebook-save-notebook-command-km, also call flycheck-buffer
-    ;; (advice-add 'flycheck-list-errors :before #'my/flycheck-buffer-action)
-    ))
+  (define-key python-mode-map (kbd "C-<return>") 'ein:worksheet-execute-cell-and-goto-next-km)
+  (run-with-idle-timer 0.5 t #'my/flycheck-check-ein-mode-update))
+
 (add-hook 'ein:notebook-mode-hook #'setup-ein-keys)
-(add-hook 'python-mode-hook #'my-ein-python-hook)
 
 (provide 'setup-python)
