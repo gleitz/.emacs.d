@@ -183,3 +183,7 @@ Both PATTERN and CONTENTS are matched as regular expressions."
   (edit-kbd-macro 'view-lossage))
 
 (defmacro comment (&rest ignore))
+
+(defun shell-command-on-region-to-string (start end command)
+  (with-output-to-string
+    (shell-command-on-region start end command standard-output)))

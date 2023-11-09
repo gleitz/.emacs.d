@@ -259,6 +259,7 @@
 (require 'setup-typescript)
 (require 'setup-keyfreq)
 (require 'setup-copilot)
+(require 'setup-llms)
 (require 'setup-howdoi)
 (require 'setup-obsidian)
 
