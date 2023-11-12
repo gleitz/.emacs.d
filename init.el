@@ -224,9 +224,8 @@
 (require 'sane-defaults)
 
 ;; Setup environment variables from the user's shell.
-(when is-mac
-  (require-package 'exec-path-from-shell)
-  (exec-path-from-shell-initialize))
+(require-package 'exec-path-from-shell)
+(exec-path-from-shell-initialize)
 
 ;; guide-key
 (require 'guide-key)

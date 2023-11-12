@@ -3,6 +3,7 @@
 ;; npm install -g jshint
 ;; npm install -g jsxhint
 ;; npm install -g tern
+;; npm install -g markdownlint-cli
 ;; pip install -U /Users/gleitz/.emacs.d/elpa/jedi-core-20191011.1750
 
 ;; if elpy complains
