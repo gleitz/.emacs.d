@@ -5,9 +5,9 @@
 
 (add-to-list 'load-path __project-name__-root-path)
 
-(require '__project-name__)
-(require 'espuds)
-(require 'ert)
+;; (require '__project-name__)
+;; (require 'espuds)
+;; (require 'ert)
 
 (Before
  (switch-to-buffer

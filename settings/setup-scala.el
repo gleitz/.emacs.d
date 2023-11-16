@@ -2,7 +2,7 @@
       (concat user-emacs-directory "lib/scala/ensime/src/main/elisp/"))
 (add-to-list 'load-path user-scala-dir)
 
-(require 'ensime)
+;; (require 'ensime)
 
 (add-hook 'scala-mode-hook '(lambda ()
   ;; format buffer on save

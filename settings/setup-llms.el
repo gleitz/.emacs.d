@@ -18,4 +18,14 @@
       (newline)
       (insert response))))
 
+(defvar llm-command-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "c") #'copilot-mode)
+    (define-key map (kbd "w") #'whisper-run)
+    (define-key map (kbd "l") #'llm-query-and-insert)
+    map)
+  "Keymap for LLM commands.")
+(fset 'llm-command-map llm-command-map)
+(define-key projectile-mode-map (kbd "C-c l") 'llm-command-map)
+
 (provide 'setup-llms)

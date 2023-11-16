@@ -48,7 +48,7 @@
    '("50cdbe9e35198343589c648f73fab07c3e1fb4e53057a9e5d3ddd5246140b07a" "cfff5a1f3b63f487c1ecda2d7aa1a7ea206533e003c17e5b8d7142ea45444a6e" "fbfbd18874a5a5a0d1ac9036f57c189195f30d57d92d9cf96b12195d18714850" "9527feeeec43970b1d725bdc04e97eb2b03b15be982ac50089ad223d3c6f2920" default))
  '(ein:output-area-inlined-images t)
  '(elpy-modules
-   '(elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-highlight-indentation elpy-module-django elpy-module-sane-defaults))
+   '(elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-highlight-indentation elpy-module-django elpy-module-sane-defaults) t)
  '(elpy-rpc-backend "rope" t)
  '(elpy-syntax-check-command "pylint")
  '(ensime-default-server-root "/Users/bgleitzman/.emacs.d/lib/scala/ensime/")
@@ -166,4 +166,6 @@
  '(web-mode-code-indent-offset 2)
  '(web-mode-enable-auto-indentation nil)
  '(web-mode-enable-auto-quoting nil)
- '(web-mode-markup-indent-offset 2))
+ '(web-mode-markup-indent-offset 2)
+ '(whisper-install-directory "~/projects/")
+ '(whisper-model "tiny.en.bin-q4_0"))

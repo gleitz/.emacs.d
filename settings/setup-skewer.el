@@ -4,10 +4,10 @@
 ;;     javascript:(function(){var d=document ;var s=d.createElement('script');s.src='http://localhost:8023/skewer';d.body.appendChild(s);})()
 ;;
 
-(require 'skewer-mode)
-(require 'skewer-repl)
-(require 'skewer-html)
-(require 'skewer-css)
+;; (require 'skewer-mode)
+;; (require 'skewer-repl)
+;; (require 'skewer-html)
+;; (require 'skewer-css)
 
 (defun skewer-start ()
   (interactive)
