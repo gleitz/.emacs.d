@@ -5,7 +5,8 @@
 (defun llm-query-and-insert (start end command)
   (interactive
    (let* ((prompt "Enter system message: ")
-          (system-message (if current-prefix-arg (read-string prompt) ""))
+          (system-message (if current-prefix-arg (shell-quote-argument (read-string prompt)) ""))
+          (message (format "llm -s \"%s\"" system-message))
           (command (format "llm -s \"%s\"" system-message)))
      (if (use-region-p)
          (list (region-beginning) (region-end) command)
