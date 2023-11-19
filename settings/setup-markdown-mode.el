@@ -11,7 +11,7 @@
         ))
 
 (defun my-markdown-mode-hook ()
-  (when (not (eq major-mode 'forge-post-mode))
+  (when (not (member major-mode '(forge-post-mode tumblesocks-compose-mode)))
     (flycheck-mode +1)
     (flycheck-select-checker 'markdown-markdownlint-cli))
   (setq imenu-generic-expression markdown-imenu-generic-expression))
