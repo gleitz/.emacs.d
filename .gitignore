@@ -45,6 +45,7 @@ forge-database*
 pyhist-python
 eln-cache/
 elgrep-data.el
+projects
 
 # site-lisp
 site-lisp/*/.github/

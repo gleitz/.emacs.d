@@ -38,6 +38,7 @@
       )))
 (add-hook 'window-configuration-change-hook #'my-ein-window-configuration-change-hook)
 
+(global-flycheck-mode)
 (flycheck-def-executable-var flake8-nb "flake8_nb_runner")
 (defun flycheck-parse-flake8-nb (output checker buffer)
   "Parse flake8-nb errors from OUTPUT and return a list of `flycheck-error' objects."
