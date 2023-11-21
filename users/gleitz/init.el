@@ -91,7 +91,7 @@
                        ("\u2122" . "TM")
                        ("[\u02DC\|\u00A0]" . " "))))
     (save-excursion
-      (loop for (key . value) in unicode-map
+      (cl-loop for (key . value) in unicode-map
             do
             (goto-char (point-min))
             (replace-regexp key value)))))
@@ -167,7 +167,7 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 
 ;; PHP
 (add-to-list 'auto-mode-alist '("[^.][^t][^p][^l]\\.php$" . web-mode))
-(add-hook 'php-mode-hook '(lambda ()
+(add-hook 'php-mode-hook #'(lambda ()
   (flycheck-mode 1)
 ))
 
@@ -204,6 +204,8 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
   (when (> (buffer-size) (* 1024 1024 5))
     (setq buffer-read-only t)
     (buffer-disable-undo)
+    (beacon-mode -1)
+    (setq-local font-lock-mode nil)
     (fundamental-mode)))
 
 (add-hook 'find-file-hook 'my-find-file-check-make-large-file-read-only-hook)
@@ -380,3 +382,8 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
                  (with-selected-window window
                      (split-window-below))))))
 (setq split-window-preferred-function #'my-split-window-sensibly)
+
+;; Replicant specific setup
+(when (string= (system-name) "Repli-Benjamin-Gleitzman")
+  (setq whisper-model "medium.en")
+  (setq whisper--ffmpeg-input-device ":1"))
