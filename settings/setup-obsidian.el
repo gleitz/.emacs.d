@@ -1,8 +1,8 @@
 (require 'obsidian)
-(obsidian-specify-path "~/Dropbox/Personal/documents/obsidian")
+(obsidian-specify-path "~/Dropbox/Personal/documents/obsidian/Gleitzvault")
 ;; If you want a different directory of `obsidian-capture':
-(setq obsidian-inbox-directory "Gleitzvault")
-(setq obsidian-daily-notes-directory "Gleitzvault/notes")
+(setq obsidian-inbox-directory "inbox")
+(setq obsidian-daily-notes-directory "notes")
 
 ;; Define obsidian-mode bindings
 (add-hook
@@ -66,6 +66,13 @@ in `obsidian-directory' root.
     (insert (format "# %s\n" (s-titleize title)))
     (save-buffer)
     (add-to-list 'obsidian-files-cache clean-filename)))
+
+;; Add emacs advice after calling obsidian-daily-note function to insert `# %Y-%m-%d` at the top of the file
+(defun obsidian-insert-date ()
+  (interactive)
+  (insert (format-time-string "# Daily Note %Y-%m-%d\n"))
+  (save-buffer))
+(advice-add 'obsidian-daily-note :after #'obsidian-insert-date)
 
 ;; Due to weirdness with Dropbox folders (existing at ~/Dropbox and ~/Library/CloudStorage/Dropbox)
 ;; we have to modify this script slightly

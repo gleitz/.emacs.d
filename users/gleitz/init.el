@@ -163,7 +163,8 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 ;; (zone-when-idle (* 60 60))
 
 ;; Enable emojis
-(add-hook 'text-mode-hook 'emojify-mode)
+;; This seems to slow down rendering quite a bit
+;; (add-hook 'text-mode-hook 'emojify-mode)
 
 ;; PHP
 (add-to-list 'auto-mode-alist '("[^.][^t][^p][^l]\\.php$" . web-mode))
@@ -383,7 +384,13 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
                      (split-window-below))))))
 (setq split-window-preferred-function #'my-split-window-sensibly)
 
-;; Replicant specific setup
-(when (string= (system-name) "Repli-Benjamin-Gleitzman")
-  (setq whisper-model "medium.en")
-  (setq whisper--ffmpeg-input-device ":1"))
+(defun insert-current-date ()
+  (interactive)
+  (insert (format-time-string "--------------------------------------------------\n\n%Y-%m-%d\n")))
+
+(defun end-of-region-or-visual-line ()
+  "Move the cursor to the end of the current region, or to the end of the visual line if no region is active."
+  (interactive)
+  (if (region-active-p)
+      (goto-char (region-end))
+    (end-of-visual-line)))

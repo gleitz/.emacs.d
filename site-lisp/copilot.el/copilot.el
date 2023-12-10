@@ -27,7 +27,7 @@ Format: '(:host \"127.0.0.1\" :port 80 :username \"username\" :password \"passwo
 Username and password are optional.
 
 If you are using a MITM proxy which intercepts TLS connections, you may need to disable
-TLS verification. This can be done by setting a pair ':rejectUnauthorized :json-false'
+TLS verification. This can be done by setting a pair ':rejectUnauthorized :json-false' 
 in the proxy plist. For example:
 
   (:host \"127.0.0.1\" :port 80 :rejectUnauthorized :json-false)
@@ -51,7 +51,7 @@ Enabling event logging may slightly affect performance."
   :type 'string)
 
 
-(defcustom copilot-max-char 30000
+(defcustom copilot-max-char 100000
   "Maximum number of characters to send to Copilot, -1 means no limit."
   :group 'copilot
   :type 'integer)
@@ -206,7 +206,7 @@ Enabling event logging may slightly affect performance."
     (condition-case err
         (copilot--request 'signInConfirm (list :userCode user-code))
       (jsonrpc-error
-        (user-error "Authentication failure: %s" (alist-get 'jsonrpc-error-message (cddr err)))))
+       (user-error "Authentication failure: %s" (alist-get 'jsonrpc-error-message (cddr err)))))
     (copilot--dbind (:user) (copilot--request 'checkStatus '(:dummy "checkStatus"))
       (message "Authenticated as GitHub user %s." user))))
 
@@ -227,21 +227,27 @@ Enabling event logging may slightly affect performance."
     (jsonrpc-shutdown copilot--connection)
     (setq copilot--connection nil))
   (setq copilot--opened-buffers nil)
+  ;; We are going to send a test request for the current buffer so we have to activate the mode
+  ;; if it is not already activated.
+  ;; If it the mode is already active, we have to make sure the current buffer is loaded in the
+  ;; agent.
+  (if copilot-mode
+      (copilot--on-doc-focus (selected-window))
+    (copilot-mode))
   (copilot--async-request 'getCompletions
-                          '(:doc (:version 0
-                                  :source "\n"
-                                  :path ""
-                                  :uri ""
-                                  :relativePath ""
-                                  :languageId "text"
-                                  :position (:line 0 :character 0)))
+                          `(:doc (:version 0
+                                           :source "\n"
+                                           :path ""
+                                           :uri ,(copilot--get-uri)
+                                           :relativePath ""
+                                           :languageId "text"
+                                           :position (:line 0 :character 0)))
                           :success-fn (lambda (_)
                                         (message "Copilot OK."))
                           :error-fn (lambda (err)
                                       (message "Copilot error: %S" err))
                           :timeout-fn (lambda ()
                                         (message "Copilot agent timeout."))))
-
 
 ;;
 ;; Auto completion
@@ -285,6 +291,14 @@ Enabling event logging may slightly affect performance."
 (defvar-local copilot--completion-cache nil)
 (defvar-local copilot--completion-idx 0)
 
+(defcustom copilot-indent-warning-suppress nil
+  "If nil, then warn when copilot finds no mode-specific offset."
+  :type 'boolean
+  :group 'copilot)
+
+(defvar-local copilot--indent-warning-printed-p nil
+  "Flag indicating whether indent warning was already printed.")
+
 (defun copilot--infer-indentation-offset ()
   "Infer indentation offset."
   (or (let ((mode major-mode))
@@ -292,10 +306,15 @@ Enabling event logging may slightly affect performance."
                     (setq mode (get mode 'derived-mode-parent))))
         (when mode
           (cl-some (lambda (s)
-                     (when (boundp s)
+                     (when (and (boundp s) (numberp (symbol-value s)))
                        (symbol-value s)))
                    (alist-get mode copilot--indentation-alist))))
-      tab-width))
+      (progn
+        (when (and (not copilot-indent-warning-suppress)
+                   (not copilot--indent-warning-printed-p))
+          (message "Warning: copilot--infer-indentation-offset found no mode-specific indentation offset, using 'tab-width' instead.  You can suppress this error message by customizing 'copilot-indent-warning-suppress'.")
+          (setq-local copilot--indent-warning-printed-p t))
+        tab-width)))
 
 (defun copilot--get-relative-path ()
   "Get relative path to current buffer."
@@ -313,7 +332,7 @@ Enabling event logging may slightly affect performance."
   "Get URI of current buffer."
   (cond
    ((not buffer-file-name)
-    "")
+    (concat "buffer://" (url-encode-url (buffer-name (current-buffer)))))
    ((and (eq system-type 'windows-nt)
          (not (s-starts-with-p "/" buffer-file-name)))
     (concat "file:///" (url-encode-url buffer-file-name)))
@@ -326,6 +345,9 @@ Enabling event logging may slightly affect performance."
          (pmax (point-max))
          (pmin (point-min))
          (half-window (/ copilot-max-char 2)))
+    (when (and (>= copilot-max-char 0) (> pmax copilot-max-char))
+      (display-warning '(copilot copilot-exceeds-max-char)
+                       (format "%s size exceeds 'copilot-max-char' (%s), copilot completions may not work" (current-buffer) copilot-max-char)))
     (cond
      ;; using whole buffer
      ((or (< copilot-max-char 0) (< pmax copilot-max-char))
@@ -347,7 +369,7 @@ Enabling event logging may slightly affect performance."
 
 (defun copilot--get-language-id ()
   "Get language ID of current buffer."
-  (let ((mode (s-chop-suffix "-mode" (symbol-name major-mode))))
+  (let ((mode (s-chop-suffixes '("-ts-mode" "-mode") (symbol-name major-mode))))
     (alist-get mode copilot-major-mode-alist mode nil 'equal)))
 
 (defun copilot--generate-doc ()
@@ -375,7 +397,6 @@ Enabling event logging may slightly affect performance."
   "Get completion cycling options with CALLBACK."
   (if copilot--completion-cache
       (funcall callback copilot--completion-cache)
-    (copilot--sync-doc)
     (copilot--async-request 'getCompletionsCycling
                             (list :doc (copilot--generate-doc))
                             :success-fn callback)))
@@ -463,10 +484,9 @@ Enabling event logging may slightly affect performance."
   (setq copilot--last-doc-version copilot--doc-version)
   (setq copilot--panel-lang (copilot--get-language-id))
 
-  (copilot--sync-doc)
   (copilot--get-panel-completions
-    (jsonrpc-lambda (&key solutionCountTarget)
-      (message "Copilot: Synthesizing %d solutions..." solutionCountTarget)))
+   (jsonrpc-lambda (&key solutionCountTarget)
+     (message "Copilot: Synthesizing %d solutions..." solutionCountTarget)))
   (with-current-buffer (get-buffer-create "*copilot-panel*")
     (org-mode)
     (erase-buffer)))
@@ -566,7 +586,7 @@ Use TRANSFORM-FN to transform completion if provided."
             (vterm-insert t-completion))
         (delete-region start end)
         (insert t-completion))
-      ; if it is a partial completion
+      ;; if it is a partial completion
       (when (and (s-prefix-p t-completion completion)
                  (not (s-equals-p t-completion completion)))
         (copilot--set-overlay-text (copilot--get-overlay) (s-chop-prefix t-completion completion)))
@@ -616,24 +636,58 @@ Use TRANSFORM-FN to transform completion if provided."
                           (funcall goto-line!)
                           (forward-char end-char)
                           (point)))
-                   (balanced-text (copilot-balancer-fix-completion start end text)))
+                   (fixed-completion (copilot-balancer-fix-completion start end text)))
               (goto-char p)
-              (copilot--display-overlay-completion balanced-text uuid start end))))))))
+              (pcase-let ((`(,start ,end ,balanced-text) fixed-completion))
+                (copilot--display-overlay-completion balanced-text uuid start end)))))))))
 
-(defun copilot--sync-doc ()
-  "Sync current buffer."
-  (if (-contains-p copilot--opened-buffers (current-buffer))
-      (progn
-        (copilot--notify 'textDocument/didChange
-                          (list :textDocument (list :uri (copilot--get-uri)
-                                                    :version copilot--doc-version)
-                                :contentChanges (vector (list :text (copilot--get-source))))))
-    (add-to-list 'copilot--opened-buffers (current-buffer))
-    (copilot--notify ':textDocument/didOpen
-                      (list :textDocument (list :uri (copilot--get-uri)
-                                                :languageId (copilot--get-language-id)
-                                                :version copilot--doc-version
-                                                :text (copilot--get-source))))))
+(defun copilot--on-doc-focus (window)
+  "Notify that the document has been focussed or opened."
+  ;; When switching windows, this function is called twice, once for the
+  ;; window losing focus and once for the window gaining focus. We only want to
+  ;; send a notification for the window gaining focus and only if the buffer has
+  ;; copilot-mode enabled.
+  (when (and copilot-mode (eq window (selected-window)))
+    (if (-contains-p copilot--opened-buffers (current-buffer))
+        (copilot--notify ':textDocument/didFocus
+                         (list :textDocument (list :uri (copilot--get-uri))))
+      (add-to-list 'copilot--opened-buffers (current-buffer))
+      (copilot--notify ':textDocument/didOpen
+                       (list :textDocument (list :uri (copilot--get-uri)
+                                                 :languageId (copilot--get-language-id)
+                                                 :version copilot--doc-version
+                                                 :text (copilot--get-source)))))))
+
+(defun copilot--on-doc-change (&optional beg end chars-replaced)
+  "Notify that the document has changed."
+  (let* ((is-before-change (eq chars-replaced nil))
+         (is-after-change (not is-before-change))
+         ;; for a deletion, the post-change beginning and end are at the same place.
+         (is-insertion (and is-after-change (not (equal beg end))))
+         (is-deletion (and is-before-change (not (equal beg end)))))
+    (when (or is-insertion is-deletion)
+      (save-restriction
+        (widen)
+        (let* ((range-start (list :line (- (line-number-at-pos beg) copilot--line-bias)
+                                  :character (- beg (save-excursion (goto-char beg) (line-beginning-position)))))
+               (range-end (if is-insertion range-start
+                            (list :line (- (line-number-at-pos end) copilot--line-bias)
+                                  :character (- end (save-excursion (goto-char end) (line-beginning-position))))))
+               (text (if is-insertion (buffer-substring-no-properties beg end) ""))
+               (content-changes (vector (list :range (list :start range-start :end range-end)
+                                              :text text))))
+          (cl-incf copilot--doc-version)
+          (copilot--notify 'textDocument/didChange
+                           (list :textDocument (list :uri (copilot--get-uri) :version copilot--doc-version)
+                                 :contentChanges content-changes)))))))
+
+(defun copilot--on-doc-close (&rest _args)
+  "Notify that the document has been closed."
+  (when (-contains-p copilot--opened-buffers (current-buffer))
+    (copilot--notify 'textDocument/didClose
+                     (list :textDocument (list :uri (copilot--get-uri))))
+    (setq copilot--opened-buffers (delete (current-buffer) copilot--opened-buffers))))
+
 
 ;;;###autoload
 (defun copilot-complete ()
@@ -645,14 +699,13 @@ Use TRANSFORM-FN to transform completion if provided."
   (setq copilot--completion-idx 0)
 
   (let ((called-interactively (called-interactively-p 'interactive)))
-    (copilot--sync-doc)
     (copilot--get-completion
-      (jsonrpc-lambda (&key completions &allow-other-keys)
-        (let ((completion (if (seq-empty-p completions) nil (seq-elt completions 0))))
-          (if completion
-              (copilot--show-completion completion)
-            (when called-interactively
-              (message "No completion is available."))))))))
+     (jsonrpc-lambda (&key completions &allow-other-keys)
+       (let ((completion (if (seq-empty-p completions) nil (seq-elt completions 0))))
+         (if completion
+             (copilot--show-completion completion)
+           (when called-interactively
+             (message "No completion is available."))))))))
 
 ;;
 ;; minor mode
@@ -703,6 +756,30 @@ Copilot will show completions only if all predicates return t."
   "Keymap for Copilot minor mode.
 Use this for custom bindings in `copilot-mode'.")
 
+(defun copilot--mode-enter ()
+  "Set up copilot mode when entering."
+  (add-hook 'post-command-hook #'copilot--post-command nil 'local)
+  (add-hook 'before-change-functions #'copilot--on-doc-change nil 'local)
+  (add-hook 'after-change-functions #'copilot--on-doc-change nil 'local)
+  ;; Hook onto both window-selection-change-functions and window-buffer-change-functions
+  ;; since both are separate ways of 'focussing' a buffer.
+  (add-hook 'window-selection-change-functions #'copilot--on-doc-focus nil 'local)
+  (add-hook 'window-buffer-change-functions #'copilot--on-doc-focus nil 'local)
+  (add-hook 'kill-buffer-hook #'copilot--on-doc-close nil 'local)
+  ;; The mode may be activated manually while focus remains on the current window/buffer.
+  (copilot--on-doc-focus (selected-window)))
+
+(defun copilot--mode-exit ()
+  "Clean up copilot mode when exiting."
+  (remove-hook 'post-command-hook #'copilot--post-command 'local)
+  (remove-hook 'before-change-functions #'copilot--on-doc-change 'local)
+  (remove-hook 'after-change-functions #'copilot--on-doc-change 'local)
+  (remove-hook 'window-selection-change-functions #'copilot--on-doc-focus 'local)
+  (remove-hook 'window-buffer-change-functions #'copilot--on-doc-focus 'local)
+  (remove-hook 'kill-buffer-hook #'copilot--on-doc-close 'local)
+  ;; Send the close event for the active buffer since activating the mode will open it again.
+  (copilot--on-doc-close))
+
 ;;;###autoload
 (define-minor-mode copilot-mode
   "Minor mode for Copilot."
@@ -711,11 +788,8 @@ Use this for custom bindings in `copilot-mode'.")
   (copilot-clear-overlay)
   (advice-add 'posn-at-point :before-until #'copilot--posn-advice)
   (if copilot-mode
-      (progn
-        (add-hook 'post-command-hook #'copilot--post-command nil 'local)
-        (add-hook 'before-change-functions #'copilot--on-change nil 'local))
-    (remove-hook 'post-command-hook #'copilot--post-command 'local)
-    (remove-hook 'before-change-functions #'copilot--on-change 'local)))
+      (copilot--mode-enter)
+    (copilot--mode-exit)))
 
 (defun copilot--posn-advice (&rest args)
   "Remap posn if in copilot-mode."
@@ -728,11 +802,12 @@ Use this for custom bindings in `copilot-mode'.")
 
 ;;;###autoload
 (define-global-minor-mode global-copilot-mode
-    copilot-mode copilot-mode)
+  copilot-mode copilot-turn-on-unless-buffer-read-only)
 
-(defun copilot--on-change (&rest _args)
-  "Handle `before-change-functions' hook."
-  (cl-incf copilot--doc-version))
+(defun copilot-turn-on-unless-buffer-read-only ()
+  "Turn on `copilot-mode' if the buffer is writable."
+  (unless buffer-read-only
+    (copilot-mode 1)))
 
 (defun copilot--post-command ()
   "Complete in `post-command-hook' hook."
@@ -773,7 +848,7 @@ command that triggered `post-command-hook'."
              (equal (current-buffer) buffer)
              copilot-mode
              (copilot--satisfy-trigger-predicates))
-        (copilot-complete)))
+    (copilot-complete)))
 
 (provide 'copilot)
 ;;; copilot.el ends here

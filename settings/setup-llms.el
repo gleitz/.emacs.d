@@ -5,9 +5,9 @@
 (defun llm-query-and-insert (start end command)
   (interactive
    (let* ((prompt "Enter system message: ")
-          (system-message (if current-prefix-arg (shell-quote-argument (read-string prompt)) ""))
-          (message (format "llm -s \"%s\"" system-message))
-          (command (format "llm -s \"%s\"" system-message)))
+          (system-message (if current-prefix-arg "" (shell-quote-argument (read-string prompt))))
+          (message (format "llm -m gpt-3.5-turbo -s \"%s\"" system-message))
+          (command (format "llm -m gpt-3.5-turbo -s \"%s\"" system-message)))
      (if (use-region-p)
          (list (region-beginning) (region-end) command)
        (list (line-beginning-position) (line-end-position) command))))
@@ -15,19 +15,43 @@
   (let ((response (shell-command-on-region-to-string start end command)))
     (kill-new response)
     (save-excursion
-      (end-of-visual-line)
+      (end-of-region-or-visual-line)
       (newline)
       (insert response))))
 
-(defvar llm-command-map
-  (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "c") #'copilot-mode)
-    (define-key map (kbd "w") #'whisper-run)
-    (define-key map (kbd "l") #'llm-query-and-insert)
-    map)
-  "Keymap for LLM commands.")
-(fset 'llm-command-map llm-command-map)
-(define-key projectile-mode-map (kbd "C-c l") 'llm-command-map)
+(defun llm-gpt4-query-and-insert (start end command)
+  (interactive
+   (let* ((prompt "Enter system message: ")
+          (system-message (if current-prefix-arg "" (shell-quote-argument (read-string prompt))))
+          (message (format "llm -m gpt-4 -s \"%s\"" system-message))
+          (command (format "llm -m gpt-4 -s \"%s\"" system-message)))
+     (if (use-region-p)
+         (list (region-beginning) (region-end) command)
+       (list (line-beginning-position) (line-end-position) command))))
+  (message command)
+  (let ((response (shell-command-on-region-to-string start end command)))
+    (kill-new response)
+    (save-excursion
+      (end-of-region-or-visual-line)
+      (newline)
+      (insert response))))
+
+(defun llm-orca-query-and-insert (start end command)
+  (interactive
+   (let* ((prompt "Enter system message: ")
+          (system-message (if current-prefix-arg "" (shell-quote-argument (read-string prompt))))
+          (message (format "llm -m orca-2-13b -s \"%s\"" system-message))
+          (command (format "llm -m orca-2-13b -s \"%s\"" system-message)))
+     (if (use-region-p)
+         (list (region-beginning) (region-end) command)
+       (list (line-beginning-position) (line-end-position) command))))
+  (message command)
+  (let ((response (shell-command-on-region-to-string start end command)))
+    (kill-new response)
+    (save-excursion
+      (end-of-region-or-visual-line)
+      (newline)
+      (insert response))))
 
 ;; whisper microphone setup
 (defun rk/get-ffmpeg-device ()
@@ -90,5 +114,22 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
     (setq rk/default-audio-device (rk/find-device-matching name :audio))
     (when (boundp 'whisper--ffmpeg-input-device)
       (setq whisper--ffmpeg-input-device (format ":%s" rk/default-audio-device)))))
+
+(when (string= (system-name) "Repli-Benjamin-Gleitzman")
+  (setq whisper-model "medium.en")
+  (setq whisper--ffmpeg-input-device ":1"))
+
+(defvar llm-command-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "c") #'copilot-mode)
+    (define-key map (kbd "d") #'copilot-diagnose)
+    (define-key map (kbd "w") #'whisper-run)
+    (define-key map (kbd "l") #'llm-query-and-insert)
+    (define-key map (kbd "o") #'llm-orca-query-and-insert)
+    (define-key map (kbd "4") #'llm-gpt4-query-and-insert)
+    map)
+  "Keymap for LLM commands.")
+(fset 'llm-command-map llm-command-map)
+(define-key projectile-mode-map (kbd "C-c l") 'llm-command-map)
 
 (provide 'setup-llms)

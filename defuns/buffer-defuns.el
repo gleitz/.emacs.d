@@ -174,5 +174,5 @@ Including indent-buffer, which should not be called automatically on save."
   (interactive)
   (let* ((recent-files (mapcar 'recentf--file-cons recentf-list))
          (files (mapcar 'car recent-files))
-         (file (completing-read "Choose recent file: " files)))
+         (file (ido-completing-read "Choose recent file: " files)))
     (find-file (cdr (assoc file recent-files)))))

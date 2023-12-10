@@ -74,7 +74,7 @@
 ;; Turn on the menu bar for exploring new modes
 (global-set-key (kbd "C-<f10>") 'menu-bar-mode)
 
-;; Use shell-like backspace C-h, rebind help to F1
+;; Rebind help to F1
 (define-key key-translation-map [?\C-h] [?\C-?])
 (global-set-key (kbd "<f1>") 'help-command)
 
@@ -165,9 +165,9 @@
 
 ;; Window switching
 ;; (windmove-default-keybindings) ;; Shift+direction
-(global-set-key (kbd "C-x -") 'rotate-windows)
-(global-set-key (kbd "C-x C--") 'toggle-window-split)
-(global-unset-key (kbd "C-x C-+")) ;; don't zoom like this
+;; (global-set-key (kbd "C-x -") 'rotate-windows)
+;; (global-set-key (kbd "C-x C--") 'toggle-window-split)
+;; (global-unset-key (kbd "C-x C-+")) ;; don't zoom like this
 
 (global-set-key (kbd "C-x 3") 'split-window-right-and-move-there-dammit)
 
@@ -240,10 +240,10 @@
 (global-set-key (kbd "C-c b") 'create-scratch-buffer)
 
 ;; Move windows, even in org-mode
-;; (global-set-key (kbd "<s-right>") 'windmove-right)
-;; (global-set-key (kbd "<s-left>") 'windmove-left)
-;; (global-set-key (kbd "<s-up>") 'windmove-up)
-;; (global-set-key (kbd "<s-down>") 'windmove-down)
+(global-set-key (kbd "<s-right>") 'windmove-right)
+(global-set-key (kbd "<s-left>") 'windmove-left)
+(global-set-key (kbd "<s-up>") 'windmove-up)
+(global-set-key (kbd "<s-down>") 'windmove-down)
 
 ;; Magit
 (global-set-key (kbd "C-x m") 'magit-status)
@@ -360,5 +360,7 @@
 (define-key occur-mode-map (kbd "v") 'occur-mode-display-occurrence)
 (define-key occur-mode-map (kbd "n") 'next-line)
 (define-key occur-mode-map (kbd "p") 'previous-line)
+
+(define-key global-map (kbd "C-z") 'vterm)
 
 (provide 'key-bindings)

@@ -123,6 +123,7 @@
      elpy
      emojify
      eproject
+     ein
      exec-path-from-shell
      expand-region
      f
@@ -148,6 +149,7 @@
      ido-vertical-mode
      impatient-mode
      inflections
+     jinja2-mode
      json-mode
      json-snatcher
      jump-char
@@ -174,6 +176,7 @@
      prescient
      prodigy
      projectile
+     python-black
      python-mls
      quickrun
      realgud
@@ -207,6 +210,7 @@
      vterm
      wgrep
      whitespace-cleanup-mode
+     yaml-mode
      )))
 
 (condition-case nil

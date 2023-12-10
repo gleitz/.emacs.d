@@ -22,9 +22,9 @@
   (interactive)
   (unwind-protect
       (progn
-        (linum-mode 1)
+        (display-line-numbers-mode 1)
         (call-interactively 'goto-line))
-    (linum-mode -1)))
+    (display-line-numbers-mode -1)))
 
 (defun open-line-and-indent ()
   (interactive)

@@ -55,4 +55,44 @@
 ;;                    (buffer-substring-no-properties (point-min) (point-max))))
 ;;          (current-buffer)))
 
+(require 'xml)
+
+;; Call `markdown-export`, open the resulting HTML file, and then remove all content that is not within the <body> tag
+(defun markdown-export-and-open ()
+  (interactive)
+  ;; Export markdown to HTML.
+  (markdown-export)
+  ;; Construct HTML file path.
+  (let* ((md-file (buffer-file-name))
+         (html-file (concat (file-name-sans-extension md-file) ".html"))
+         title) ;; Declare title variable
+    ;; Open HTML file in Emacs.
+    (find-file html-file)
+    ;; Modify HTML content.
+    (goto-char (point-min))
+    ;; Extract and delete <h1> content.
+    (when (re-search-forward "<h1>\\(.*?\\)</h1>" nil t)
+      (setq title (decode-html (match-string 1))) ;; Save <h1> content to title
+      (replace-match "") ;; Delete <h1> tag
+      (kill-new title)) ;; Copy title to clipboard
+    ;; Delete content up to first <p> tag
+    (goto-char (point-min))
+    (when (search-forward "<p>" nil t)
+      (delete-region (point-min) (match-beginning 0)))
+    (when (search-forward "</body>" nil t)
+      (backward-char (length "</body>"))
+      (delete-region (point) (point-max)))
+    ;; Save and close the buffer.
+    (save-buffer)
+    ;; (kill-buffer)
+    ;; Open HTML file in the browser.
+    (browse-url (concat "file://" html-file))))
+
+(defun decode-html (html-string)
+  "Decode HTML entities in a string."
+  (with-temp-buffer
+    (insert html-string)
+    (libxml-parse-html-region (point-min) (point-max))
+    (buffer-string)))
+
 (provide 'setup-markdown-mode)

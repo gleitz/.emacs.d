@@ -38,8 +38,6 @@ If you want to use my settings straight out of the box, here are some things to 
 
  * Add your user- and project-specific stuff in .emacs.d/users/[machine name]/*.el
 
- * `C-h` is rebound to backspace, like in the shell. Get help on `F1` instead.
-
  * Autocomplete with `C-.` (autocomplete entire lines with `C-:`)
 
  * expand-region is your friend. Find its bound key by doing `F1 f er/expand-region`

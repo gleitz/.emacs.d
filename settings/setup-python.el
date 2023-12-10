@@ -19,7 +19,8 @@
 
 (add-hook 'python-mode-hook
           (lambda ()
-            (flycheck-select-checker 'python-flake8)))
+            (flycheck-select-checker 'python-flake8)
+            (python-black-on-save-mode 1)))
 
 (add-hook 'python-mode-hook 'jedi:setup)
 

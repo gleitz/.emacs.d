@@ -111,7 +111,7 @@ White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
 
 ;; Load scratch from Dropbox
 (setq scratch-buffer-path
-      (loop for filename in '("~/Dropbox/Personal/documents/scratch.txt")
+      (loop for filename in '("~/Dropbox/Personal/documents/obsidian/Gleitzvault/scratch/scratch.md")
             when (file-exists-p filename) collect filename into valid-files
             finally return (car valid-files)))
 
