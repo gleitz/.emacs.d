@@ -201,7 +201,7 @@
      tagedit
      tern
      tide
-     tumblesocks
+     ;; tumblesocks (provided by site-lisp)
      typo
      undo-tree
      virtualenvwrapper

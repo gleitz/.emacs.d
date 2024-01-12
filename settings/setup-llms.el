@@ -53,6 +53,9 @@
       (newline)
       (insert response))))
 
+;; Whisper
+(require 'whisper)
+
 ;; whisper microphone setup
 (defun rk/get-ffmpeg-device ()
   "Gets the list of devices available to ffmpeg.
