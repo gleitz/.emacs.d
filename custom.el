@@ -24,6 +24,7 @@
  '(js2-error-face ((t nil)))
  '(js2-function-param-face ((t (:foreground "LightGoldenrod"))))
  '(js2-warning-face ((t nil)))
+ '(mode-line ((t (:box (:line-width (1 . -1) :style released-button) :foreground "black" :background "grey75"))))
  '(mumamo-background-chunk-submode ((((class color) (min-colors 88) (background dark)) nil)) t)
  '(safe-local-variable-values '((eval font-lock-add-keywords nil '(("defexamples\\|def-example-group\\| => " (0 'font-lock-keyword-face)) ("(defexamples[[:blank:]]+\\(.*\\)" (1 'font-lock-function-name-face)))) (eval font-lock-add-keywords nil '(("defexamples\\|def-example-group\\| => " (0 'font-lock-keyword-face)))) (eval when (and (buffer-file-name) (file-regular-p (buffer-file-name)) (string-match-p "^[^.]" (buffer-file-name))) (emacs-lisp-mode)) (eval font-lock-add-keywords nil '(("defexamples\\| => " (0 'font-lock-keyword-face)))) (encoding . utf-8)))
  '(selectrum-current-candidate ((t (:inherit hl-line :extend t))))
@@ -123,7 +124,7 @@
    '((arduino-cli-default-fqbn . "arduino:avr:uno")
      (arduino-cli-default-port . "/dev/cu.usbmodem14601")
      (arduino-cli-default-fqbn quote arduino:avr:uno)
-     (arduino-cli-default-port quote /dev/cu.usbmodem14601)
+     (arduino-cli-default-port quote /dev/cu\.usbmodem14601)
      (eval setq flycheck-disabled-checkers
            (append flycheck-disabled-checkers
                    '(typescript-tsc)))
