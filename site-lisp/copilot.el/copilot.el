@@ -1,11 +1,48 @@
-;;; copilot.el --- An unofficial Copilot plugin for Emacs  -*- lexical-binding:t -*-
+;;; copilot.el --- An unofficial Copilot plugin for Emacs  -*- lexical-binding: t; -*-
 
-;; Package-Requires: ((emacs "27.2") (s "1.12.0") (dash "2.19.1") (editorconfig "0.8.2") (jsonrpc "1.0.14"))
+;; Copyright (C) 2022-2024  copilot-emacs maintainers
+
+;; Author: zerol <z@zerol.me>
+;; Maintainer: Emil van der Westhuizen
+;;             Shen, Jen-Chieh <jcs090218@gmail.com>
+;;             Rakotomandimby Mihamina <mihamina.rakotomandimby@rktmb.org>
+;; URL: https://github.com/copilot-emacs/copilot.el
+;; Package-Requires: ((emacs "27.2") (s "1.12.0") (dash "2.19.1") (editorconfig "0.8.2") (jsonrpc "1.0.14") (f "0.20.0"))
+;; Version: 0.0.1
+;; Keywords: convenience copilot
+
+;; The MIT License (MIT)
+
+;; Permission is hereby granted, free of charge, to any person obtaining a copy
+;; of this software and associated documentation files (the "Software"), to deal
+;; in the Software without restriction, including without limitation the rights
+;; to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+;; copies of the Software, and to permit persons to whom the Software is
+;; furnished to do so, subject to the following conditions:
+
+;; The above copyright notice and this permission notice shall be included in all
+;; copies or substantial portions of the Software.
+
+;; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+;; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+;; FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+;; AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+;; LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+;; SOFTWARE.
+
+;;; Commentary:
+
+;; An unofficial Copilot plugin for Emacs
 
 ;;; Code:
+
 (require 'cl-lib)
+(require 'compile)
 (require 'json)
 (require 'jsonrpc)
+
+(require 'f)
 (require 's)
 (require 'dash)
 (require 'editorconfig)
@@ -17,39 +54,48 @@
   :prefix "copilot-")
 
 (defcustom copilot-idle-delay 0
-  "Time in seconds to wait before starting completion. Complete immediately if set to 0."
-  :type 'float
+  "Time in seconds to wait before starting completion.
+
+Complete immediately if set to 0.
+Disable idle completion if set to nil."
+  :type '(choice
+          (number :tag "Seconds of delay")
+          (const :tag "Idle completion disabled" nil))
   :group 'copilot)
 
 (defcustom copilot-network-proxy nil
-  "Network proxy to use for Copilot. Nil means no proxy.
-Format: '(:host \"127.0.0.1\" :port 80 :username \"username\" :password \"password\")
+  "Network proxy to use for Copilot.
+
+Nil means no proxy.
+Format: \='(:host \"127.0.0.1\" :port 80 :username \"username\"
+            :password \"password\")
 Username and password are optional.
 
-If you are using a MITM proxy which intercepts TLS connections, you may need to disable
-TLS verification. This can be done by setting a pair ':rejectUnauthorized :json-false' 
-in the proxy plist. For example:
+If you are using a MITM proxy which intercepts TLS connections, you may need
+to disable TLS verification.  This can be done by setting a pair
+':rejectUnauthorized :json-false' in the proxy plist.  For example:
 
-  (:host \"127.0.0.1\" :port 80 :rejectUnauthorized :json-false)
-"
+  (:host \"127.0.0.1\" :port 80 :rejectUnauthorized :json-false)"
   :type '(plist :tag "Uncheck all to disable proxy" :key-type symbol)
   :options '((:host string) (:port integer) (:username string) (:password string))
   :group 'copilot)
 
 (defcustom copilot-log-max 0
-  "Max size of events buffer. 0 disables, nil means infinite.
-Enabling event logging may slightly affect performance."
+  "Max size of events buffer.
+0 disables, nil means infinite.  Enabling event logging may slightly affect
+performance."
   :group 'copilot
   :type 'integer)
 
-(defcustom copilot-node-executable
-  (if (eq system-type 'windows-nt)
-      "node.exe"
-    "node")
+(defcustom copilot-node-executable (executable-find "node")
   "Node executable path."
   :group 'copilot
   :type 'string)
 
+(defcustom copilot-server-args nil
+  "Additional arguments to pass to the Copilot server."
+  :group 'copilot
+  :type '(repeat string))
 
 (defcustom copilot-max-char 100000
   "Maximum number of characters to send to Copilot, -1 means no limit."
@@ -62,17 +108,55 @@ Enabling event logging may slightly affect performance."
   :group 'copilot
   :type '(repeat function))
 
-(defconst copilot--base-dir
-  (file-name-directory
-   (or load-file-name
-       (buffer-file-name)))
-  "Directory containing this file.")
+(defcustom copilot-indent-offset-warning-disable nil
+  "Disable indentation warnings.
 
-(defconst copilot-version "0.10.0"
-  "Copilot version.")
+Warning occurs when the function `copilot--infer-indentation-offset' cannot
+find indentation offset."
+  :group 'copilot
+  :type 'boolean)
+
+(defcustom copilot-indentation-alist
+  (append '((latex-mode tex-indent-basic)
+            (nxml-mode nxml-child-indent)
+            (python-mode python-indent py-indent-offset python-indent-offset)
+            (python-ts-mode python-indent py-indent-offset python-indent-offset)
+            (web-mode web-mode-markup-indent-offset web-mode-html-offset))
+          editorconfig-indentation-alist)
+  "Alist of `major-mode' to indentation map with optional fallbacks."
+  :type '(alist :key-type symbol :value-type (choice integer symbol))
+  :group 'copilot)
+
+(defconst copilot-server-package-name "copilot-node-server"
+  "The name of the package to install copilot server.")
+
+(defcustom copilot-install-dir (expand-file-name
+                                (locate-user-emacs-file (f-join ".cache" "copilot")))
+  "Directory in which the servers will be installed."
+  :risky t
+  :type 'directory
+  :group 'copilot)
+
+(defconst copilot--server-executable
+  (if (eq system-type 'windows-nt)
+      (f-join copilot-install-dir "node_modules" "copilot-node-server"
+              "bin" "copilot-node-server")
+    (f-join copilot-install-dir "bin" "copilot-node-server"))
+  "The dist directory containing agent.js file.")
+
+(defcustom copilot-version "1.14.0"
+  "Copilot version.
+
+The default value is the preferred version and ensures functionality.
+You may adjust this variable at your own risk."
+  :type 'string
+  :group 'copilot)
 
 (defvar-local copilot--overlay nil
   "Overlay for Copilot completion.")
+
+(defvar-local copilot--keymap-overlay nil
+  "Overlay used to surround point and make copilot-completion-keymap activate.")
 
 (defvar copilot--connection nil
   "Copilot agent jsonrpc connection instance.")
@@ -84,7 +168,8 @@ Enabling event logging may slightly affect performance."
 (defvar-local copilot--last-doc-version 0
   "The document version of the last completion.")
 (defvar-local copilot--doc-version 0
-  "The document version of the current buffer. Incremented after each change.")
+  "The document version of the current buffer.
+Incremented after each change.")
 
 (defun copilot--buffer-changed ()
   "Return non-nil if the buffer has changed since last completion."
@@ -92,6 +177,68 @@ Enabling event logging may slightly affect performance."
 
 (defvar copilot--opened-buffers nil
   "List of buffers that have been opened in Copilot.")
+
+;;
+;; Externals
+;;
+
+(declare-function vterm-delete-region "ext:vterm.el")
+(declare-function vterm-insert "ext:vterm.el")
+(declare-function org-sort-entries "ext:org.el")
+(declare-function org-entry-get "ext:org.el")
+(declare-function org-map-entries "ext:org.el")
+
+;;
+;; Entry
+;;
+
+(defvar copilot-mode-map (make-sparse-keymap)
+  "Keymap for Copilot minor mode.
+Use this for custom bindings in `copilot-mode'.")
+
+(defun copilot--mode-enter ()
+  "Set up copilot mode when entering."
+  (add-hook 'post-command-hook #'copilot--post-command nil 'local)
+  (add-hook 'before-change-functions #'copilot--on-doc-change nil 'local)
+  (add-hook 'after-change-functions #'copilot--on-doc-change nil 'local)
+  ;; Hook onto both window-selection-change-functions and window-buffer-change-functions
+  ;; since both are separate ways of 'focussing' a buffer.
+  (add-hook 'window-selection-change-functions #'copilot--on-doc-focus nil 'local)
+  (add-hook 'window-buffer-change-functions #'copilot--on-doc-focus nil 'local)
+  (add-hook 'kill-buffer-hook #'copilot--on-doc-close nil 'local)
+  ;; The mode may be activated manually while focus remains on the current window/buffer.
+  (copilot--on-doc-focus (selected-window)))
+
+(defun copilot--mode-exit ()
+  "Clean up copilot mode when exiting."
+  (remove-hook 'post-command-hook #'copilot--post-command 'local)
+  (remove-hook 'before-change-functions #'copilot--on-doc-change 'local)
+  (remove-hook 'after-change-functions #'copilot--on-doc-change 'local)
+  (remove-hook 'window-selection-change-functions #'copilot--on-doc-focus 'local)
+  (remove-hook 'window-buffer-change-functions #'copilot--on-doc-focus 'local)
+  (remove-hook 'kill-buffer-hook #'copilot--on-doc-close 'local)
+  ;; Send the close event for the active buffer since activating the mode will open it again.
+  (copilot--on-doc-close))
+
+;;;###autoload
+(define-minor-mode copilot-mode
+  "Minor mode for Copilot."
+  :init-value nil
+  :lighter " Copilot"
+  (copilot-clear-overlay)
+  (advice-add 'posn-at-point :before-until #'copilot--posn-advice)
+  (if copilot-mode
+      (copilot--mode-enter)
+    (copilot--mode-exit)))
+
+(defun copilot-turn-on-unless-buffer-read-only ()
+  "Turn on `copilot-mode' if the buffer is writable."
+  (unless buffer-read-only
+    (copilot-mode 1)))
+
+;;;###autoload
+(define-global-minor-mode global-copilot-mode
+  copilot-mode copilot-turn-on-unless-buffer-read-only)
 
 ;;
 ;; agent
@@ -121,7 +268,11 @@ Enabling event logging may slightly affect performance."
      (jsonrpc-notify copilot--connection ,@args)))
 
 (cl-defmacro copilot--async-request (method params &rest args &key (success-fn #'copilot--ignore-response) &allow-other-keys)
-  "Send an asynchronous request to the copilot agent."
+  "Send an asynchronous request to the copilot agent.
+
+Arguments METHOD, PARAMS and ARGS are used in function `jsonrpc-async-request'.
+
+SUCCESS-FN is the CALLBACK."
   `(progn
      (unless (copilot--connection-alivep)
        (copilot--start-agent))
@@ -134,37 +285,55 @@ Enabling event logging may slightly affect performance."
                                               (funcall ,success-fn result)))
                               ,@args))))
 
+(defun copilot--make-connection ()
+  "Establish copilot jsonrpc connection."
+  (let ((make-fn (apply-partially
+                  #'make-instance
+                  'jsonrpc-process-connection
+                  :name "copilot"
+                  :notification-dispatcher #'copilot--handle-notification
+                  :process (make-process :name "copilot agent"
+                                         :command (append
+                                                   (list copilot-node-executable
+                                                         copilot--server-executable)
+                                                   copilot-server-args)
+                                         :coding 'utf-8-emacs-unix
+                                         :connection-type 'pipe
+                                         :stderr (get-buffer-create "*copilot stderr*")
+                                         :noquery t))))
+    (condition-case nil
+        (funcall make-fn :events-buffer-config `(:size ,copilot-log-max))
+      (invalid-slot-name
+       ;; handle older jsonrpc versions
+       (funcall make-fn :events-buffer-scrollback-size copilot-log-max)))))
+
 (defun copilot--start-agent ()
   "Start the copilot agent process in local."
-  (if (not (locate-file copilot-node-executable exec-path))
-      (user-error "Could not find node executable")
+  (cond
+   ((null copilot-node-executable)
+    (user-error "Could not find node executable"))
+   ((not (file-exists-p copilot-install-dir))
+    (user-error "Server is not installed, please install via `M-x copilot-install-server`"))
+   (t
+    (unless (equal (copilot-installed-version) copilot-version)
+      (warn "Newer versions of the Copilot server are available for installation.
+Please upgrade the server via `M-x copilot-reinstall-server`"))
     (let ((node-version (->> (with-output-to-string
                                (call-process copilot-node-executable nil standard-output nil "--version"))
                              (s-trim)
                              (s-chop-prefix "v")
                              (string-to-number))))
-      (cond ((< node-version 16)
-             (user-error "Node 16+ is required but found %s" node-version))
+      (cond ((< node-version 18)
+             (user-error "Node 18+ is required but found %s" node-version))
             (t
-             (setq copilot--connection
-                   (make-instance 'jsonrpc-process-connection
-                                  :name "copilot"
-                                  :events-buffer-scrollback-size copilot-log-max
-                                  :notification-dispatcher #'copilot--handle-notification
-                                  :process (make-process :name "copilot agent"
-                                                         :command (list copilot-node-executable
-                                                                        (concat copilot--base-dir "/dist/agent.js"))
-                                                         :coding 'utf-8-emacs-unix
-                                                         :connection-type 'pipe
-                                                         :stderr (get-buffer-create "*copilot stderr*")
-                                                         :noquery t)))
+             (setq copilot--connection (copilot--make-connection))
              (message "Copilot agent started.")
              (copilot--request 'initialize '(:capabilities (:workspace (:workspaceFolders t))))
              (copilot--async-request 'setEditorInfo
                                      `(:editorInfo (:name "Emacs" :version ,emacs-version)
-                                       :editorPluginInfo (:name "copilot.el" :version ,copilot-version)
-                                       ,@(when copilot-network-proxy
-                                           `(:networkProxy ,copilot-network-proxy)))))))))
+                                                   :editorPluginInfo (:name "copilot.el" :version ,copilot-version)
+                                                   ,@(when copilot-network-proxy
+                                                       `(:networkProxy ,copilot-network-proxy))))))))))
 
 ;;
 ;; login / logout
@@ -197,7 +366,9 @@ Enabling event logging may slightly affect performance."
     (if (display-graphic-p)
         (progn
           (gui-set-selection 'CLIPBOARD user-code)
-          (read-from-minibuffer (format "Your one-time code %s is copied. Press ENTER to open GitHub in your browser." user-code))
+          (read-from-minibuffer (format "Your one-time code %s is copied. Press \
+ENTER to open GitHub in your browser. If your browser does not open \
+automatically, browse to %s." user-code verification-uri))
           (browse-url verification-uri)
           (read-from-minibuffer "Press ENTER if you finish authorizing."))
       (read-from-minibuffer (format "First copy your one-time code: %s. Press ENTER to continue." user-code))
@@ -258,7 +429,7 @@ Enabling event logging may slightly affect performance."
 (defvar copilot-major-mode-alist '(("rustic" . "rust")
                                    ("cperl" . "perl")
                                    ("c++" . "cpp")
-                                   ("clojurec" . "clojure")
+                                   ("clojure" . "clojure")
                                    ("clojurescript" . "clojure")
                                    ("objc" . "objective-c")
                                    ("cuda" . "cuda-cpp")
@@ -270,6 +441,8 @@ Enabling event logging may slightly affect performance."
                                    ("typescript-tsx" . "typescriptreact")
                                    ("rjsx" . "typescriptreact")
                                    ("less-css" . "less")
+                                   ("caml" . "ocaml")
+                                   ("tuareg" . "ocaml")
                                    ("text" . "plaintext")
                                    ("ess-r" . "r")
                                    ("enh-ruby" . "ruby")
@@ -279,22 +452,11 @@ Enabling event logging may slightly affect performance."
                                    ("nxml" . "xml"))
   "Alist mapping major mode names (with -mode removed) to copilot language ID's.")
 
-(defconst copilot--indentation-alist
-  (append '((latex-mode tex-indent-basic)
-            (nxml-mode nxml-child-indent)
-            (python-mode python-indent py-indent-offset python-indent-offset)
-            (python-ts-mode python-indent py-indent-offset python-indent-offset)
-            (web-mode web-mode-markup-indent-offset web-mode-html-offset))
-          editorconfig-indentation-alist)
-  "Alist of `major-mode' to indentation map with optional fallbacks.")
+(defvar copilot-minor-mode-alist '(("git-commit" . "git-commit"))
+  "Alist mapping minor mode names (with -mode removed) to copilot language ID's.")
 
 (defvar-local copilot--completion-cache nil)
 (defvar-local copilot--completion-idx 0)
-
-(defcustom copilot-indent-warning-suppress nil
-  "If nil, then warn when copilot finds no mode-specific offset."
-  :type 'boolean
-  :group 'copilot)
 
 (defvar-local copilot--indent-warning-printed-p nil
   "Flag indicating whether indent warning was already printed.")
@@ -302,17 +464,20 @@ Enabling event logging may slightly affect performance."
 (defun copilot--infer-indentation-offset ()
   "Infer indentation offset."
   (or (let ((mode major-mode))
-        (while (and (not (assq mode copilot--indentation-alist))
+        (while (and (not (assq mode copilot-indentation-alist))
                     (setq mode (get mode 'derived-mode-parent))))
         (when mode
           (cl-some (lambda (s)
-                     (when (and (boundp s) (numberp (symbol-value s)))
-                       (symbol-value s)))
-                   (alist-get mode copilot--indentation-alist))))
+                     ;; s can be a symbol or a number.
+                     (cond ((numberp s) s)
+                           ((and (boundp s) (numberp (symbol-value s))) (symbol-value s))))
+                   (alist-get mode copilot-indentation-alist))))
       (progn
-        (when (and (not copilot-indent-warning-suppress)
-                   (not copilot--indent-warning-printed-p))
-          (message "Warning: copilot--infer-indentation-offset found no mode-specific indentation offset, using 'tab-width' instead.  You can suppress this error message by customizing 'copilot-indent-warning-suppress'.")
+        (when (and
+               (not copilot-indent-offset-warning-disable)
+               (not copilot--indent-warning-printed-p))
+          (display-warning '(copilot copilot-no-mode-indent)
+                           "copilot--infer-indentation-offset found no mode-specific indentation offset.")
           (setq-local copilot--indent-warning-printed-p t))
         tab-width)))
 
@@ -367,10 +532,25 @@ Enabling event logging may slightly affect performance."
       (buffer-substring-no-properties (- p half-window)
                                       (+ p half-window))))))
 
+(defun copilot--get-minor-mode-language-id ()
+  "Get language ID from minor mode if available."
+  (let ((pair
+         (seq-find
+          (lambda (pair)
+            (let ((minor-mode-symbol (intern (concat (car pair) "-mode"))))
+              (and (boundp minor-mode-symbol) (symbol-value minor-mode-symbol))))
+          copilot-minor-mode-alist)))
+    (cdr pair)))
+
+(defun copilot--get-major-mode-language-id ()
+  "Get language ID from major mode."
+  (let ((major-mode-symbol (s-chop-suffixes '("-ts-mode" "-mode") (symbol-name major-mode))))
+    (alist-get major-mode copilot-major-mode-alist major-mode-symbol nil 'equal)))
+
 (defun copilot--get-language-id ()
   "Get language ID of current buffer."
-  (let ((mode (s-chop-suffixes '("-ts-mode" "-mode") (symbol-name major-mode))))
-    (alist-get mode copilot-major-mode-alist mode nil 'equal)))
+  (or (copilot--get-minor-mode-language-id)
+      (copilot--get-major-mode-language-id)))
 
 (defun copilot--generate-doc ()
   "Generate doc parameters for completion request."
@@ -455,7 +635,7 @@ Enabling event logging may slightly affect performance."
                     "  :END:\n"
                     "#+BEGIN_SRC " copilot--panel-lang "\n"
                     completion-text "\n#+END_SRC\n\n")
-            (mark-whole-buffer)
+            (call-interactively #'mark-whole-buffer)
             (org-sort-entries nil ?R nil nil "SCORE"))))))
   (when (eql method 'PanelSolutionsDone)
     (message "Copilot: Finish synthesizing solutions.")
@@ -511,12 +691,28 @@ To work around posn problems with after-string property.")
 (defconst copilot-completion-map (make-sparse-keymap)
   "Keymap for Copilot completion overlay.")
 
+(defun copilot--posn-advice (&rest args)
+  "Remap posn if in copilot-mode with ARGS."
+  (when copilot-mode
+    (let ((pos (or (car-safe args) (point))))
+      (when (and copilot--real-posn
+                 (eq pos (car copilot--real-posn)))
+        (cdr copilot--real-posn)))))
+
+(defun copilot--get-or-create-keymap-overlay ()
+  "Make or return the local copilot--keymap-overlay."
+  (unless (overlayp copilot--keymap-overlay)
+    (setq copilot--keymap-overlay (make-overlay 1 1 nil nil t))
+    (overlay-put copilot--keymap-overlay 'keymap copilot-completion-map)
+    (overlay-put copilot--keymap-overlay 'priority 101))
+  copilot--keymap-overlay)
+
 (defun copilot--get-overlay ()
   "Create or get overlay for Copilot."
   (unless (overlayp copilot--overlay)
     (setq copilot--overlay (make-overlay 1 1 nil nil t))
-    (overlay-put copilot--overlay 'keymap copilot-completion-map)
-    (overlay-put copilot--overlay 'priority 100))
+    (overlay-put
+     copilot--overlay 'keymap-overlay (copilot--get-or-create-keymap-overlay)))
   copilot--overlay)
 
 (defun copilot--overlay-end (ov)
@@ -526,6 +722,16 @@ To work around posn problems with after-string property.")
 (defun copilot--set-overlay-text (ov completion)
   "Set overlay OV with COMPLETION."
   (move-overlay ov (point) (line-end-position))
+
+  ;; set overlay position for the keymap, to activate copilot-completion-map
+  ;;
+  ;; if the point is at the end of the buffer, we will create a
+  ;; 0-length buffer. But this is ok, since the keymap will still
+  ;; activate _so long_ as no other overlay contains the point.
+  ;;
+  ;; see https://github.com/copilot-emacs/copilot.el/issues/251 for details.
+  (move-overlay (overlay-get ov 'keymap-overlay) (point) (min (point-max) (+ 1 (point))))
+
   (let* ((tail (buffer-substring (copilot--overlay-end ov) (line-end-position)))
          (p-completion (concat (propertize completion 'face 'copilot-overlay-face)
                                tail)))
@@ -544,8 +750,8 @@ To work around posn problems with after-string property.")
 (defun copilot--display-overlay-completion (completion uuid start end)
   "Show COMPLETION with UUID between START and END.
 
-(save-excursion) is not necessary since there is only one caller, and they are
-already saving an excursion. This is also a private function."
+`save-excursion' is not necessary since there is only one caller, and they are
+already saving an excursion.  This is also a private function."
   (copilot-clear-overlay)
   (when (and (s-present-p completion)
              (or (= start (point))      ; up-to-date completion
@@ -559,18 +765,21 @@ already saving an excursion. This is also a private function."
       (copilot--async-request 'notifyShown (list :uuid uuid)))))
 
 (defun copilot-clear-overlay (&optional is-accepted)
-  "Clear Copilot overlay. If IS-ACCEPTED is nil, notify rejected."
+  "Clear Copilot overlay.
+If IS-ACCEPTED is nil, notify rejected."
   (interactive)
   (when (copilot--overlay-visible)
     (unless is-accepted
       (copilot--async-request 'notifyRejected
                               (list :uuids `[,(overlay-get copilot--overlay 'uuid)])))
     (delete-overlay copilot--overlay)
+    (delete-overlay copilot--keymap-overlay)
     (setq copilot--real-posn nil)))
 
 (defun copilot-accept-completion (&optional transform-fn)
-  "Accept completion. Return t if there is a completion.
-Use TRANSFORM-FN to transform completion if provided."
+  "Accept completion.
+Return t if there is a completion.  Use TRANSFORM-FN to transform completion if
+provided."
   (interactive)
   (when (copilot--overlay-visible)
     (let* ((completion (overlay-get copilot--overlay 'completion))
@@ -613,8 +822,8 @@ Use TRANSFORM-FN to transform completion if provided."
   (when (copilot--satisfy-display-predicates)
     (copilot--dbind
         (:text :uuid :docVersion doc-version
-         :range (:start (:line :character start-char)
-                 :end (:character end-char)))
+               :range (:start (:line :character start-char)
+                              :end (:character end-char)))
         completion-data
       (when (= doc-version copilot--doc-version)
         (save-excursion
@@ -642,7 +851,7 @@ Use TRANSFORM-FN to transform completion if provided."
                 (copilot--display-overlay-completion balanced-text uuid start end)))))))))
 
 (defun copilot--on-doc-focus (window)
-  "Notify that the document has been focussed or opened."
+  "Notify that the document WINDOW has been focussed or opened."
   ;; When switching windows, this function is called twice, once for the
   ;; window losing focus and once for the window gaining focus. We only want to
   ;; send a notification for the window gaining focus and only if the buffer has
@@ -659,8 +868,10 @@ Use TRANSFORM-FN to transform completion if provided."
                                                  :text (copilot--get-source)))))))
 
 (defun copilot--on-doc-change (&optional beg end chars-replaced)
-  "Notify that the document has changed."
-  (let* ((is-before-change (eq chars-replaced nil))
+  "Notify that the document has changed.
+
+Arguments BEG, END, and CHARS-REPLACED are metadata for region changed."
+  (let* ((is-before-change (null chars-replaced))
          (is-after-change (not is-before-change))
          ;; for a deletion, the post-change beginning and end are at the same place.
          (is-insertion (and is-after-change (not (equal beg end))))
@@ -752,63 +963,6 @@ Copilot will show completions only if all predicates return t."
   "Return t if all display predicates are satisfied."
   (copilot--satisfy-predicates copilot-enable-display-predicates copilot-disable-display-predicates))
 
-(defvar copilot-mode-map (make-sparse-keymap)
-  "Keymap for Copilot minor mode.
-Use this for custom bindings in `copilot-mode'.")
-
-(defun copilot--mode-enter ()
-  "Set up copilot mode when entering."
-  (add-hook 'post-command-hook #'copilot--post-command nil 'local)
-  (add-hook 'before-change-functions #'copilot--on-doc-change nil 'local)
-  (add-hook 'after-change-functions #'copilot--on-doc-change nil 'local)
-  ;; Hook onto both window-selection-change-functions and window-buffer-change-functions
-  ;; since both are separate ways of 'focussing' a buffer.
-  (add-hook 'window-selection-change-functions #'copilot--on-doc-focus nil 'local)
-  (add-hook 'window-buffer-change-functions #'copilot--on-doc-focus nil 'local)
-  (add-hook 'kill-buffer-hook #'copilot--on-doc-close nil 'local)
-  ;; The mode may be activated manually while focus remains on the current window/buffer.
-  (copilot--on-doc-focus (selected-window)))
-
-(defun copilot--mode-exit ()
-  "Clean up copilot mode when exiting."
-  (remove-hook 'post-command-hook #'copilot--post-command 'local)
-  (remove-hook 'before-change-functions #'copilot--on-doc-change 'local)
-  (remove-hook 'after-change-functions #'copilot--on-doc-change 'local)
-  (remove-hook 'window-selection-change-functions #'copilot--on-doc-focus 'local)
-  (remove-hook 'window-buffer-change-functions #'copilot--on-doc-focus 'local)
-  (remove-hook 'kill-buffer-hook #'copilot--on-doc-close 'local)
-  ;; Send the close event for the active buffer since activating the mode will open it again.
-  (copilot--on-doc-close))
-
-;;;###autoload
-(define-minor-mode copilot-mode
-  "Minor mode for Copilot."
-  :init-value nil
-  :lighter " Copilot"
-  (copilot-clear-overlay)
-  (advice-add 'posn-at-point :before-until #'copilot--posn-advice)
-  (if copilot-mode
-      (copilot--mode-enter)
-    (copilot--mode-exit)))
-
-(defun copilot--posn-advice (&rest args)
-  "Remap posn if in copilot-mode."
-  (when copilot-mode
-    (let ((pos (or (car-safe args) (point))))
-      (when (and copilot--real-posn
-                 (eq pos (car copilot--real-posn)))
-        (cdr copilot--real-posn)))))
-
-
-;;;###autoload
-(define-global-minor-mode global-copilot-mode
-  copilot-mode copilot-turn-on-unless-buffer-read-only)
-
-(defun copilot-turn-on-unless-buffer-read-only ()
-  "Turn on `copilot-mode' if the buffer is writable."
-  (unless buffer-read-only
-    (copilot-mode 1)))
-
 (defun copilot--post-command ()
   "Complete in `post-command-hook' hook."
   (when (and this-command
@@ -820,16 +974,17 @@ Use this for custom bindings in `copilot-mode'.")
     (copilot-clear-overlay)
     (when copilot--post-command-timer
       (cancel-timer copilot--post-command-timer))
-    (setq copilot--post-command-timer
-          (run-with-idle-timer copilot-idle-delay
-                               nil
-                               #'copilot--post-command-debounce
-                               (current-buffer)))))
+    (when (numberp copilot-idle-delay)
+      (setq copilot--post-command-timer
+            (run-with-idle-timer copilot-idle-delay
+                                 nil
+                                 #'copilot--post-command-debounce
+                                 (current-buffer))))))
 
 (defun copilot--self-insert (command)
   "Handle the case where the char just inserted is the start of the completion.
-If so, update the overlays and continue. COMMAND is the
-command that triggered `post-command-hook'."
+If so, update the overlays and continue.  COMMAND is the command that triggered
+in `post-command-hook'."
   (when (and (eq command 'self-insert-command)
              (copilot--overlay-visible)
              (copilot--satisfy-display-predicates))
@@ -849,6 +1004,84 @@ command that triggered `post-command-hook'."
              copilot-mode
              (copilot--satisfy-trigger-predicates))
     (copilot-complete)))
+
+;;
+;;; Installation
+
+(defun copilot-installed-version ()
+  "Return the version number of currently installed `copilot-node-server'."
+  (let ((possible-paths (list
+                         (when (eq system-type 'windows-nt)
+                           (f-join copilot-install-dir "node_modules" "copilot-node-server" "package.json"))
+                         (f-join copilot-install-dir "lib" "node_modules" "copilot-node-server" "package.json")
+                         (f-join copilot-install-dir "lib64" "node_modules" "copilot-node-server" "package.json"))))
+    (seq-some
+     (lambda (path)
+       (when (and path (file-exists-p path))
+         (with-temp-buffer
+           (insert-file-contents path)
+           (save-match-data
+             (when (re-search-forward "\"version\": \"\\([0-9]+\\.[0-9]+\\.[0-9]+\\)\"" nil t)
+               (match-string 1))))))
+     possible-paths)))
+
+;; XXX: This function is modified from `lsp-mode'; see `lsp-async-start-process'
+;; function for more information.
+(defun copilot-async-start-process (callback error-callback &rest command)
+  "Start async process COMMAND with CALLBACK and ERROR-CALLBACK."
+  (with-current-buffer
+      (compilation-start
+       (mapconcat
+        #'shell-quote-argument
+        (-filter (lambda (cmd) cmd) command)
+        " ")
+       t
+       (lambda (&rest _)
+         (generate-new-buffer-name "*copilot-install-server*")))
+    (view-mode +1)
+    (add-hook
+     'compilation-finish-functions
+     (lambda (_buf status)
+       (if (string= "finished\n" status)
+           (when callback
+             (condition-case err
+                 (funcall callback)
+               (error
+                (funcall error-callback (error-message-string err)))))
+         (when error-callback
+           (funcall error-callback (s-trim-right status)))))
+     nil t)))
+
+;;;###autoload
+(defun copilot-install-server ()
+  "Interactively install server."
+  (interactive)
+  (if-let ((npm-binary (executable-find "npm")))
+      (progn
+        (make-directory copilot-install-dir 'parents)
+        (copilot-async-start-process
+         nil nil
+         npm-binary
+         "-g" "--prefix" copilot-install-dir
+         "install" (format "%s@%s" copilot-server-package-name copilot-version)))
+    (message "Unable to install %s via `npm' because it is not present" copilot-server-package-name)
+    nil))
+
+;;;###autoload
+(defun copilot-reinstall-server ()
+  "Interactively re-install server."
+  (interactive)
+  (copilot-uninstall-server)
+  (copilot-install-server))
+
+;;;###autoload
+(defun copilot-uninstall-server ()
+  "Delete a Copilot server from `copilot-install-dir'."
+  (interactive)
+  (unless (file-directory-p copilot-install-dir)
+    (user-error "Couldn't find %s directory" copilot-install-dir))
+  (delete-directory copilot-install-dir 'recursive)
+  (message "Server `%s' uninstalled." (file-name-nondirectory (directory-file-name copilot-install-dir))))
 
 (provide 'copilot)
 ;;; copilot.el ends here

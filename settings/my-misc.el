@@ -1,3 +1,4 @@
+(require 'cl-lib)
 (require 'typo)
 
 ;; Seed the random-number generator
@@ -32,12 +33,12 @@
 (add-hook 'makefile-mode-hook 'indent-tabs-mode)
 
 ;; More neat bindings for C-x 8
-(global-set-key (kbd "C-x 8 t m") (λ (insert "™")))
-(global-set-key (kbd "C-x 8 ( c )") (λ (insert "©")))
-(global-set-key (kbd "C-x 8 - >") (λ (insert "→")))
-(global-set-key (kbd "C-x 8 8") (λ (insert "∞")))
-(global-set-key (kbd "C-x 8 ( c )") (λ (insert "©")))
-(global-set-key (kbd "C-x 8 v") (λ (insert "✓")))
+;; (global-set-key (kbd "C-x 8 t m") (lambda (insert "™")))
+;; (global-set-key (kbd "C-x 8 ( c )") (lambda (insert "©")))
+;; (global-set-key (kbd "C-x 8 - >") (lambda (insert "→")))
+;; (global-set-key (kbd "C-x 8 8") (lambda (insert "∞")))
+;; (global-set-key (kbd "C-x 8 ( c )") (lambda (insert "©")))
+;; (global-set-key (kbd "C-x 8 v") (lambda (insert "✓")))
 
 ;; Add JSP expansions to html-mode
 (eval-after-load "sgml-mode" '(require 'jsp-expansions))
@@ -111,9 +112,9 @@ White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
 
 ;; Load scratch from Dropbox
 (setq scratch-buffer-path
-      (loop for filename in '("~/Dropbox/Personal/documents/obsidian/Gleitzvault/scratch/scratch.md")
-            when (file-exists-p filename) collect filename into valid-files
-            finally return (car valid-files)))
+      (cl-loop for filename in '("~/Dropbox/Personal/documents/obsidian/Gleitzvault/scratch/scratch.md")
+               when (file-exists-p filename) collect filename into valid-files
+               finally return (car valid-files)))
 
 ;; Scroll to the end of the scratch buffer
 (defun end-of-scratch ()
@@ -130,5 +131,24 @@ White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
   (setq initial-buffer-choice scratch-buffer-path)
   (kill-buffer "*scratch*")
   (run-at-time "1 sec" nil 'end-of-scratch))
+
+;; Treesitter
+;; https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
+(setq treesit-language-source-alist
+   '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+     (cmake "https://github.com/uyha/tree-sitter-cmake")
+     (css "https://github.com/tree-sitter/tree-sitter-css")
+     (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+     (go "https://github.com/tree-sitter/tree-sitter-go")
+     (html "https://github.com/tree-sitter/tree-sitter-html")
+     (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+     (json "https://github.com/tree-sitter/tree-sitter-json")
+     (make "https://github.com/alemuller/tree-sitter-make")
+     (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+     (python "https://github.com/tree-sitter/tree-sitter-python")
+     (toml "https://github.com/tree-sitter/tree-sitter-toml")
+     (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+     (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+     (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
 (provide 'my-misc)

@@ -89,7 +89,7 @@
 (add-to-list 'magic-mode-alist '("#!/usr/bin/env node" . js-mode))
 (add-to-list 'auto-mode-alist '("\\.jsx$" . js-mode))
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js-mode))
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . js-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . js-mode))
 
 ;; Configuration files

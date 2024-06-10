@@ -26,6 +26,11 @@
           (lambda ()
             (setup-tide-mode)))
 
+;; Treesitter
+(add-hook 'tsx-ts-mode-hook
+          (lambda ()
+            (setup-tide-mode)))
+
 (flycheck-define-checker typescript-tsc
   "A TypeScript syntax checker using tsc, the TypeScript compiler.
 

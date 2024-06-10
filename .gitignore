@@ -46,6 +46,8 @@ pyhist-python
 eln-cache/
 elgrep-data.el
 projects
+tree-sitter/
+.cache/
 
 # site-lisp
 site-lisp/*/.github/

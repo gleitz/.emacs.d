@@ -2,6 +2,8 @@
 
 Bits and pieces collected over the years. Folder structure and base configuration inspired by [magnars/.emacs.d](https://github.com/magnars/.emacs.d).
 
+Emacs is intalled from [[https://github.com/d12frosted/homebrew-emacs-plus]].
+
 ## Setup
 
 To grab all the dependencies:
@@ -147,6 +149,10 @@ overview of the most commonly used shortcuts to get you through this pain:
 * `M-x atomic-chrome-start-server` and then use GhostText to edit with Emacs
 * `M-x find-file-literally` to open without any modes (good for long files)
 * `C-u C-x =` unicode descriptor for character at poiny
+
+### Copilot
+
+When installing copilot, fund where the lang server installs the `agent.js` (/Users/gleitz/.emacs.d/.cache/copilot) and change `.stop` to have three newlines.
 
 ### Useful Packages
 * git-link

@@ -6,21 +6,25 @@ Copilot.el is an Emacs plugin for GitHub Copilot.
 
 **Warning:** This plugin is unofficial and based on binaries provided by [copilot.vim](https://github.com/github/copilot.vim).
 
-**Note:** You need access to [GitHub Copilot](https://github.com/features/copilot) to use this plugin.
+**Note:** You need access to [GitHub Copilot][] to use this plugin.
 
-Current maintainer: [@emil-vdw](https://github.com/emil-vdw)
+Current maintainer: [@emil-vdw][], [@jcs090218][], [@rakotomandimby][].
+
+Retired maintainer: [@zerolfx][].
 
 ## Installation
 
-0. Ensure your Emacs version is at least 27, and the dependency package `editorconfig` ([melpa](https://melpa.org/#/editorconfig)) is also installed.
+0. Ensure your Emacs version is at least 27, the dependency package `editorconfig` ([melpa](https://melpa.org/#/editorconfig)) and `jsonrpc` ([elpa](https://elpa.gnu.org/packages/jsonrpc.html), >= 1.0.14) are both installed.
 
-1. Install [Node.js](https://nodejs.org/en/download/) v16+. (You can specify the path to `node` executable by setting `copilot-node-executable`.)
+1. Install [Node.js][] v18+. (You can specify the path to `node` executable by setting `copilot-node-executable`.)
 
 2. Setup `copilot.el` as described in the next section.
 
-3. Login to Copilot by `M-x copilot-login`. You can also check the status by `M-x copilot-diagnose` (`NotAuthorized` means you don't have a valid subscription).
+3. Install the copilot server by `M-x copilot-install-server`.
 
-4. Enjoy!
+4. Login to Copilot by `M-x copilot-login`. You can also check the status by `M-x copilot-diagnose` (`NotAuthorized` means you don't have a valid subscription).
+
+5. Enjoy!
 
 ## Configurations
 
@@ -32,7 +36,7 @@ Add package definition to `~/.doom.d/packages.el`:
 
 ```elisp
 (package! copilot
-  :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
+  :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el")))
 ```
 
 Configure copilot in `~/.doom.d/config.el`:
@@ -49,6 +53,23 @@ Configure copilot in `~/.doom.d/config.el`:
 ```
 
 Strongly recommend to enable `childframe` option in `company` module (`(company +childframe)`) to prevent overlay conflict.
+
+If pressing tab to complete sometimes doesn't work you might want to bind completion to another key or try:
+
+```elisp
+(after! (evil copilot)
+  ;; Define the custom function that either accepts the completion or does the default behavior
+  (defun my/copilot-tab-or-default ()
+    (interactive)
+    (if (and (bound-and-true-p copilot-mode)
+             ;; Add any other conditions to check for active copilot suggestions if necessary
+             )
+        (copilot-accept-completion)
+      (evil-insert 1))) ; Default action to insert a tab. Adjust as needed.
+
+  ;; Bind the custom function to <tab> in Evil's insert state
+  (evil-define-key 'insert 'global (kbd "<tab>") 'my/copilot-tab-or-default))
+```
 
 </details>
 
@@ -75,8 +96,8 @@ dotspacemacs-configuration-layers
 dotspacemacs-additional-packages
  '((copilot :location (recipe
                        :fetcher github
-                       :repo "zerolfx/copilot.el"
-                       :files ("*.el" "dist"))))
+                       :repo "copilot-emacs/copilot.el"
+                       :files ("*.el"))))
 
 ;; ========================
 ;; dotspacemacs/user-config
@@ -111,7 +132,7 @@ dotspacemacs-additional-packages
   
 ```elisp
 (use-package copilot
-  :straight (:host github :repo "zerolfx/copilot.el" :files ("dist" "*.el"))
+  :straight (:host github :repo "copilot-emacs/copilot.el" :files ("*.el"))
   :ensure t)
 ;; you can utilize :map :hook and :config to customize copilot
 ```
@@ -121,9 +142,9 @@ dotspacemacs-additional-packages
 ```elisp
 (use-package copilot
   :quelpa (copilot :fetcher github
-                   :repo "zerolfx/copilot.el"
+                   :repo "copilot-emacs/copilot.el"
                    :branch "main"
-                   :files ("dist" "*.el")))
+                   :files ("*.el")))
 ;; you can utilize :map :hook and :config to customize copilot
 ```
 
@@ -134,10 +155,11 @@ Please make sure you have these dependencies installed (available in ELPA/MELPA)
 + `dash`
 + `s`
 + `editorconfig`
++ `f`
 
 After installing those, clone this repository then insert the below snippet into your config file.
 
-```
+```elisp
 (add-to-list 'load-path "/path/to/copilot.el")
 (require 'copilot)
 ```
@@ -213,13 +235,13 @@ Cycle through the completion list.
 
 #### copilot-logout
 
-Logout from GitHub.
+Log out from GitHub.
 
 ## Customization
 
 #### copilot-node-executable
 
-The executable path of Node.js.
+The executable path of [Node.js][].
 
 #### copilot-idle-delay
 
@@ -283,3 +305,14 @@ These projects helped me a lot:
 + https://github.com/TommyX12/company-tabnine/
 + https://github.com/cryptobadger/flight-attendant.el
 + https://github.com/github/copilot.vim
+
+
+<!-- Links -->
+
+[@emil-vdw]: https://github.com/emil-vdw
+[@jcs090218]: https://github.com/jcs090218
+[@rakotomandimby]: https://github.com/rakotomandimby
+[@zerolfx]: https://github.com/zerolfx
+
+[GitHub Copilot]: https://github.com/features/copilot
+[Node.js]: https://nodejs.org/en/download/
