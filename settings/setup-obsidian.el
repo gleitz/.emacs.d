@@ -31,20 +31,17 @@
   (interactive)
   (insert "- [ ] "))
 
-(defun obsidian-capture-with-title ()
-  "Create new obsidian daily note with a specific title.
-Fill in the buffer with a proper Markdown heading based on the name.
-In the `obsidian-daily-notes-directory' if set otherwise in `obsidian-inbox-directory' - if that's also unset,
-in `obsidian-directory' root.
-."
+(defun obsidian-capture-with-title (&optional title dir)
+  "Create new obsidian note with a specific title and move it to the specified directory.
+If TITLE is provided, use it; otherwise, prompt for a title.
+If DIR is provided, use it; otherwise, use the default inbox directory."
   (interactive)
-  (let* ((title (read-from-minibuffer "Title: "))
-         ;; create a full-title with date and title, replacing any spaces with dashes
+  (let* ((title (or title (read-from-minibuffer "Title: ")))
+         (dir (or dir obsidian-inbox-directory))
          (full-title (s-concat (format-time-string "%Y-%m-%d") "-" (s-replace " " "-" title)))
-         (filename (s-concat obsidian-directory "/" obsidian-inbox-directory "/" full-title ".md"))
+         (filename (s-concat obsidian-directory "/" dir "/" full-title ".md"))
          (clean-filename (s-replace "//" "/" filename)))
     (find-file (expand-file-name clean-filename) t)
-    ;; capitalize first letter of each word in title
     (insert (format "# %s\n" (s-titleize title)))
     (save-buffer)
     (add-to-list 'obsidian-files-cache clean-filename)))
@@ -96,5 +93,15 @@ FILE is an Org-roam file if:
                (not-dot-obsidian (obsidian-not-dot-obsidian-p path))
                (not-temp-p (not (s-contains-p "~" relative-path))))
     t))
+
+(defun capture-and-move-jen ()
+  "Capture a note for Jen and move it to the coaching folder."
+  (interactive)
+  (obsidian-capture-with-title "jen" "coaching/jen"))
+
+(defun capture-and-move-jen ()
+  "Capture a note for Jen and move it to the coaching folder."
+  (interactive)
+  (obsidian-capture-with-title "greg" "coaching/greg"))
 
 (provide 'setup-obsidian)

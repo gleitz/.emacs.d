@@ -1,59 +1,4 @@
-;; I would like to modify this function.
-;; Right now it takes the current region and passes it to `llm`.
-;; If a prefix argument is used, I would like to prompt for a message
-;; and pass that message as a system message like this `llm -s "<PROMPT>"
-;; (defun llm-query-and-insert (start end command)
-;;   (interactive
-;;    (let* ((prompt "Enter system message: ")
-;;           (system-message (if current-prefix-arg "" (shell-quote-argument (read-string prompt))))
-;;           (message (format "llm -m gpt-3.5-turbo -s \"%s\"" system-message))
-;;           (command (format "llm -m gpt-3.5-turbo -s \"%s\"" system-message)))
-;;      (if (use-region-p)
-;;          (list (region-beginning) (region-end) command)
-;;        (list (line-beginning-position) (line-end-position) command))))
-;;   (message command)
-;;   (let ((response (shell-command-on-region-to-string start end command)))
-;;     (kill-new response)
-;;     (save-excursion
-;;       (end-of-region-or-visual-line)
-;;       (newline)
-;;       (insert response))))
-
-;; (defun llm-gpt4-query-and-insert (start end command)
-;;   (interactive
-;;    (let* ((prompt "Enter system message: ")
-;;           (system-message (if current-prefix-arg "" (shell-quote-argument (read-string prompt))))
-;;           (message (format "llm -m gpt-4 -s \"%s\"" system-message))
-;;           (command (format "llm -m gpt-4 -s \"%s\"" system-message)))
-;;      (if (use-region-p)
-;;          (list (region-beginning) (region-end) command)
-;;        (list (line-beginning-position) (line-end-position) command))))
-;;   (message command)
-;;   (let ((response (shell-command-on-region-to-string start end command)))
-;;     (kill-new response)
-;;     (save-excursion
-;;       (end-of-region-or-visual-line)
-;;       (newline)
-;;       (insert response))))
-
-;; (defun llm-orca-query-and-insert (start end command)
-;;   (interactive
-;;    (let* ((prompt "Enter system message: ")
-;;           (system-message (if current-prefix-arg "" (shell-quote-argument (read-string prompt))))
-;;           (message (format "llm -m orca-2-13b -s \"%s\"" system-message))
-;;           (command (format "llm -m orca-2-13b -s \"%s\"" system-message)))
-;;      (if (use-region-p)
-;;          (list (region-beginning) (region-end) command)
-;;        (list (line-beginning-position) (line-end-position) command))))
-;;   (message command)
-;;   (let ((response (shell-command-on-region-to-string start end command)))
-;;     (kill-new response)
-;;     (save-excursion
-;;       (end-of-region-or-visual-line)
-;;       (newline)
-;;       (insert response))))
-
-(defun llm-query-and-insert (start end command model) ;; model is unused here
+(defun llm-query-and-insert (start end command model)
   (message command)
   (let ((response (shell-command-on-region-to-string start end command)))
     (kill-new response)
@@ -62,23 +7,27 @@
       (newline)
       (insert response))))
 
-(defun llm-gpt35-turbo-query-and-insert ()
+(defun llm-generic-query-and-insert (model-name model-param)
   (interactive)
   (let* ((start (if (use-region-p) (region-beginning) (line-beginning-position)))
          (end (if (use-region-p) (region-end) (line-end-position)))
          (prompt "Enter system message: ")
          (system-message (if current-prefix-arg "" (shell-quote-argument (read-string prompt))))
-         (command (format "llm -m gpt-3.5-turbo -s \"%s\"" system-message)))
-    (llm-query-and-insert start end command "gpt-3.5-turbo")))
+         (command (format "llm -m %s -s \"%s\"" model-param system-message)))
+    (llm-query-and-insert start end command model-name)))
+
+(defun llm-gpt35-turbo-query-and-insert ()
+  (interactive)
+  (llm-generic-query-and-insert "gpt-3.5-turbo" "gpt-3.5-turbo"))
 
 (defun llm-gpt4-query-and-insert ()
   (interactive)
-  (let* ((start (if (use-region-p) (region-beginning) (line-beginning-position)))
-         (end (if (use-region-p) (region-end) (line-end-position)))
-         (prompt "Enter system message: ")
-         (system-message (if current-prefix-arg "" (shell-quote-argument (read-string prompt))))
-         (command (format "llm -m gpt-4 -s \"%s\"" system-message)))
-    (llm-query-and-insert start end command "gpt-4")))
+  (llm-generic-query-and-insert "gpt-4" "4o"))
+
+(defun llm-claude-3.5-sonnet-query-and-insert ()
+  (interactive)
+  (llm-generic-query-and-insert "claude-3.5-sonnet" "claude-3.5-sonnet"))
+
 
 ;; doesn't work, currently
 (defun llm-orca-2-13b-query-and-insert ()
@@ -189,7 +138,7 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
 
 (when (string= (system-name) "Repli-Benjamin-Gleitzman")
   (setq whisper-model "medium.en")
-  (setq whisper--ffmpeg-input-device ":1"))
+  (setq whisper--ffmpeg-input-device ":2"))
 
 (defvar llm-command-map
   (let ((map (make-sparse-keymap)))
@@ -200,9 +149,39 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
     (define-key map (kbd "l") #'llm-gpt35-turbo-query-and-insert)
     (define-key map (kbd "o") #'llm-orca-2-13b-query-and-insert)
     (define-key map (kbd "4") #'llm-gpt4-query-and-insert)
+    (define-key map (kbd "a") #'llm-claude-3.5-sonnet-query-and-insert)
     map)
   "Keymap for LLM commands.")
 (fset 'llm-command-map llm-command-map)
 (define-key projectile-mode-map (kbd "C-c l") 'llm-command-map)
+
+;;; GPTEL
+
+(require 'auth-source)
+(setq gptel-model "max-tokens-3-5-sonnet-2024-07-15")
+(setq gptel-backend
+      (gptel-make-anthropic
+          "Claude"
+        :stream t
+        :key (lambda ()
+               (auth-source-pick-first-password
+                :host "api.anthropic.com"
+                :user "apikey"))))
+
+(gptel-make-ollama "ollama"
+  :host "localhost:11434"
+  :stream t
+  :models '("c4ai-command-r-plus-iMat:latest"))
+
+(gptel-make-privategpt "lmstudio"               ;Any name you want
+  :protocol "http"
+  :host "localhost:1234"
+  :stream t
+  :context t                            ;Use context provided by embeddings
+  :sources t                            ;Return information about source documents
+  :models '("QuantFactory/Meta-Llama-3-8B-Instruct-GGUF/Meta-Llama-3-8B-Instruct.Q6_K.gguf"))
+
+(global-set-key (kbd "C-c RET") 'gptel-send)
+(global-set-key (kbd "C-c C-<return>") 'gptel-menu)
 
 (provide 'setup-llms)

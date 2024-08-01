@@ -138,6 +138,7 @@
      forge
      gist
      git-link
+     gptel
      groovy-mode
      guide-key
      haskell-mode

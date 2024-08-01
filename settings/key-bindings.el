@@ -361,6 +361,10 @@
 (define-key occur-mode-map (kbd "n") 'next-line)
 (define-key occur-mode-map (kbd "p") 'previous-line)
 
+;; Allow emoji shortcut
+(global-unset-key (kbd "C-M-SPC"))
+
+;; Vterm
 (define-key global-map (kbd "C-z") 'vterm)
 
 (provide 'key-bindings)
