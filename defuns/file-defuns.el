@@ -31,11 +31,11 @@
         (message "File '%s' successfully removed" filename)))))
 
 (defun copy-current-file-path (&optional arg)
-  "Add current file path to kill ring. Limits the filename to project root if possible.
-With prefix argument (C-u), copies the full path instead."
+  "Add current file path to kill ring. Copies the full path by default.
+With prefix argument (C-u), copies the project-relative path instead."
   (interactive "P")
   (let ((filename (buffer-file-name)))
-    (kill-new (if (and (not arg) eproject-mode)
+    (kill-new (if (and arg eproject-mode)
                   (s-chop-prefix (eproject-root) filename)
                 filename))))
 
