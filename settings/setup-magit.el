@@ -114,4 +114,40 @@ See also: `-reductions', `-reductions-r', `-reduce-r'"
 (with-eval-after-load 'magit
   (require 'forge))
 
+;; Create branches easier
+(defun my-magit-stash-branch (branch-name)
+  "Stash current changes, create a new branch from origin/main if it doesn't exist, switch to it, and pop the stash.
+Takes BRANCH-NAME as the name for the new branch."
+  (interactive "sEnter new branch name: ")
+  (magit-stash-both "Temporary stash for new branch")
+  ;; Check if the branch exists
+  (if (magit-ref-p branch-name)
+      ;; Branch exists, just checkout
+      (magit-checkout branch-name)
+    ;; Branch doesn't exist, create and checkout
+    (magit-branch-and-checkout branch-name "origin/main"))
+  ;; Pop the stash
+  (magit-stash-pop))
+
+(defun my-magit-poms-via-alias ()
+  "Run 'git poms' alias (custom stash, fetch, rebase, pop)."
+  (interactive) ; Good for M-x testing, not strictly needed by the suffix if not called otherwise
+  (message "Executing 'git poms'...")
+  (magit-call-git "poms")
+  (magit-refresh)
+  (message "'git poms' finished."))
+
+;; (with-eval-after-load 'magit
+;;   (transient-define-suffix magit-pull () ; Suffix for 'magit-pull', takes no arguments itself (hence '()')
+;;     ;; Keyword arguments describing the suffix
+;;     :key         "P"  ; The key to press (e.g., Shift+p)
+;;     :description "→ Poms (custom pull/rebase/stash via alias)"
+
+;;     ;; ---- BODY of the Suffix Command ----
+;;     ;; This suffix command must be interactive.
+;;     ;; Its (interactive) spec must match its arglist '()'.
+;;     (interactive)
+;;     ;; The action to perform when the suffix is invoked:
+;;     (my-magit-poms-via-alias)))
+
 (provide 'setup-magit)

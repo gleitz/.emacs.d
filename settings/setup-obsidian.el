@@ -1,8 +1,8 @@
 (require 'obsidian)
-(obsidian-specify-path "~/Dropbox/Personal/documents/obsidian/Gleitzvault")
+(setopt obsidian-directory "~/Dropbox/Personal/documents/obsidian/Gleitzvault")
 ;; If you want a different directory of `obsidian-capture':
-(setq obsidian-inbox-directory "inbox")
-(setq obsidian-daily-notes-directory "notes")
+(setopt obsidian-inbox-directory "inbox")
+(setopt obsidian-daily-notes-directory "notes")
 
 ;; Define obsidian-mode bindings
 (add-hook
@@ -44,7 +44,8 @@ If DIR is provided, use it; otherwise, use the default inbox directory."
     (find-file (expand-file-name clean-filename) t)
     (insert (format "# %s\n" (s-titleize title)))
     (save-buffer)
-    (add-to-list 'obsidian-files-cache clean-filename)))
+    ;; (add-to-list 'obsidian-files-cache clean-filename)
+    ))
 
 (defun obsidian-daily-note-with-title ()
   "Create new obsidian daily note with a specific title.
@@ -62,7 +63,8 @@ in `obsidian-directory' root.
     ;; capitalize first letter of each word in title
     (insert (format "# %s\n" (s-titleize title)))
     (save-buffer)
-    (add-to-list 'obsidian-files-cache clean-filename)))
+    ;; (add-to-list 'obsidian-files-cache clean-filename)
+    ))
 
 ;; Add emacs advice after calling obsidian-daily-note function to insert `# %Y-%m-%d` at the top of the file
 (defun obsidian-insert-date ()
@@ -83,15 +85,16 @@ FILE is an Org-roam file if:
 - Is not a dot file or, if `obsidian-include-hidden-files' is t, then:
   - It is not in .trash
   - It is not an Emacs temp file"
-  (-when-let* ((path (s-replace "Library/CloudStorage/Dropbox" "Dropbox" (or file buffer-file-name)))
-               (relative-path (file-relative-name path obsidian-directory))
-               (ext (file-name-extension relative-path))
-               (md-p (string= ext "md"))
-               (obsidian-dir-p (obsidian-descendant-of-p path obsidian-directory))
-               (not-dot-file (or obsidian-include-hidden-files (not (obsidian-dot-file-p path))))
+  (-when-let* ((raw-path (s-replace "Library/CloudStorage/Dropbox" "Dropbox" (or file (buffer-file-name (buffer-base-buffer)))))
+               (path (expand-file-name raw-path))
+               (in-vault (s-starts-with-p obsidian-directory path))
+               (md-ext (s-ends-with-p ".md" path))
+               (not-dot-file (or obsidian-include-hidden-files
+                                 (not (obsidian-dot-file-p path))))
+               (not-node-git-p (not (string-match-p (rx (or "node_modules" ".git")) path)))
                (not-trash-p (obsidian-not-trash-p path))
-               (not-dot-obsidian (obsidian-not-dot-obsidian-p path))
-               (not-temp-p (not (s-contains-p "~" relative-path))))
+               (not-ignored-dir (obsidian-not-in-excluded-directory-p path))
+               (not-dot-obsidian (obsidian-not-dot-obsidian-p path)))
     t))
 
 (defun capture-and-move-jen ()
@@ -99,7 +102,7 @@ FILE is an Org-roam file if:
   (interactive)
   (obsidian-capture-with-title "jen" "coaching/jen"))
 
-(defun capture-and-move-jen ()
+(defun capture-and-move-greg ()
   "Capture a note for Jen and move it to the coaching folder."
   (interactive)
   (obsidian-capture-with-title "greg" "coaching/greg"))

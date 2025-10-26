@@ -5,6 +5,7 @@
  ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :stipple nil :background "Black" :foreground "White" :inverse-video nil :box nil :strike-t*hrough nil :overline nil :underline nil :slant normal :weight normal :width normal :height 105))))
  '(beacon-fallback-background ((t (:background "#333366"))))
+ '(claude-code-repl-face ((t (:family "JuliaMono"))) t)
  '(company-scrollbar-bg ((t (:background "#199919991999"))) t)
  '(company-scrollbar-fg ((t (:background "#0ccc0ccc0ccc"))) t)
  '(company-tooltip ((t (:inherit default :background "#051e051e051e"))))
@@ -54,10 +55,16 @@
  '(copilot-log-max 10000)
  '(css-indent-offset 2)
  '(custom-safe-themes
-   '("50cdbe9e35198343589c648f73fab07c3e1fb4e53057a9e5d3ddd5246140b07a" "cfff5a1f3b63f487c1ecda2d7aa1a7ea206533e003c17e5b8d7142ea45444a6e" "fbfbd18874a5a5a0d1ac9036f57c189195f30d57d92d9cf96b12195d18714850" "9527feeeec43970b1d725bdc04e97eb2b03b15be982ac50089ad223d3c6f2920" default))
+   '("50cdbe9e35198343589c648f73fab07c3e1fb4e53057a9e5d3ddd5246140b07a"
+     "cfff5a1f3b63f487c1ecda2d7aa1a7ea206533e003c17e5b8d7142ea45444a6e"
+     "fbfbd18874a5a5a0d1ac9036f57c189195f30d57d92d9cf96b12195d18714850"
+     "9527feeeec43970b1d725bdc04e97eb2b03b15be982ac50089ad223d3c6f2920"
+     default))
  '(ein:output-area-inlined-images t)
  '(elpy-modules
-   '(elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-highlight-indentation elpy-module-django elpy-module-sane-defaults))
+   '(elpy-module-company elpy-module-eldoc elpy-module-pyvenv
+                         elpy-module-highlight-indentation
+                         elpy-module-django elpy-module-sane-defaults) t)
  '(elpy-rpc-backend "rope" t)
  '(elpy-syntax-check-command "pylint")
  '(ensime-default-server-root "/Users/bgleitzman/.emacs.d/lib/scala/ensime/")
@@ -67,9 +74,18 @@
  '(flycheck-check-syntax-automatically '(save mode-enabled))
  '(flycheck-checker-error-threshold 2000)
  '(flycheck-checkers
-   '(tsx-tide typescript-tide python-mypy bash coffee-coffeelint css-csslint elixir emacs-lisp emacs-lisp-checkdoc erlang go-gofmt go-build go-test haml html-tidy lua perl php php-phpcs puppet-parser puppet-lint python-flake8 python-pylint rst ruby-rubocop ruby ruby-jruby rust sass scala scss sh-dash sh-bash tex-chktex tex-lacheck xml-xmlstarlet zsh javascript-jshint javascript-eslint javascript-tide jsx-tide typescript-tsc))
+   '(tsx-tide typescript-tide python-mypy bash coffee-coffeelint
+              css-csslint elixir emacs-lisp emacs-lisp-checkdoc erlang
+              go-gofmt go-build go-test haml html-tidy lua perl php
+              php-phpcs puppet-parser puppet-lint python-flake8
+              python-pylint rst ruby-rubocop ruby ruby-jruby rust sass
+              scala scss sh-dash sh-bash tex-chktex tex-lacheck
+              xml-xmlstarlet zsh javascript-jshint javascript-eslint
+              javascript-tide jsx-tide typescript-tsc yaml-yamllint))
  '(flycheck-disabled-checkers
-   '(json-jsonlist emacs-lisp emacs-lisp-checkdoc jsx-tide typescript-tslint typescript-tide tsx-tide javascript-tide javascript-jshint))
+   '(json-jsonlist emacs-lisp emacs-lisp-checkdoc jsx-tide
+                   typescript-tslint typescript-tide tsx-tide
+                   javascript-tide javascript-jshint))
  '(flycheck-eslint-args nil)
  '(flycheck-jshintrc "~/.jshintrc")
  '(flycheck-python-flake8-executable "flake8")
@@ -77,21 +93,32 @@
  '(flycheck-python-pylint-executable "pylint")
  '(forge-alist
    '(("github.com" "api.github.com" "github.com" forge-github-repository)
-     ("gitlab.inf.replicant.ai" "gitlab.inf.replicant.ai/api/v4" "gitlab.inf.replicant.ai" forge-gitlab-repository)
-     ("gitlab.com" "gitlab.com/api/v4" "gitlab.com" forge-gitlab-repository)
-     ("salsa.debian.org" "salsa.debian.org/api/v4" "salsa.debian.org" forge-gitlab-repository)
-     ("framagit.org" "framagit.org/api/v4" "framagit.org" forge-gitlab-repository)
-     ("codeberg.org" "codeberg.org/api/v1" "codeberg.org" forge-gitea-repository)
-     ("code.orgmode.org" "code.orgmode.org/api/v1" "code.orgmode.org" forge-gogs-repository)
-     ("bitbucket.org" "api.bitbucket.org/2.0" "bitbucket.org" forge-bitbucket-repository)
-     ("git.savannah.gnu.org" nil "git.savannah.gnu.org" forge-cgit**-repository)
+     ("gitlab.inf.replicant.ai" "gitlab.inf.replicant.ai/api/v4"
+      "gitlab.inf.replicant.ai" forge-gitlab-repository)
+     ("gitlab.com" "gitlab.com/api/v4" "gitlab.com"
+      forge-gitlab-repository)
+     ("salsa.debian.org" "salsa.debian.org/api/v4" "salsa.debian.org"
+      forge-gitlab-repository)
+     ("framagit.org" "framagit.org/api/v4" "framagit.org"
+      forge-gitlab-repository)
+     ("codeberg.org" "codeberg.org/api/v1" "codeberg.org"
+      forge-gitea-repository)
+     ("code.orgmode.org" "code.orgmode.org/api/v1" "code.orgmode.org"
+      forge-gogs-repository)
+     ("bitbucket.org" "api.bitbucket.org/2.0" "bitbucket.org"
+      forge-bitbucket-repository)
+     ("git.savannah.gnu.org" nil "git.savannah.gnu.org"
+      forge-cgit**-repository)
      ("git.kernel.org" nil "git.kernel.org" forge-cgit-repository)
      ("repo.or.cz" nil "repo.or.cz" forge-repoorcz-repository)
-     ("git.suckless.org" nil "git.suckless.org" forge-stagit-repository)
+     ("git.suckless.org" nil "git.suckless.org"
+      forge-stagit-repository)
      ("git.sr.ht" nil "git.sr.ht" forge-srht-repository)))
  '(global-semantic-idle-scheduler-mode nil)
  '(grep-find-ignored-directories
-   '(".meteor" "node_modules" "target" "SCCS" "RCS" "CVS" "MCVS" ".src" ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "bin"))
+   '(".meteor" "node_modules" "target" "SCCS" "RCS" "CVS" "MCVS" ".src"
+     ".svn" ".git" ".hg" ".bzr" "_MTN" "_darcs" "{arch}" "bin"))
+ '(grep-save-buffers nil)
  '(haskell-compile-cabal-build-command "stack build")
  '(ido-buffer-disable-smart-matches nil)
  '(ido-cr+-replace-completely nil)
@@ -99,6 +126,8 @@
  '(jedi:tooltip-method nil)
  '(js2-basic-offset 2)
  '(js2-pretty-multiline-decl-indentation-p t)
+ '(magit-branch-adjust-remote-upstream-alist '(("origin/main" . "")))
+ '(magit-process-apply-ansi-colors 'filter)
  '(magit-push-always-verify nil t)
  '(magit-stage-all-confirm nil t)
  '(message-log-max 1000)
@@ -110,38 +139,63 @@
      ("melpa-stable" . "https://stable.melpa.org/packages/")))
  '(package-check-signature nil)
  '(package-selected-packages
-   '(pandoc pandoc-mode gptel jtsx tumblesocks jinja2-mode python-black live-py-mode lsp-pyright lsp-mode pcre2el obsidian undo-tree smooth-scrolling shell-command+ scala-mode eproject edit-server string-edit-at-point atomic-chrome sqlite3 impatient-mode typo arduino-cli-mode editorconfig fireplace python-mls snow selectrum-prescient selectrum symbol-overlay dot-mode git-link company-prescient prescient vterm emojify olivetti json-snatcher ripgrep rg yaml-mode prettier-js beacon auto-complete company-jedi flycheck-pos-tip flycheck-popup-tip forge auto-virtualenv magit benchmark-init cider-interaction ace-window vlf rjsx-mode ein wgrep smex bash-completion perspective multifiles jump-char ido-completing-read+ flycheck-haskell ido-ubiquitous groovy-mode ensime change-inner browse-kill-ring persistent-scratch tagedit simplezen ace-jump-mode reveal-in-osx-finder dired-details mic-paren column-enforce-mode tide virtualenvwrapper realgud haskell-mode json-mode ivy-historian expand-region spinner gh clojure-mode dash find-file-in-project highlight-indentation ht ivy multiple-cursors tern-auto-complete tern-mode async flycheck git-commit slime visual-regexp with-editor tern arduino-mode whitespace-cleanup-mode web-mode visual-regexp-steroids vagrant-tramp swiper string-edit speed-type smartparens slime-js simple-httpd scala-mode2 reveal-in-finder restclient quickrun projectile prodigy php-mode paredit package-utils nodejs-repl move-text maxframe markdown-mode malabar-mode magit-tramp less-css-mode keyfreq jsx-mode js2-refactor inflections ido-vertical-mode ido-at-point hydra htmlize highlight-escape-sequences guide-key gitignore-mode gitconfig-mode git-messenger gist flx-ido fill-column-indicator exec-path-from-shell elpy elisp-slime-nav dockerfile-mode dired-details+ css-eldoc clojure-mode-extra-font-locking ag))
+   '(ace-jump-mode ace-window ag aider aidermacs arduino-cli-mode
+                   arduino-mode atomic-chrome auto-complete
+                   auto-virtualenv bash-completion beacon
+                   benchmark-init browse-kill-ring change-inner
+                   clojure-mode-extra-font-locking column-enforce-mode
+                   company-jedi company-prescient css-eldoc diminish
+                   dockerfile-mode dot-mode edit-server editorconfig
+                   ein elisp-slime-nav elpy emojify eproject
+                   exec-path-from-shell fill-column-indicator
+                   find-file-in-project fireplace flx-ido
+                   flycheck-haskell flycheck-popup-tip forge gist
+                   git-link gptel groovy-mode guide-key
+                   highlight-escape-sequences hydra ido-at-point
+                   ido-completing-read+ ido-vertical-mode
+                   impatient-mode inflections inheritenv jinja2-mode
+                   json-mode jtsx jump-char keyfreq live-py-mode
+                   lsp-mode lsp-pyright magit-popup maxframe
+                   mermaid-mode mic-paren move-text multifiles
+                   multiple-cursors nodejs-repl obsidian olivetti
+                   package-utils pandoc pandoc-mode paredit
+                   persistent-scratch perspective php-mode pkg-info
+                   prodigy projectile python-black python-mls quickrun
+                   realgud restclient reveal-in-osx-finder rg ripgrep
+                   rjsx-mode scala-mode selectrum-prescient
+                   shell-command+ shell-maker simplezen smartparens
+                   smex smooth-scrolling speed-type sqlite3
+                   string-edit-at-point symbol-overlay tagedit tern
+                   tide transpose-frame tumblesocks typo undo-tree
+                   virtualenvwrapper visual-regexp-steroids vterm
+                   whitespace-cleanup-mode yaml-mode))
  '(prescient-filter-method '(literal regexp initialism fuzzy))
  '(projectile-enable-caching nil)
  '(projectile-globally-ignored-directories
-   '(".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" "bin" "build"))
+   '(".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_"
+     ".bzr" "_darcs" ".tox" ".svn" ".stack-work" "bin" "build"))
  '(read-quoted-char-radix 16)
  '(realgud:pdb-command-name "./pdb")
  '(recentf-max-saved-items 1000)
  '(ripgrep-arguments '("--max-columns=100" "--max-columns-preview"))
  '(ripgrep-highlight-search t)
  '(rst-compile-toolsets
-   '((html "rst2html5" ".html" nil)
-     (latex "rst2latex" ".tex" nil)
+   '((html "rst2html5" ".html" nil) (latex "rst2latex" ".tex" nil)
      (newlatex "rst2newlatex" ".tex" nil)
-     (pseudoxml "rst2pseudoxml" ".xml" nil)
-     (xml "rst2xml" ".xml" nil)
-     (pdf "rst2pdf" ".pdf" nil)
-     (s5 "rst2s5" ".html" nil)))
+     (pseudoxml "rst2pseudoxml" ".xml" nil) (xml "rst2xml" ".xml" nil)
+     (pdf "rst2pdf" ".pdf" nil) (s5 "rst2s5" ".html" nil)))
  '(safe-local-variable-values
    '((arduino-cli-default-fqbn . "arduino:avr:uno")
      (arduino-cli-default-port . "/dev/cu.usbmodem14601")
      (arduino-cli-default-fqbn quote arduino:avr:uno)
      (arduino-cli-default-port quote /dev/cu.usbmodem14601)
      (eval setq flycheck-disabled-checkers
-           (append flycheck-disabled-checkers
-                   '(typescript-tsc)))
+           (append flycheck-disabled-checkers '(typescript-tsc)))
      (flycheck-disabled-checkers . typescript-tsc)
      (web-mode-code-indent-offset . 2)
      (web-mode-markup-indent-offset . 2)
      (web-mode-code-indent-offset . 4)
-     (web-mode-markup-indent-offset . 4)
-     (jsx-indent-level . 4)))
+     (web-mode-markup-indent-offset . 4) (jsx-indent-level . 4)))
  '(semantic-idle-scheduler-idle-time 10)
  '(sgml-basic-offset 2)
  '(sh-basic-offset 2)
@@ -151,24 +205,19 @@
  '(split-width-threshold 160)
  '(tab-width 4)
  '(tern-ac-on-dot nil)
+ '(tide-format-options '(indentSize 2 tabSize 2))
  '(tramp-default-method "ssh")
  '(tramp-ssh-controlmaster-options "" t)
  '(typescript-indent-level 2)
  '(typo-quotation-marks
-   '(("Czech" "„" "“" "‚" "‘")
-     ("Czech (Guillemets)" "»" "«" "›" "‹")
-     ("English" "\"" "\"" "'" "'")
-     ("German" "„" "“" "‚" "‘")
+   '(("Czech" "„" "“" "‚" "‘") ("Czech (Guillemets)" "»" "«" "›" "‹")
+     ("English" "\"" "\"" "'" "'") ("German" "„" "“" "‚" "‘")
      ("German (Guillemets)" "»" "«" "›" "‹")
-     ("French" "«" "»" "‹" "›")
-     ("Finnish" "”" "”" "’" "’")
+     ("French" "«" "»" "‹" "›") ("Finnish" "”" "”" "’" "’")
      ("Finnish (Guillemets)" "»" "»" "›" "›")
-     ("Swedish" "”" "”" "’" "’")
-     ("Russian" "«" "»" "„" "“")
-     ("Italian" "«" "»" "“" "”")
-     ("Polish" "„" "”" "‚" "’")
-     ("Serbian" "„" "”" "’" "’")
-     ("Ukrainian" "«" "»" "„" "“")))
+     ("Swedish" "”" "”" "’" "’") ("Russian" "«" "»" "„" "“")
+     ("Italian" "«" "»" "“" "”") ("Polish" "„" "”" "‚" "’")
+     ("Serbian" "„" "”" "’" "’") ("Ukrainian" "«" "»" "„" "“")))
  '(undo-tree-auto-save-history nil)
  '(visible-bell nil)
  '(vr/command-python

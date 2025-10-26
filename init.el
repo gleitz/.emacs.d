@@ -96,6 +96,7 @@
   (packages-install
    '(ace-jump-mode
      ace-window
+     aider
      ag
      arduino-mode
      arduino-cli-mode
@@ -150,6 +151,7 @@
      ido-vertical-mode
      impatient-mode
      inflections
+     inheritenv
      jinja2-mode
      json-mode
      json-snatcher
@@ -160,8 +162,10 @@
      lsp-mode
      lsp-pyright
      magit
+     magit-popup
      markdown-mode
      maxframe
+     mermaid-mode
      multiple-cursors
      mic-paren
      move-text
@@ -202,7 +206,8 @@
      tagedit
      tern
      tide
-     ;; tumblesocks (provided by site-lisp)
+     transient
+     transpose-frame
      typo
      undo-tree
      virtualenvwrapper
@@ -263,9 +268,14 @@
 (require 'setup-typescript)
 (require 'setup-keyfreq)
 (require 'setup-copilot)
+(require 'setup-aider)
+(require 'setup-claude-code)
 (require 'setup-llms)
 (require 'setup-howdoi)
 (require 'setup-obsidian)
+(require 'setup-tramp)
+(require 'setup-hugo)
+(require 'setup-yaml)
 
 ;; Font lock dash.el
 (eval-after-load "dash" '(dash-enable-font-lock))
@@ -429,5 +439,5 @@
     (byte-compile-dotfiles)
     ;; (message "%s compiled" user-init-file)
     ))
-(add-hook 'kill-emacs-hook 'byte-compile-user-init-file t t)
-(add-hook 'kill-emacs-hook 'byte-compile-dotfiles t t)
+(add-hook 'kill-emacs-hook 'byte-compile-user-init-file t)
+(add-hook 'kill-emacs-hook 'byte-compile-dotfiles t)

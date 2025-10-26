@@ -149,6 +149,7 @@ overview of the most commonly used shortcuts to get you through this pain:
 * `M-x atomic-chrome-start-server` and then use GhostText to edit with Emacs
 * `M-x find-file-literally` to open without any modes (good for long files)
 * `C-u C-x =` unicode descriptor for character at poiny
+* `M-S-!` run a shell command (useful for, say, magit)
 
 ### Copilot
 

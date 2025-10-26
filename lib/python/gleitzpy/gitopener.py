@@ -33,9 +33,13 @@ def get_github_url(filename, start_line=False, end_line=False, use_upstream=Fals
     github_address = get_github_address(use_upstream)
     branch_name = get_branch_name()
     git_root_directory = get_git_root_directory(filename)
-    if not all([github_address, branch_name, git_root_directory]):
+    if not all([github_address, branch_name]):
         return False
-    relative_path = filename.replace(git_root_directory, '')
+
+    if git_root_directory:
+        relative_path = filename.replace(git_root_directory, '')
+    else:
+        relative_path = filename
     if os.path.isdir(filename):
         url_str = 'http://{0}/tree/{1}{2}'
     else:
@@ -75,7 +79,8 @@ def main():
     current_dir = filename
     if not os.path.isdir(filename):
         current_dir = os.path.dirname(filename)
-    os.chdir(current_dir)
+    if current_dir != '':
+        os.chdir(current_dir)
     print(get_github_url(filename, start_line, end_line, use_upstream))
 
 

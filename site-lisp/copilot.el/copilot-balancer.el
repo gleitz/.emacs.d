@@ -1,6 +1,6 @@
-;;; copilot-balancer.el --- Balancer module  -*- lexical-binding:t -*-
+;;; copilot-balancer.el --- Parentheses balancer for Lisps  -*- lexical-binding:t -*-
 
-;; Copyright (C) 2022-2024  copilot-emacs maintainers
+;; Copyright (C) 2022-2025  copilot-emacs maintainers
 
 ;; The MIT License (MIT)
 
@@ -24,15 +24,17 @@
 
 ;;; Commentary:
 
-;; Balancer module
+;; The `copilot-balancer.el` module helps balance pairs of characters
+;; in Lisp-like languages.  This includes parentheses, brackets, braces, and quotation
+;; marks.  The module is particularly useful for maintaining the syntactical integrity
+;; of code written in Emacs Lisp, Common Lisp, Scheme, and Clojure.
 
 ;;; Code:
 
 (require 'cl-lib)
 (require 'pcase)
 (require 'rx)
-
-(require 'dash)
+(require 'subr-x)
 
 (defvar copilot-balancer-lisp-modes '( emacs-lisp-mode
                                        lisp-mode
@@ -311,8 +313,9 @@ character).")
        (completion-pairs (copilot-balancer-extract-pairs trimmed-completion))
 
        (`(,meta-prefix-pairs . ,in-string)
-        (-> (append prefix-pairs completion-pairs)
-            (copilot-balancer-collapse-matching-pairs nil)))
+        (thread-first
+          (append prefix-pairs completion-pairs)
+          (copilot-balancer-collapse-matching-pairs nil)))
 
        (infix-string-fixup-needed
         (and (= start end)
@@ -340,8 +343,9 @@ character).")
           (list trimmed-completion meta-prefix-pairs in-string)))
 
        (`(,suffix-pairs . _)
-        (-> (copilot-balancer-extract-pairs suffix)
-            (copilot-balancer-collapse-matching-pairs in-string)))
+        (thread-first
+          (copilot-balancer-extract-pairs suffix)
+          (copilot-balancer-collapse-matching-pairs in-string)))
        (reversed-suffix-pairs (reverse suffix-pairs))
        (flipped-suffix-pairs (mapcar #'copilot-balancer-get-other-pair
                                      reversed-suffix-pairs))

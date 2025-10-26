@@ -78,7 +78,7 @@ White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
   (browse-url
    (trim-string
     (shell-command-to-string
-     (format "python %s %s %d %d %s"
+     (format "python3 %s %s %d %d %s"
              (expand-file-name "~/.emacs.d/lib/python/gleitzpy/gitopener.py")
              (buffer-file-name)
              (if mark-active (line-number-at-pos (region-beginning))
@@ -130,7 +130,7 @@ White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
 (when (display-graphic-p)
   (setq initial-buffer-choice scratch-buffer-path)
   (kill-buffer "*scratch*")
-  (run-at-time "1 sec" nil 'end-of-scratch))
+  (run-at-time "1.5 sec" nil 'end-of-scratch))
 
 ;; Treesitter
 ;; https://www.masteringemacs.org/article/how-to-get-started-tree-sitter

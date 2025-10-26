@@ -15,7 +15,7 @@
 (setq elpy-rpc-python-command "python3")
 
 (require 'auto-virtualenv)
-(add-hook 'python-mode-hook 'auto-virtualenv-set-virtualenv)
+(add-hook 'python-mode-hook 'auto-virtualenv-find-and-activate)
 
 (add-hook 'python-mode-hook
           (lambda ()

@@ -1,10 +1,7 @@
 ;; Install the following
 ;; IF YOU CHANGE THESE, ALSO CHANGE mac_core.yml
 ;; pip3 install pylint elpy flake8 pyyaml flake8_nb
-;; npm install -g jshint
-;; npm install -g jsxhint
-;; npm install -g tern
-;; npm install -g markdownlint-cli
+;; npm install -g jshint jsxhint tern markdownlint-cli @mermaid-js/mermaid-cli rtm-cli eslint@8.56.0 typescript yaml-language-server @github/copilot-language-server
 ;; pip install -U /Users/gleitz/.emacs.d/elpa/jedi-core-20191011.1750
 ;; (elpy-config) and then click [Install jedi]
 
@@ -269,20 +266,6 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
 ;; if: Autoloading file /Applications/Emacs.app/Contents/Resources/lisp/dired.elc failed to define function dired-jump
 (autoload 'dired-jump "dired")
 
-;; Tumblr
-(setq tumblesocks-blog "gleitzman.tumblr.com")
-(setq oauth-nonce-function 'oauth-internal-make-nonce)
-(defun oauth-build-signature-hmac-sha1 (req secret)
-  "Returns the signature for the given request object"
-  (let* ((token (oauth-request-token req))
-         (key (concat secret "&" (when token (oauth-t-token-secret token))))
-         (hmac-params
-          (list (string-to-unibyte (encode-coding-string key 'utf-8 t))
-                (string-to-unibyte (encode-coding-string
-                 (oauth-build-signature-basestring-hmac-sha1 req) 'utf-8 t)))))
-    (if oauth-hmac-sha1-param-reverse (setq hmac-params (reverse hmac-params)))
-    (base64-encode-string (apply 'hmac-sha1 hmac-params))))
-
 ;; ripgrep default args
 ;; bug: seem to make it so that you can't select the results to jump to the file
 ;; (setq ripgrep--base-arguments '("--line-number" "--with-filename"))
@@ -379,3 +362,11 @@ Toggles between: “all lower”, “Init Caps”, “ALL CAPS”."
   (if (region-active-p)
       (goto-char (region-end))
     (end-of-visual-line)))
+
+;; When "C-x -" insert 50 dashes
+(global-set-key (kbd "C-x -") (lambda ()
+  (interactive)
+  (insert (make-string 50 ?-))))
+
+;; Map Command+V to yank so other apps can paste easily
+;; (global-set-key (kbd "M-v") 'yank)

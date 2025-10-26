@@ -158,7 +158,7 @@ If `DEVICE-NAME' is provided, it will be used instead of prompting the user."
 ;;; GPTEL
 
 (require 'auth-source)
-(setq gptel-model "max-tokens-3-5-sonnet-2024-07-15")
+(setq gptel-model "claude-3-7-sonnet-20250219")
 (setq gptel-backend
       (gptel-make-anthropic
           "Claude"

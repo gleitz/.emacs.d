@@ -55,6 +55,11 @@
 
 ;; mac friendly font
 (when window-system
+  ;; Maple Mono NF CN fonts (an alternative)
+  ;; (setq magnars/default-font "Maple Mono NF CN-14")
+  ;; (setq magnars/presentation-font "Maple Mono NF CN-28")
+
+  ;; Monaco fonts
   (setq magnars/default-font "-apple-Monaco-medium-normal-normal-*-14-*-*-*-m-0-iso10646-1")
   (setq magnars/presentation-font "-apple-Monaco-medium-normal-normal-*-28-*-*-*-m-0-iso10646-1")
   (set-face-attribute 'default nil :font magnars/default-font))
