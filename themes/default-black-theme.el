@@ -11,6 +11,8 @@
  '(js2-function-param-face ((t (:foreground "LightGoldenrod"))))
  '(font-lock-warning-face ((nil (:foreground "#ff6666"))))
  '(show-paren-match ((nil (:background "#333399"))))
- '(show-paren-mismatch ((((class color)) (:background "red")))))
+ '(show-paren-mismatch ((((class color)) (:background "red"))))
+ '(mode-line ((t (:foreground "#ffffff" :background "#005f87" :box (:line-width -1 :style released-button)))))
+ '(mode-line-inactive ((t (:foreground "#808080" :background "#2a2a2a" :box (:line-width -1 :style released-button))))))
 
 (provide-theme 'default-black)

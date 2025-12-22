@@ -33,7 +33,6 @@
  '(js2-error-face ((t nil)))
  '(js2-function-param-face ((t (:foreground "LightGoldenrod"))))
  '(js2-warning-face ((t nil)))
- '(mode-line ((t (:box (:line-width (1 . -1) :style released-button) :foreground "black" :background "grey75"))))
  '(mumamo-background-chunk-submode ((((class color) (min-colors 88) (background dark)) nil)) t)
  '(safe-local-variable-values '((eval font-lock-add-keywords nil '(("defexamples\\|def-example-group\\| => " (0 'font-lock-keyword-face)) ("(defexamples[[:blank:]]+\\(.*\\)" (1 'font-lock-function-name-face)))) (eval font-lock-add-keywords nil '(("defexamples\\|def-example-group\\| => " (0 'font-lock-keyword-face)))) (eval when (and (buffer-file-name) (file-regular-p (buffer-file-name)) (string-match-p "^[^.]" (buffer-file-name))) (emacs-lisp-mode)) (eval font-lock-add-keywords nil '(("defexamples\\| => " (0 'font-lock-keyword-face)))) (encoding . utf-8)))
  '(selectrum-current-candidate ((t (:inherit hl-line :extend t))))
@@ -51,11 +50,14 @@
  '(auto-save-list-file-prefix nil)
  '(beacon-color "LightGoldenrod")
  '(c-basic-offset 4)
+ '(claude-code-sandbox-program "claude")
+ '(claude-code-toggle-auto-select t)
  '(column-enforce-column 119)
  '(copilot-log-max 10000)
  '(css-indent-offset 2)
  '(custom-safe-themes
-   '("50cdbe9e35198343589c648f73fab07c3e1fb4e53057a9e5d3ddd5246140b07a"
+   '("31898ac90e9b683ce996b6378f9ae8c0a7356e8a4a96c4311dcfc10306027c46"
+     "50cdbe9e35198343589c648f73fab07c3e1fb4e53057a9e5d3ddd5246140b07a"
      "cfff5a1f3b63f487c1ecda2d7aa1a7ea206533e003c17e5b8d7142ea45444a6e"
      "fbfbd18874a5a5a0d1ac9036f57c189195f30d57d92d9cf96b12195d18714850"
      "9527feeeec43970b1d725bdc04e97eb2b03b15be982ac50089ad223d3c6f2920"

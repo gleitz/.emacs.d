@@ -19,8 +19,25 @@
   ;; important - tell emacs to use our fontset settings
   (setq use-default-font-for-symbols nil))
 
-(custom-set-faces
-   '(claude-code-repl-face ((t (:family "JuliaMono")))))
+(defun gleitz--vterm-font-setup ()
+  "Configure font settings specifically for vterm buffers, workaround claude-code."
+
+  ;; Apply ASCII replacements for vterm specifically
+  (let ((tbl (or buffer-display-table (setq buffer-display-table (make-display-table)))))
+    (dolist (pair
+             '((#x273B . ?*) ; ✻ TEARDROP-SPOKED ASTERISK
+               (#x273D . ?*) ; ✽ HEAVY TEARDROP-SPOKED ASTERISK
+               (#x2722 . ?+) ; ✢ FOUR TEARDROP-SPOKED ASTERISK
+               (#x2736 . ?+) ; ✶ SIX-POINTED BLACK STAR
+               (#x2733 . ?*) ; ✳ EIGHT SPOKED ASTERISK
+               ))
+      (aset tbl (car pair) (vector (cdr pair))))))
+
+(add-hook 'vterm-mode-hook #'gleitz--vterm-font-setup)
+
+;; Replace the font to be monospace (to avoid jumping around when Claude Code uses different symbols)
+;; (custom-set-faces
+   ;; '(claude-code-repl-face ((t (:family "JuliaMono")))))
 
 ;; Apply settings both when Claude Code starts and when vterm mode initializes
 (add-hook 'claude-code-start-hook #'my-claude-code-setup)
@@ -71,5 +88,10 @@
 ;; Set up the built-in Emacs tools
 (global-set-key (kbd "C-c C-'") 'claude-code-ide-menu)
 (claude-code-ide-emacs-tools-setup)
+
+(setopt vterm-min-window-width 80)
+
+;; Smaller delay for vterm to update the display, to make it more responsive
+(setq vterm-timer-delay 0.5)
 
 (provide 'setup-claude-code)

@@ -1,9 +1,8 @@
-;; Install the following
-;; IF YOU CHANGE THESE, ALSO CHANGE mac_core.yml
-;; pip3 install pylint elpy flake8 pyyaml flake8_nb
-;; npm install -g jshint jsxhint tern markdownlint-cli @mermaid-js/mermaid-cli rtm-cli eslint@8.56.0 typescript yaml-language-server @github/copilot-language-server
-;; pip install -U /Users/gleitz/.emacs.d/elpa/jedi-core-20191011.1750
-;; (elpy-config) and then click [Install jedi]
+;; Install the following (scripts at ~/.files/scripts/)
+;;   ~/.files/scripts/setup-python-packages
+;;   ~/.files/scripts/setup-node-packages
+;;   pip install -U /Users/gleitz/.emacs.d/elpa/jedi-core-20191011.1750
+;;   (elpy-config) and then click [Install jedi]
 
 ;; if elpy complains
 ;; trash /Users/gleitz/.emacs.d/elpy/rpc-venv
