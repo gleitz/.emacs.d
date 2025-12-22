@@ -190,7 +190,7 @@
    '((arduino-cli-default-fqbn . "arduino:avr:uno")
      (arduino-cli-default-port . "/dev/cu.usbmodem14601")
      (arduino-cli-default-fqbn quote arduino:avr:uno)
-     (arduino-cli-default-port quote /dev/cu.usbmodem14601)
+     (arduino-cli-default-port quote /dev/cu\.usbmodem14601)
      (eval setq flycheck-disabled-checkers
            (append flycheck-disabled-checkers '(typescript-tsc)))
      (flycheck-disabled-checkers . typescript-tsc)
@@ -223,7 +223,7 @@
  '(undo-tree-auto-save-history nil)
  '(visible-bell nil)
  '(vr/command-python
-   "python3 /Users/gleitz/.emacs.d/elpa/visual-regexp-steroids-20170222.253/regexp.py")
+   "python3 ~/.emacs.d/elpa/visual-regexp-steroids-20170222.253/regexp.py")
  '(warning-minimum-level :error)
  '(web-mode-code-indent-offset 2)
  '(web-mode-enable-auto-indentation nil)
