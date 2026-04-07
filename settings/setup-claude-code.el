@@ -2,10 +2,21 @@
 (require 'claude-code)
 (require 'matisse)
 
+
 ;; Enable claude-code-mode
 (claude-code-mode 1)
 
 (setq claude-code-terminal-backend 'vterm)
+
+;; Use Happy CLI instead of bare claude — sessions are visible from phone
+(setq claude-code-program
+      "/Users/gleitz/projects/happy/packages/happy-cli/bin/happy.mjs")
+(setq claude-code-program-switches '("--dangerously-skip-permissions"))
+
+;; Tell Happy where the server is
+(add-hook 'claude-code-process-environment-functions
+          (lambda (_buffer-name _directory)
+            '("HAPPY_SERVER_URL=https://gleitz-happy.ngrok.app")))
 
 ;; Set up key bindings
 (global-set-key (kbd "C-c c") claude-code-command-map)
@@ -39,8 +50,21 @@
 ;; (custom-set-faces
    ;; '(claude-code-repl-face ((t (:family "JuliaMono")))))
 
+;; Fix cursor disappearing after toggling read-only mode (C-c C-t).
+;; vterm sets cursor-type to nil in copy-mode and doesn't restore it on exit.
+;; See: https://github.com/stevemolitor/claude-code.el/issues/118
+(add-hook 'vterm-copy-mode-hook
+          (lambda ()
+            (when (string-prefix-p "*claude:" (buffer-name))
+              (setq-local cursor-type (if vterm-copy-mode t nil)))))
+
 ;; Apply settings both when Claude Code starts and when vterm mode initializes
 (add-hook 'claude-code-start-hook #'my-claude-code-setup)
+
+;; Automatically switch to the Claude Code buffer when starting a new session
+(advice-add 'claude-code--start :around
+            (lambda (orig-fn arg extra-switches &optional force-prompt _force-switch-to-buffer)
+              (funcall orig-fn arg extra-switches force-prompt t)))
 
 ;; Also apply when vterm-mode-hook runs, but only in claude-code buffers
 (add-hook 'vterm-mode-hook
@@ -83,15 +107,15 @@
     window))
 (setq claude-code-display-window-fn #'my-claude-display-right)
 
-;; Claude Code IDE
-(require 'claude-code-ide)
-;; Set up the built-in Emacs tools
-(global-set-key (kbd "C-c C-'") 'claude-code-ide-menu)
-(claude-code-ide-emacs-tools-setup)
+;; Claude Code IDE — disabled for now (2026-03-26)
+;; The emacs-tools (xref, imenu, treesit) are never used in practice since
+;; Claude's built-in Grep/Glob/Read cover the same ground. The openDiff handler
+;; also overrides bypass-permissions mode, causing unexpected edit prompts.
+;; Re-enable if the emacs-tools become useful or the permissions issue is fixed.
+;; (require 'claude-code-ide)
+;; (global-set-key (kbd "C-c C-'") 'claude-code-ide-menu)
+;; (claude-code-ide-emacs-tools-setup)
 
 (setopt vterm-min-window-width 80)
-
-;; Smaller delay for vterm to update the display, to make it more responsive
-(setq vterm-timer-delay 0.5)
 
 (provide 'setup-claude-code)
