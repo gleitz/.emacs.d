@@ -82,12 +82,28 @@
   (add-hook 'claude-code-process-environment-functions #'monet-start-server-function)
   (monet-mode 1))
 
-(defun my-claude-notify (title message)
-  "Send notification using terminal-notifier with Sonar sound."
-  (call-process "terminal-notifier" nil nil nil
-                "-message" message
-                "-title" title
-                "-sound" "Ping"))
+(defun my-claude-notify (title message &optional buffer-name)
+  "Send notification via terminal-notifier; click jumps to BUFFER-NAME.
+Only one click action is allowed by terminal-notifier — when BUFFER-NAME
+is supplied we use `-execute' so the elisp form can both raise Emacs and
+pop to the buffer.  Otherwise we fall back to `-activate' so a click at
+least brings Emacs forward."
+  (let* ((emacsclient (or (executable-find "emacsclient") "emacsclient"))
+         (click-args
+          (cond
+           ((and buffer-name (get-buffer buffer-name))
+            (list "-execute"
+                  (format "%s -n --eval %s"
+                          emacsclient
+                          (shell-quote-argument
+                           (format "(let ((frame (or (car (seq-filter #'display-graphic-p (frame-list))) (selected-frame)))) (select-frame-set-input-focus frame) (raise-frame frame) (pop-to-buffer %S))"
+                                   buffer-name)))))
+           (t (list "-activate" "org.gnu.Emacs")))))
+    (apply #'call-process "terminal-notifier" nil nil nil
+           "-title" title
+           "-message" message
+           "-sound" "Ping"
+           click-args)))
 
 (setq claude-code-notification-function #'my-claude-notify)
 
