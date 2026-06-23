@@ -32,6 +32,16 @@
 ;; Setup packages
 (require 'setup-package)
 
+;; `compat-31.el' declares (compat-version "31.0.50") and therefore skips
+;; defining `set-local' whenever the running Emacs reports 31.0.50 or
+;; newer — but pre-release dev snapshots of 31.0.50 don't yet have
+;; `set-local' built in. magit-mode and forge-post call it directly,
+;; which fails with "Symbol's function definition is void: set-local".
+(unless (fboundp 'set-local)
+  (defun set-local (variable value)
+    "Make VARIABLE buffer-local and set it to VALUE."
+    (set (make-local-variable variable) value)))
+
 ;; Patch for load-history (happened when upgrading to Emacs 27)
 ;; https://emacs.stackexchange.com/questions/5552/emacs-on-android-org-mode-error-wrong-type-argument-stringp-require-t
 (defun load-history-filename-element (file-regexp)
@@ -113,6 +123,7 @@
      column-enforce-mode
      company-jedi
      company-prescient
+     consult
      css-eldoc
 	 dash
 	 diminish
@@ -127,6 +138,7 @@
      ein
      exec-path-from-shell
      expand-region
+     expreg
      f
      fill-column-indicator
      find-file-in-project
@@ -307,6 +319,7 @@
 (eval-after-load 'ruby-mode '(require 'setup-ruby-mode))
 ;; (eval-after-load 'clojure-mode '(require 'setup-clojure-mode))
 (eval-after-load 'markdown-mode '(require 'setup-markdown-mode))
+(eval-after-load 'gfm-mode '(require 'setup-markdown-mode))
 
 ;; Load stuff on demand
 (autoload 'skewer-start "setup-skewer" nil t)
@@ -364,6 +377,21 @@
 
 ;; Show expand-region command used
 (setq er--show-expansion-message t)
+
+;; expreg - tree-sitter aware expand region
+(require 'expreg)
+(global-set-key (kbd "C-=") 'expreg-expand)
+(global-set-key (kbd "C--") 'expreg-contract)
+
+;; consult-jq - live jq queries in JSON buffers
+(autoload 'consult-jq "consult-jq" "Live preview jq queries." t)
+
+;; winpulse - flash window on focus change
+(require 'winpulse)
+(setq winpulse-brightness 40)
+(setq winpulse-duration 0.4)
+(setq winpulse-color "#440066")
+(winpulse-mode +1)
 
 ;; Fill column indicator
 (require 'fill-column-indicator)

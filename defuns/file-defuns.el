@@ -32,12 +32,17 @@
 
 (defun copy-current-file-path (&optional arg)
   "Add current file path to kill ring. Copies the full path by default.
-With prefix argument (C-u), copies the project-relative path instead."
+With prefix argument (C-u), copies the project-relative path instead.
+In dired buffers, copies the directory path."
   (interactive "P")
-  (let ((filename (buffer-file-name)))
-    (kill-new (if (and arg eproject-mode)
-                  (s-chop-prefix (eproject-root) filename)
-                filename))))
+  (let ((filename (or (buffer-file-name)
+                      (and (derived-mode-p 'dired-mode)
+                           (dired-current-directory)))))
+    (if filename
+        (kill-new (if (and arg eproject-mode)
+                      (s-chop-prefix (eproject-root) filename)
+                    filename))
+      (error "Buffer is not visiting a file or directory"))))
 
 (defun find-or-create-file-at-point ()
   "Guesses what parts of the buffer under point is a file name and opens it."

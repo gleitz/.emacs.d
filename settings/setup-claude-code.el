@@ -3,6 +3,23 @@
 (require 'matisse)
 
 
+;; Disable claude-code's window-resize optimization advice.  It only
+;; signals a resize event when the selected window's buffer is NOT a
+;; claude buffer (or, if it is, only on width changes and not
+;; read-only).  The effect: resizing the Emacs frame reflows claude
+;; in *non-selected* panes but the active pane stays stuck at its
+;; old layout.  Disabling restores normal vterm resize behavior for
+;; the selected window too.
+(setq claude-code-optimize-window-resize nil)
+
+;; Already-set-up claude buffers have the advice installed at buffer
+;; creation time.  Remove it globally so existing buffers (e.g. an
+;; in-flight session) also get normal resize behavior.
+(when (advice-member-p 'claude-code--adjust-window-size-advice
+                       'vterm--window-adjust-process-window-size)
+  (advice-remove 'vterm--window-adjust-process-window-size
+                 'claude-code--adjust-window-size-advice))
+
 ;; Enable claude-code-mode
 (claude-code-mode 1)
 
@@ -13,10 +30,51 @@
       "/Users/gleitz/projects/happy/packages/happy-cli/bin/happy.mjs")
 (setq claude-code-program-switches '("--dangerously-skip-permissions"))
 
-;; Tell Happy where the server is
-(add-hook 'claude-code-process-environment-functions
-          (lambda (_buffer-name _directory)
-            '("HAPPY_SERVER_URL=https://gleitz-happy.ngrok.app")))
+;; Tell Happy where the server is, and pin the Claude credential per the
+;; ~/.claude-auth-mode marker. Mirrors scripts/happy-autostart.sh in the happy
+;; repo. Without this, when the phone takes over a terminal-launched session,
+;; happy's claudeRemote.ts sees a stale ANTHROPIC_API_KEY leaked into Emacs by
+;; setup-aider.el's setenv, no CLAUDE_CODE_OAUTH_TOKEN, doesn't strip the API
+;; key, and the SDK 401s with "Invalid API key · Fix external API key".
+
+(defun gleitz--read-rc-export (file var)
+  "Return VAR's value from a `export VAR=...' line in FILE, or nil.
+Strips surrounding single/double quotes."
+  (when (file-readable-p file)
+    (with-temp-buffer
+      (insert-file-contents file)
+      (goto-char (point-min))
+      (when (re-search-forward
+             (format "^export %s=\\(.*\\)$" (regexp-quote var)) nil t)
+        (let ((val (match-string 1)))
+          (cond
+           ((string-match "\\`\"\\(.*\\)\"\\'" val) (match-string 1 val))
+           ((string-match "\\`'\\(.*\\)'\\'" val)   (match-string 1 val))
+           (t val)))))))
+
+(defun gleitz--happy-env (_buffer-name _directory)
+  "Return env strings for Happy: server URL + Claude credential per mode marker."
+  (let* ((mode-file (expand-file-name "~/.claude-auth-mode"))
+         (mode (if (file-readable-p mode-file)
+                   (string-trim
+                    (with-temp-buffer
+                      (insert-file-contents mode-file)
+                      (buffer-string)))
+                 "max"))
+         (envs (list "HAPPY_SERVER_URL=https://gleitz-happy.ngrok.app")))
+    (cond
+     ((string= mode "api")
+      (let ((key (gleitz--read-rc-export "~/.claude-api-keyrc" "ANTHROPIC_API_KEY")))
+        (push (concat "ANTHROPIC_API_KEY=" (or key "")) envs)
+        (push "CLAUDE_CODE_OAUTH_TOKEN=" envs)))
+     (t
+      (let ((token (gleitz--read-rc-export "~/.claude-oauth-tokenrc"
+                                           "CLAUDE_CODE_OAUTH_TOKEN")))
+        (push (concat "CLAUDE_CODE_OAUTH_TOKEN=" (or token "")) envs)
+        (push "ANTHROPIC_API_KEY=" envs))))
+    envs))
+
+(add-hook 'claude-code-process-environment-functions #'gleitz--happy-env)
 
 ;; Set up key bindings
 (global-set-key (kbd "C-c c") claude-code-command-map)
@@ -79,6 +137,10 @@
 
 ;; Optional IDE integration with Monet
 (when (featurep 'monet)
+  ;; Disable diff tools so openDiff MCP tool is not registered.
+  ;; Without this, monet intercepts file edits with an approval prompt
+  ;; that overrides bypass-permissions mode.
+  (setq monet-diff-tool nil)
   (add-hook 'claude-code-process-environment-functions #'monet-start-server-function)
   (monet-mode 1))
 
@@ -107,13 +169,17 @@ least brings Emacs forward."
 
 (setq claude-code-notification-function #'my-claude-notify)
 
-;; Example: Always show Claude in split buffer on the right
+;; Display Claude in a sensible window:
+;;  - If the frame has only one window, split it to the right at 50%.
+;;  - Otherwise, take over the currently selected window (avoids crushing
+;;    a small pane when splitting by a fraction of the *frame* width).
 (defun my-claude-display-right (buffer)
-  "Display Claude buffer in right window, taking half the frame width."
-  (let ((window (display-buffer buffer '((display-buffer-in-direction)
-                                         (direction . right)
-                                         (window-width . 0.5)))))
-
+  "Display Claude BUFFER intelligently based on current window layout."
+  (let ((window (if (one-window-p)
+                    (display-buffer buffer '((display-buffer-in-direction)
+                                             (direction . right)
+                                             (window-width . 0.5)))
+                  (display-buffer buffer '((display-buffer-same-window))))))
     ;; Send SIGWINCH to force TUI to recalculate layout
     (run-with-timer 0.2 nil
       (lambda (buf)
@@ -122,6 +188,30 @@ least brings Emacs forward."
       buffer)
     window))
 (setq claude-code-display-window-fn #'my-claude-display-right)
+
+(defun my-claude-code-force-relayout ()
+  "Force a Claude Code TUI relayout by briefly maximizing its window.
+Works because we disabled `claude-code-optimize-window-resize' —
+both the maximize and the restore now propagate as real resize
+events that vterm forwards to claude."
+  (interactive)
+  (let ((win (seq-find
+              (lambda (w)
+                (string-prefix-p "*claude:" (buffer-name (window-buffer w))))
+              (window-list))))
+    (cond
+     ((not win)
+      (message "No visible Claude Code buffer"))
+     ((one-window-p win)
+      (message "Claude is already the only window — split (C-x 3) and back to reflow"))
+     (t
+      (let ((config (current-window-configuration)))
+        (select-window win)
+        (delete-other-windows)
+        (redisplay t)
+        (set-window-configuration config))))))
+
+(define-key claude-code-command-map (kbd "l") #'my-claude-code-force-relayout)
 
 ;; Claude Code IDE — disabled for now (2026-03-26)
 ;; The emacs-tools (xref, imenu, treesit) are never used in practice since

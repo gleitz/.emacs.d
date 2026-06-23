@@ -4,7 +4,7 @@
 
 ;; Author: Imran Khan <imran@khan.ovh>
 ;; URL: https://github.com/natrys/whisper.el
-;; Version: 0.4.4
+;; Version: 0.4.7
 ;; Package-Requires: ((emacs "27.1"))
 
 ;; This file is NOT part of GNU Emacs.
@@ -31,6 +31,7 @@
 ;;; Code:
 
 (require 'cl-lib)
+(require 'url-parse)
 (require 'whisper-languages)
 
 ;;; User facing options
@@ -140,9 +141,11 @@ responsibility to override `whisper-command' with appropriate function."
 Possible values:
 - nil: Use local whisper.cpp directly
 - local: Run whisper.cpp as local HTTP server
+- remote: Use a remote whisper.cpp server
 - openai: Use OpenAI's Whisper API (requires API key)"
   :type '(choice (const :tag "Direct" nil)
                  (const :tag "Local Server" local)
+                 (const :tag "Remote Server" remote)
                  (const :tag "OpenAI API" openai))
   :set (lambda (sym val)
          (set-default sym val)
@@ -151,13 +154,28 @@ Possible values:
            (setq whisper--server-process nil)))
   :group 'whisper)
 
+(defcustom whisper-server-baseurl nil
+  "Base URL for the whisper server.
+This should be the full URL including protocol, host, and port.
+For example: \"http://localhost:8642\" or \"https://whisper.example.com\"
+
+If this is nil, falls back to constructing URL from `whisper-server-host'
+and `whisper-server-port' (for backward compatibility)."
+  :type '(choice (const :tag "Use host/port instead (for backward compatibility)" nil)
+                 string)
+  :group 'whisper)
+
+(define-obsolete-variable-alias 'whisper-server-host 'whisper-server-baseurl "0.4.5")
 (defcustom whisper-server-host "127.0.0.1"
-  "Host address for the whisper server."
+  "Host address for the whisper server.
+This is now only used when `whisper-server-baseurl' is nil."
   :type 'string
   :group 'whisper)
 
+(define-obsolete-variable-alias 'whisper-server-port 'whisper-server-baseurl "0.4.5")
 (defcustom whisper-server-port 8642
-  "Port number for the whisper server."
+  "Port number for the whisper server.
+This is now only used when `whisper-server-baseurl' is nil."
   :type 'integer
   :group 'whisper)
 
@@ -181,7 +199,7 @@ Required when using openai server mode."
   "Whether to put whisper output under point in current buffer.
 
 When nil, instead of inserting text under current point, a temporary buffer
-containing whisper output text is created.  The buffer name is distinguised
+containing whisper output text is created.  The buffer name is distinguished
 with current timestamp and it's the user's responsibility to kill the buffer if
 they want to.  Whether this buffer is displayed is controlled by
 `whisper-display-transcription-buffer'."
@@ -207,12 +225,33 @@ it something simple and deterministic to avoid proliferation of such buffers
 then set it to `whisper--simple-transcription-buffer-name' instead."
   :group 'whisper)
 
+(define-obsolete-variable-alias 'whisper-return-cursor-to-start 'whisper-return-cursor "0.4.6")
 (defcustom whisper-return-cursor-to-start t
   "Whether to re-position the cursor after transcription.
+
+This variable is obsolete; use `whisper-return-cursor' instead.
 
 When non-nil, the cursor is returned to the original invocation point.
 Otherwise, the cursor remains at the end of the inserted transcription."
   :type 'boolean
+  :set (lambda (sym val)
+         (set-default sym val)
+         (setq whisper-return-cursor (if val 'start 'end)))
+  :group 'whisper)
+
+(defcustom whisper-return-cursor whisper-return-cursor-to-start
+  "Where to place cursor after transcription text is inserted.
+
+The text is always inserted at the original invocation point, but this
+controls where the cursor ends up afterwards.
+
+Possible values:
+- nil: cursor doesn't move
+- `start': cursor moves to start of inserted text
+- `end': cursor moves to end of inserted text"
+  :type '(choice (const :tag "Stay where cursor is" nil)
+                 (const :tag "At start of inserted text" start)
+                 (const :tag "At end of inserted text" end))
   :group 'whisper)
 
 (defcustom whisper-show-progress-in-mode-line t
@@ -411,6 +450,28 @@ Depending on the COMMAND we either show the indicator or hide it."
          (bin-path (concat base "build/bin/" bin-name)))
     bin-path))
 
+(defun whisper--server-base-url ()
+  "Return the effective server base URL.
+Uses `whisper-server-baseurl' if set, otherwise constructs from
+`whisper-server-host' and `whisper-server-port'."
+  (or whisper-server-baseurl
+      (format "http://%s:%d" whisper-server-host whisper-server-port)))
+
+(defun whisper--server-host ()
+  "Extract host from server base URL for local server binding."
+  (if whisper-server-baseurl
+      (let ((url (url-generic-parse-url whisper-server-baseurl)))
+        (or (url-host url) "127.0.0.1"))
+    whisper-server-host))
+
+(defun whisper--server-port ()
+  "Extract port from server base URL for local server binding."
+  (if whisper-server-baseurl
+      (let* ((url (url-generic-parse-url whisper-server-baseurl))
+             (port (url-port url)))
+        (or port 8642))
+    whisper-server-port))
+
 (defun whisper--record-audio ()
   "Start audio recording process in the background."
   (when whisper-insert-text-at-point
@@ -435,7 +496,9 @@ Depending on the COMMAND we either show the indicator or hide it."
                                   (string-equal "terminated\n" event)
                                   ;; but this is reality
                                   (string-equal "exited abnormally with code 255\n" event))
-                              (whisper--transcribe-audio))
+                              (progn
+                                (set-file-modes whisper--temp-file #o600 'nofollow)
+                                (whisper--transcribe-audio)))
                              ((string-match-p "exited abnormally with code [0-9]+\n" event)
                               (if whisper--ffmpeg-input-file
                                   (error "FFmpeg failed to convert given file")
@@ -451,8 +514,8 @@ Depending on the COMMAND we either show the indicator or hide it."
             (make-process
              :name "whisper-server"
              :command `(,(whisper--find-whispercpp-server)
-                        "--host" ,whisper-server-host
-                        "--port" ,(number-to-string whisper-server-port)
+                        "--host" ,(whisper--server-host)
+                        "--port" ,(number-to-string (whisper--server-port))
                         "--model" ,(whisper--model-file whisper-quantize)
                         "--language" ,whisper-language
                         "--no-timestamps"
@@ -519,13 +582,17 @@ PRE-PROCESSOR is a function that will be called first thing on the raw output."
     (when (> (buffer-size) 0)
       (if whisper-insert-text-at-point
           (with-current-buffer (marker-buffer whisper--marker)
-            (goto-char whisper--marker)
-            (whisper--insert-text
-             (with-current-buffer (get-buffer whisper--stdout-buffer-name)
-               (buffer-string)))
-            (when whisper-return-cursor-to-start
-              (goto-char whisper--marker))
-            (run-hooks 'whisper-after-insert-hook))
+            (let ((text (with-current-buffer (get-buffer whisper--stdout-buffer-name)
+                          (buffer-string)))
+                  end-pos)
+              (save-excursion
+                (goto-char whisper--marker)
+                (whisper--insert-text text)
+                (setq end-pos (point)))
+              (pcase whisper-return-cursor
+                ((or 'start 't) (goto-char whisper--marker))
+                ('end (goto-char end-pos)))
+              (run-hooks 'whisper-after-insert-hook)))
         (with-current-buffer
             (get-buffer-create (funcall whisper-transcription-buffer-name-function))
           (erase-buffer)
@@ -583,14 +650,17 @@ PRE-PROCESSOR is a function that will be called first thing on the raw output."
            ,(concat "model=" whisper-openai-model)
            ,@(unless whisper-translate (list (concat "language=" whisper-language)))))))
 
-(defun whisper--transcribe-via-local-server ()
-  "Transcribe audio using the local whisper server."
-  (message "[-] Transcribing via local server")
+(defun whisper--transcribe-via-local-server (&optional skip-start)
+  "Transcribe audio using a whisper.cpp server.
+
+When SKIP-START is non-nil, do not attempt to start a local server."
+  (message "[-] Transcribing via %s server" (if skip-start "remote" "local"))
   (whisper--setup-mode-line :show 'transcribing)
-  (whisper--ensure-server)
+  (unless skip-start
+    (whisper--ensure-server))
   (setq whisper--transcribing-process
         (whisper--process-curl-request
-         (format "http://%s:%d/inference" whisper-server-host whisper-server-port)
+         (file-name-concat (whisper--server-base-url) "inference")
          (list "Content-Type: multipart/form-data")
          (list (concat "file=@" whisper--temp-file)
                "temperature=0.0"
@@ -626,6 +696,7 @@ PRE-PROCESSOR is a function that will be called first thing on the raw output."
   "Start audio transcribing process in the background."
   (pcase whisper-server-mode
     ('local (whisper--transcribe-via-local-server))
+    ('remote (whisper--transcribe-via-local-server t))
     ('openai (whisper--transcribe-via-openai))
     ('nil (whisper--transcribe-via-subprocess))))
 
@@ -838,11 +909,12 @@ This is a dwim function that does different things depending on current state:
      ((and (buffer-live-p whisper--compilation-buffer)
            (process-live-p (get-buffer-process whisper--compilation-buffer)))
       (when-let* ((proc (get-buffer-process whisper--compilation-buffer)))
-	(interrupt-process proc)))
+	    (interrupt-process proc)))
      (t
       (setq whisper--point-buffer (current-buffer))
       (run-hooks 'whisper-before-transcription-hook)
-      (when (and whisper-install-whispercpp (not (eq whisper-server-mode 'openai)))
+      (when (and whisper-install-whispercpp
+                 (not (memq whisper-server-mode '(openai remote))))
         (whisper--check-model-consistency))
       (setq-default
        whisper--ffmpeg-input-file

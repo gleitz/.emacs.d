@@ -96,4 +96,68 @@
     (libxml-parse-html-region (point-min) (point-max))
     (buffer-string)))
 
+;; GitHub-style markdown preview with dark mode support
+(setq markdown-css-paths
+      '("https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.8.1/github-markdown.min.css"))
+
+(setq markdown-xhtml-header-content
+      "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css\" media=\"(prefers-color-scheme: dark)\" />
+<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css\" media=\"(prefers-color-scheme: light)\" />
+<script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js\"></script>
+<style>
+        body {
+          box-sizing: border-box;
+          min-width: 200px;
+          max-width: 980px;
+          margin: 0 auto;
+          padding: 45px;
+        }
+        @media (prefers-color-scheme: dark) {
+          body { background-color: #0d1117; }
+        }
+        @media (prefers-color-scheme: light) {
+          body { background-color: #ffffff; }
+        }
+        html { scroll-behavior: smooth; }
+        /* Code block line stripes */
+        pre {
+          background-image: repeating-linear-gradient(
+            180deg, transparent 0, transparent 1.6em,
+            rgba(128,128,128,0.06) 1.6em, rgba(128,128,128,0.06) 3.2em);
+          background-size: 100% 3.2em;
+          background-position: 0 16px;
+        }
+        pre code.hljs { padding: 16px; line-height: 1.6; }
+        /* Full-width tables */
+        .markdown-body table { display: table; width: 100%; }
+        /* Heading anchors */
+        .heading-anchor {
+          opacity: 0; text-decoration: none; margin-left: 0.3em;
+          font-weight: normal; color: inherit;
+        }
+        h1:hover .heading-anchor, h2:hover .heading-anchor,
+        h3:hover .heading-anchor, h4:hover .heading-anchor { opacity: 0.5; }
+        .heading-anchor:hover { opacity: 1 !important; }
+        h2[id], h3[id], h4[id] { scroll-margin-top: 16px; }
+      </style>")
+
+(setq markdown-xhtml-body-preamble "<article class=\"markdown-body\">")
+(setq markdown-xhtml-body-epilogue "</article>
+<script>
+  hljs.highlightAll();
+  document.querySelectorAll('h1,h2,h3,h4').forEach(function(h) {
+    var id = h.textContent.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+    h.id = id;
+    var a = document.createElement('a');
+    a.href = '#' + id;
+    a.className = 'heading-anchor';
+    a.textContent = '#';
+    h.appendChild(a);
+  });
+</script>")
+
+;; Mermaid: higher quality rendering
+(setq mermaid-output-format ".png")
+(setq mermaid-flags "-s 2 -w 4096 -b white")
+
 (provide 'setup-markdown-mode)

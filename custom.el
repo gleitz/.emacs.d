@@ -66,7 +66,7 @@
  '(elpy-modules
    '(elpy-module-company elpy-module-eldoc elpy-module-pyvenv
                          elpy-module-highlight-indentation
-                         elpy-module-django elpy-module-sane-defaults) t)
+                         elpy-module-django elpy-module-sane-defaults))
  '(elpy-rpc-backend "rope" t)
  '(elpy-syntax-check-command "pylint")
  '(ensime-default-server-root "/Users/bgleitzman/.emacs.d/lib/scala/ensime/")
@@ -132,7 +132,11 @@
  '(magit-process-apply-ansi-colors 'filter)
  '(magit-push-always-verify nil t)
  '(magit-stage-all-confirm nil t)
+ '(markdown-command "marked")
  '(message-log-max 1000)
+ '(mouse-wheel-flip-direction t)
+ '(mouse-wheel-scroll-amount-horizontal 100)
+ '(mouse-wheel-tilt-scroll t)
  '(nxml-child-indent 4)
  '(package-archive-priorities '(("MELPA Stable" . 10) ("GNU ELPA" . 5) ("MELPA" . 0)))
  '(package-archives
@@ -175,7 +179,7 @@
  '(projectile-enable-caching nil)
  '(projectile-globally-ignored-directories
    '(".idea" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_"
-     ".bzr" "_darcs" ".tox" ".svn" ".stack-work" "bin" "build"))
+     ".bzr" "_darcs" ".tox" ".svn" ".stack-work" "build"))
  '(read-quoted-char-radix 16)
  '(realgud:pdb-command-name "./pdb")
  '(recentf-max-saved-items 1000)
