@@ -87,8 +87,11 @@ Strips surrounding single/double quotes."
   ;; Unbind vterm-copy-mode from C-c C-t first
   (local-unset-key (kbd "C-c C-t"))
   (local-set-key (kbd "C-c C-t") 'claude-code-toggle-read-only-mode)
-  ;; important - tell emacs to use our fontset settings
-  (setq use-default-font-for-symbols nil))
+  ;; Symbol rendering in the Claude TUI (spinners, box-drawing, icons).
+  ;; macOS: route symbols through the fontset (nil) — the system symbol fonts
+  ;; render them well. Linux/GPD: that fallback is ugly/tofu while the default
+  ;; font (JuliaMono) has full symbol + box-drawing coverage, so use it.
+  (setq use-default-font-for-symbols (not (eq system-type 'darwin))))
 
 (defun gleitz--vterm-font-setup ()
   "Configure font settings specifically for vterm buffers, workaround claude-code."
