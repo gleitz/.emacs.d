@@ -54,3 +54,6 @@ site-lisp/*/.github/
 site-lisp/*/.gitignore
 site-lisp/*/.mailmap
 .aider*
+
+# local planning/handoff docs — kept out of git intentionally
+docs/plans/
