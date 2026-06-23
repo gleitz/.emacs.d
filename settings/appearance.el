@@ -84,8 +84,13 @@
 
 (rename-modeline "clojure-mode" clojure-mode "Clj")
 
-;; mac friendly font
-(set-face-attribute 'default nil :family "Monaco" :height 120)
+;; Default font per OS: Monaco on macOS, JuliaMono on Linux (e.g. the GPD,
+;; which has no Monaco — falls back to an ugly default otherwise). On the mac,
+;; mac.el (loaded via `when is-mac`) also reasserts Monaco; on Linux this is
+;; the only default-font setting, so vterm/claude pick it up too.
+(set-face-attribute 'default nil
+                    :family (if (eq system-type 'darwin) "Monaco" "JuliaMono")
+                    :height 120)
 
 (when window-system
   (require 'maxframe)
