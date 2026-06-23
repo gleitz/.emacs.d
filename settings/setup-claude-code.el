@@ -25,9 +25,11 @@
 
 (setq claude-code-terminal-backend 'vterm)
 
-;; Use Happy CLI instead of bare claude — sessions are visible from phone
+;; Use Happy CLI instead of bare claude — sessions are visible from phone.
+;; Path is resolved per-machine via ~ so this shared config works on both the
+;; mac (/Users/gleitz) and the GPD (/home/gleitz). See the happy-on-gpd plan.
 (setq claude-code-program
-      "/Users/gleitz/projects/happy/packages/happy-cli/bin/happy.mjs")
+      (expand-file-name "~/projects/happy/packages/happy-cli/bin/happy.mjs"))
 (setq claude-code-program-switches '("--dangerously-skip-permissions"))
 
 ;; Tell Happy where the server is, and pin the Claude credential per the
