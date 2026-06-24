@@ -150,27 +150,44 @@ Strips surrounding single/double quotes."
   (monet-mode 1))
 
 (defun my-claude-notify (title message &optional buffer-name)
-  "Send notification via terminal-notifier; click jumps to BUFFER-NAME.
-Only one click action is allowed by terminal-notifier — when BUFFER-NAME
-is supplied we use `-execute' so the elisp form can both raise Emacs and
-pop to the buffer.  Otherwise we fall back to `-activate' so a click at
-least brings Emacs forward."
-  (let* ((emacsclient (or (executable-find "emacsclient") "emacsclient"))
-         (click-args
-          (cond
-           ((and buffer-name (get-buffer buffer-name))
-            (list "-execute"
-                  (format "%s -n --eval %s"
-                          emacsclient
-                          (shell-quote-argument
-                           (format "(let ((frame (or (car (seq-filter #'display-graphic-p (frame-list))) (selected-frame)))) (select-frame-set-input-focus frame) (raise-frame frame) (pop-to-buffer %S))"
-                                   buffer-name)))))
-           (t (list "-activate" "org.gnu.Emacs")))))
-    (apply #'call-process "terminal-notifier" nil nil nil
-           "-title" title
-           "-message" message
-           "-sound" "Ping"
-           click-args)))
+  "Send a desktop notification with TITLE and MESSAGE.
+
+On macOS use `terminal-notifier': click jumps to BUFFER-NAME.  Only one
+click action is allowed by terminal-notifier — when BUFFER-NAME is
+supplied we use `-execute' so the elisp form can both raise Emacs and pop
+to the buffer.  Otherwise we fall back to `-activate' so a click at least
+brings Emacs forward.
+
+On Linux use `notify-send' (libnotify).  It has no per-notification click
+action, so BUFFER-NAME is ignored there.  If neither tool is on PATH
+(e.g. a headless box), degrade to the echo area instead of erroring with
+\"no such file or directory terminal-notifier\"."
+  (cond
+   ;; macOS — terminal-notifier with click-to-jump.
+   ((executable-find "terminal-notifier")
+    (let* ((emacsclient (or (executable-find "emacsclient") "emacsclient"))
+           (click-args
+            (cond
+             ((and buffer-name (get-buffer buffer-name))
+              (list "-execute"
+                    (format "%s -n --eval %s"
+                            emacsclient
+                            (shell-quote-argument
+                             (format "(let ((frame (or (car (seq-filter #'display-graphic-p (frame-list))) (selected-frame)))) (select-frame-set-input-focus frame) (raise-frame frame) (pop-to-buffer %S))"
+                                     buffer-name)))))
+             (t (list "-activate" "org.gnu.Emacs")))))
+      (apply #'call-process "terminal-notifier" nil nil nil
+             "-title" title
+             "-message" message
+             "-sound" "Ping"
+             click-args)))
+   ;; Linux — notify-send (libnotify). No click-to-jump action available.
+   ((executable-find "notify-send")
+    (call-process "notify-send" nil nil nil
+                  "-a" "Emacs"
+                  title message))
+   ;; No notifier — fall back to the echo area.
+   (t (message "%s: %s" title message))))
 
 (setq claude-code-notification-function #'my-claude-notify)
 
