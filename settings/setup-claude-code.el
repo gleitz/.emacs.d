@@ -63,7 +63,7 @@ Strips surrounding single/double quotes."
                       (insert-file-contents mode-file)
                       (buffer-string)))
                  "max"))
-         (envs (list "HAPPY_SERVER_URL=https://gleitz-happy.ngrok.app")))
+         (envs (list "HAPPY_SERVER_URL=https://happy.glei.tz")))
     (cond
      ((string= mode "api")
       (let ((key (gleitz--read-rc-export "~/.claude-api-keyrc" "ANTHROPIC_API_KEY")))
