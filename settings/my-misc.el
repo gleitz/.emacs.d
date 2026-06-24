@@ -116,21 +116,58 @@ White space here is any of: space, tab, emacs newline (line feed, ASCII 10)."
                when (file-exists-p filename) collect filename into valid-files
                finally return (car valid-files)))
 
-;; Scroll to the end of the scratch buffer
+;; Scroll to the end of the scratch buffer on startup.
+;;
+;; We must move the *buffer's* point to the end -- not just the window point.
+;; For the selected window, redisplay resyncs the window point from the
+;; buffer's point, so the old `set-window-point' approach only worked
+;; intermittently: it stuck only when the scratch buffer happened to be the
+;; current buffer when the timer fired, otherwise redisplay reset it back to
+;; the file's opening position (top).
 (defun end-of-scratch ()
-  (set-window-point (get-buffer-window (file-name-nondirectory scratch-buffer-path)) 10000000000)
-  (typo-mode)
+  "Show the bottom of the scratch buffer.
+Return non-nil once its window exists and has been scrolled."
+  (let* ((buf (and scratch-buffer-path (get-file-buffer scratch-buffer-path)))
+         (win (and buf (get-buffer-window buf))))
+    (when win
+      (with-selected-window win
+        (goto-char (point-max))
+        (recenter -1))
+      t)))
+
+(defun my-scratch-scroll-to-end (&optional attempts)
+  "Scroll the scratch window to its end, retrying until the window appears.
+Replaces a fixed startup delay with condition-based waiting: poll every
+0.3s for up to ATTEMPTS tries (default 20, ~6s) until `end-of-scratch'
+succeeds."
+  (let ((attempts (or attempts 20)))
+    (unless (or (end-of-scratch) (<= attempts 0))
+      (run-at-time 0.3 nil #'my-scratch-scroll-to-end (1- attempts)))))
+
+(defun my-scratch-typo-setup ()
+  "Enable typo-mode tweaks in the scratch buffer."
+  (let ((buf (and scratch-buffer-path (get-file-buffer scratch-buffer-path))))
+    (when buf
+      (with-current-buffer buf
+        (typo-mode 1))))
   (define-typo-cycle typo-cycle-right-single-quotation-mark
     "Cycle through the right quotation mark and the typewriter apostrophe. If used with a numeric prefix argument N, N typewriter apostrophes will be inserted."
     ("'" "’"))
   (define-key typo-global-mode-map "`" nil)
-  (define-key typo-mode-map "`" nil)
-  )
+  (define-key typo-mode-map "`" nil))
+
+(defun my-scratch-startup-setup ()
+  "Configure and scroll the scratch buffer to its end after startup."
+  (my-scratch-typo-setup)
+  ;; Wait for the first redisplay (idle) so the scratch window has real
+  ;; dimensions, then scroll -- retrying until the window actually exists.
+  (run-with-idle-timer 0.2 nil #'my-scratch-scroll-to-end))
 
 (when (display-graphic-p)
   (setq initial-buffer-choice scratch-buffer-path)
-  (kill-buffer "*scratch*")
-  (run-at-time "1.5 sec" nil 'end-of-scratch))
+  (when (get-buffer "*scratch*")
+    (kill-buffer "*scratch*"))
+  (add-hook 'emacs-startup-hook #'my-scratch-startup-setup))
 
 ;; Treesitter
 ;; https://www.masteringemacs.org/article/how-to-get-started-tree-sitter
